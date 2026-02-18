@@ -17,7 +17,7 @@ export default function Step3Family({ data, onChange }: Props) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900">Family & timeline</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Family & timeline</h2>
         <p className="text-gray-500 mt-1">The last few details to complete your relocation profile.</p>
       </div>
 
@@ -26,7 +26,7 @@ export default function Step3Family({ data, onChange }: Props) {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Who's moving with you?
           </label>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
             {FAMILY_OPTIONS.map((opt) => (
               <button
                 key={opt.value}
@@ -38,7 +38,7 @@ export default function Step3Family({ data, onChange }: Props) {
                   });
                 }}
                 className={`
-                  flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all
+                  flex flex-col items-center gap-2 p-3 sm:p-4 rounded-xl border-2 transition-all
                   ${data.familyStatus === opt.value
                     ? "border-emerald-500 bg-emerald-50"
                     : "border-gray-200 bg-white hover:border-gray-300"

@@ -1,16 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import TaskCard from "./TaskCard";
-
-const CATEGORY_META: Record<string, { label: string; emoji: string; color: string }> = {
-  housing:   { label: "Housing",   emoji: "🏠", color: "bg-blue-50 text-blue-700 border-blue-100" },
-  banking:   { label: "Banking",   emoji: "🏦", color: "bg-green-50 text-green-700 border-green-100" },
-  legal:     { label: "Legal",     emoji: "⚖️", color: "bg-purple-50 text-purple-700 border-purple-100" },
-  telecom:   { label: "Telecom",   emoji: "📱", color: "bg-orange-50 text-orange-700 border-orange-100" },
-  transport: { label: "Transport", emoji: "🚗", color: "bg-red-50 text-red-700 border-red-100" },
-  insurance: { label: "Insurance", emoji: "🛡️", color: "bg-teal-50 text-teal-700 border-teal-100" },
-};
+import CategoryCard from "./CategoryCard";
 
 export interface JourneyTask {
   id: string;
@@ -34,7 +25,26 @@ interface JourneyViewProps {
   tasks: JourneyTask[];
 }
 
-export default function JourneyView({ title, origin, destination, tasks: initialTasks }: JourneyViewProps) {
+// Ordered by urgency + expected time-to-complete
+const CATEGORY_ORDER = ["telecom", "housing", "banking", "insurance", "legal", "transport"];
+
+const CATEGORY_META: Record<string, {
+  label: string;
+  emoji: string;
+  urgency: string;
+  timeEstimate: string;
+  color: string;
+  donutColor: string;
+}> = {
+  telecom:   { label: "Telecom",   emoji: "📱", urgency: "Day 1",     timeEstimate: "~30 min",    color: "bg-orange-50 text-orange-600 border-orange-200",  donutColor: "#f97316" },
+  housing:   { label: "Housing",   emoji: "🏠", urgency: "Week 1",    timeEstimate: "2–4 weeks",  color: "bg-blue-50 text-blue-600 border-blue-200",        donutColor: "#3b82f6" },
+  banking:   { label: "Banking",   emoji: "🏦", urgency: "Week 1–2",  timeEstimate: "3–5 days",   color: "bg-green-50 text-green-600 border-green-200",     donutColor: "#10b981" },
+  insurance: { label: "Insurance", emoji: "🛡️", urgency: "Week 2",    timeEstimate: "1–2 days",   color: "bg-teal-50 text-teal-600 border-teal-200",        donutColor: "#14b8a6" },
+  legal:     { label: "Legal",     emoji: "⚖️", urgency: "Month 1",   timeEstimate: "2–3 months", color: "bg-purple-50 text-purple-600 border-purple-200",   donutColor: "#8b5cf6" },
+  transport: { label: "Transport", emoji: "🚗", urgency: "Month 1–2", timeEstimate: "1–4 weeks",  color: "bg-red-50 text-red-600 border-red-200",           donutColor: "#ef4444" },
+};
+
+export default function JourneyView({ title, destination, tasks: initialTasks }: JourneyViewProps) {
   const [tasks, setTasks] = useState(initialTasks);
 
   const completedCount = tasks.filter((t) => t.status === "COMPLETED").length;
@@ -43,12 +53,9 @@ export default function JourneyView({ title, origin, destination, tasks: initial
 
   const handleToggle = async (taskId: string, completed: boolean) => {
     const newStatus = completed ? "COMPLETED" : "PENDING";
-
-    // Optimistic update
     setTasks((prev) =>
       prev.map((t) => (t.id === taskId ? { ...t, status: newStatus } : t))
     );
-
     try {
       await fetch(`/api/tasks/${taskId}`, {
         method: "PATCH",
@@ -56,14 +63,12 @@ export default function JourneyView({ title, origin, destination, tasks: initial
         body: JSON.stringify({ status: newStatus }),
       });
     } catch {
-      // Revert on failure
       setTasks((prev) =>
         prev.map((t) => (t.id === taskId ? { ...t, status: completed ? "PENDING" : "COMPLETED" } : t))
       );
     }
   };
 
-  // Group tasks by category
   const grouped = tasks.reduce<Record<string, JourneyTask[]>>((acc, task) => {
     const cat = task.template.category;
     if (!acc[cat]) acc[cat] = [];
@@ -71,82 +76,64 @@ export default function JourneyView({ title, origin, destination, tasks: initial
     return acc;
   }, {});
 
+  const sortedCategories = [
+    ...CATEGORY_ORDER.filter((c) => grouped[c]),
+    ...Object.keys(grouped).filter((c) => !CATEGORY_ORDER.includes(c)),
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-100">
-        <div className="max-w-2xl mx-auto px-4 py-6">
+      {/* Sticky header with main progress bar */}
+      <div className="bg-white border-b border-gray-100 sticky top-0 z-10">
+        <div className="max-w-2xl mx-auto px-4 py-5">
           <span className="text-emerald-500 font-semibold text-xs tracking-widest uppercase">Relocate</span>
-          <h1 className="text-2xl font-bold text-gray-900 mt-1">{title}</h1>
-
-          <div className="mt-4 flex items-center justify-between text-sm text-gray-500 mb-2">
-            <span>{completedCount} of {totalCount} tasks completed</span>
-            <span className="font-semibold text-gray-900">{Math.round(progressPct)}%</span>
-          </div>
-          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-            <div
-              className="h-2 bg-emerald-500 rounded-full transition-all duration-500"
-              style={{ width: `${progressPct}%` }}
-            />
+          <h1 className="text-xl font-bold text-gray-900 mt-0.5">{title}</h1>
+          <div className="mt-3">
+            <div className="flex items-center justify-between text-xs text-gray-500 mb-1.5">
+              <span>{completedCount} of {totalCount} tasks completed</span>
+              <span className="font-semibold text-gray-700">{Math.round(progressPct)}%</span>
+            </div>
+            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div
+                className="h-2 bg-emerald-500 rounded-full transition-all duration-500"
+                style={{ width: `${progressPct}%` }}
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Task list */}
-      <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
+      {/* Category cards */}
+      <div className="max-w-2xl mx-auto px-4 py-5 space-y-3">
         {totalCount === 0 && (
           <div className="text-center py-16 text-gray-400">
             <p className="text-4xl mb-3">📋</p>
-            <p className="font-medium">No tasks yet.</p>
-            <p className="text-sm mt-1">Make sure the database is seeded.</p>
+            <p className="font-medium">No tasks yet — make sure the database is seeded.</p>
           </div>
         )}
 
-        {Object.entries(grouped).map(([category, catTasks]) => {
-          const meta = CATEGORY_META[category] ?? { label: category, emoji: "📌", color: "bg-gray-50 text-gray-700 border-gray-100" };
-          const catCompleted = catTasks.filter((t) => t.status === "COMPLETED").length;
-
-          return (
-            <div key={category}>
-              {/* Category header */}
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${meta.color}`}>
-                    <span>{meta.emoji}</span>
-                    {meta.label}
-                  </span>
-                </div>
-                <span className="text-xs text-gray-400">
-                  {catCompleted}/{catTasks.length}
-                </span>
-              </div>
-
-              {/* Tasks */}
-              <div className="space-y-2">
-                {catTasks
-                  .sort((a, b) => a.template.order - b.template.order)
-                  .map((task) => (
-                    <TaskCard
-                      key={task.id}
-                      id={task.id}
-                      title={task.template.title}
-                      description={task.template.description}
-                      documents={task.template.documents}
-                      officialUrl={task.template.officialUrl}
-                      tips={task.template.tips}
-                      completed={task.status === "COMPLETED"}
-                      onToggle={handleToggle}
-                    />
-                  ))}
-              </div>
-            </div>
-          );
-        })}
+        {sortedCategories.map((category, i) => (
+          <CategoryCard
+            key={category}
+            category={category}
+            meta={CATEGORY_META[category] ?? {
+              label: category,
+              emoji: "📌",
+              urgency: "—",
+              timeEstimate: "—",
+              color: "bg-gray-50 text-gray-600 border-gray-200",
+              donutColor: "#9ca3af",
+            }}
+            tasks={grouped[category]}
+            defaultOpen={i === 0}
+            onToggleTask={handleToggle}
+          />
+        ))}
 
         {completedCount === totalCount && totalCount > 0 && (
           <div className="text-center py-10">
             <p className="text-4xl mb-3">🎉</p>
-            <p className="text-lg font-bold text-gray-900">You've completed your relocation journey!</p>
+            <p className="text-lg font-bold text-gray-900">Relocation complete!</p>
             <p className="text-gray-500 text-sm mt-1">Welcome to {destination}.</p>
           </div>
         )}

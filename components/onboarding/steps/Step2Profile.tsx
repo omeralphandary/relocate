@@ -19,7 +19,7 @@ export default function Step2Profile({ data, onChange }: Props) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900">Tell us about yourself</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Tell us about yourself</h2>
         <p className="text-gray-500 mt-1">This helps us tailor visa and work requirements for your situation.</p>
       </div>
 

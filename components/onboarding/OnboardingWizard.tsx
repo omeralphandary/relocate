@@ -55,15 +55,15 @@ export default function OnboardingWizard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-lg bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-8">
+      <div className="w-full max-w-lg bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
         <div className="mb-6">
           <span className="text-emerald-500 font-semibold text-sm tracking-wide uppercase">Relocate</span>
         </div>
 
         <ProgressBar currentStep={step} totalSteps={3} labels={STEPS} />
 
-        <div className="min-h-[380px] flex flex-col justify-between">
+        <div className="min-h-[340px] sm:min-h-[380px] flex flex-col justify-between">
           <div>
             {step === 1 && <Step1Countries data={data} onChange={update} />}
             {step === 2 && <Step2Profile data={data} onChange={update} />}
