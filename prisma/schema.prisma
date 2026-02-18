@@ -99,6 +99,12 @@ model JourneyTask {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
+  // AI-enriched content — overrides template fields when present
+  aiInstructions String?  // personalised step-by-step instructions
+  aiDocuments    String[] // personalised document list
+  aiTips         String?  // personalised tip
+  aiGeneratedAt  DateTime? // when AI content was last fetched
+
   journey  Journey      @relation(fields: [journeyId], references: [id], onDelete: Cascade)
   template TaskTemplate @relation(fields: [taskId], references: [id])
 }
@@ -126,6 +132,9 @@ model TaskTemplate {
 
   // Dependency: this task should be done after these task IDs
   dependsOn    String[]
+
+  // AI readiness flag — marks templates designed for LLM enrichment
+  aiEnriched   Boolean  @default(false)
 
   journeyTasks JourneyTask[]
 }
