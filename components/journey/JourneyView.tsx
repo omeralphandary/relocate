@@ -86,7 +86,7 @@ export default function JourneyView({ title, destination, tasks: initialTasks }:
       {/* Sticky header with main progress bar */}
       <div className="bg-white border-b border-gray-100 sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-5">
-          <span className="text-emerald-500 font-semibold text-xs tracking-widest uppercase">Relocate</span>
+          <span className="text-emerald-500 font-semibold text-xs tracking-widest uppercase">Realocate.ai</span>
           <h1 className="text-xl font-bold text-gray-900 mt-0.5">{title}</h1>
           <div className="mt-3">
             <div className="flex items-center justify-between text-xs text-gray-500 mb-1.5">

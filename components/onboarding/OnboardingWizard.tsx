@@ -58,7 +58,7 @@ export default function OnboardingWizard() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-lg bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
         <div className="mb-6">
-          <span className="text-emerald-500 font-semibold text-sm tracking-wide uppercase">Relocate</span>
+          <span className="text-emerald-500 font-semibold text-sm tracking-wide uppercase">Realocate.ai</span>
         </div>
 
         <ProgressBar currentStep={step} totalSteps={3} labels={STEPS} />

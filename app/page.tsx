@@ -5,7 +5,7 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Nav */}
       <nav className="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
-        <span className="text-emerald-500 font-bold text-lg tracking-tight">Relocate</span>
+        <span className="text-emerald-500 font-bold text-lg tracking-tight">Realocate.ai</span>
         <Link
           href="/onboarding"
           className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
@@ -27,7 +27,7 @@ export default function Home() {
 
         <p className="mt-5 text-base sm:text-lg text-gray-500 max-w-md leading-relaxed">
           Stop juggling government websites, bank appointments, and paperwork.
-          Relocate gives you a personalised, step-by-step journey — tailored to
+          Realocate.ai gives you a personalised, step-by-step journey — tailored to
           your destination, nationality, and situation.
         </p>
 
