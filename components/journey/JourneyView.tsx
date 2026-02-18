@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { signOut } from "next-auth/react";
 import CategoryCard from "./CategoryCard";
 
 export interface JourneyTask {
@@ -22,6 +23,8 @@ interface JourneyViewProps {
   title: string;
   origin: string;
   destination: string;
+  userName: string | null;
+  userEmail: string | null;
   tasks: JourneyTask[];
 }
 
@@ -44,7 +47,7 @@ const CATEGORY_META: Record<string, {
   transport: { label: "Transport", emoji: "🚗", urgency: "Month 1–2", timeEstimate: "1–4 weeks",  color: "bg-red-50 text-red-600 border-red-200",           donutColor: "#ef4444" },
 };
 
-export default function JourneyView({ title, destination, tasks: initialTasks }: JourneyViewProps) {
+export default function JourneyView({ title, destination, userName, userEmail, tasks: initialTasks }: JourneyViewProps) {
   const [tasks, setTasks] = useState(initialTasks);
 
   const completedCount = tasks.filter((t) => t.status === "COMPLETED").length;
@@ -86,7 +89,18 @@ export default function JourneyView({ title, destination, tasks: initialTasks }:
       {/* Sticky header with main progress bar */}
       <div className="bg-white border-b border-gray-100 sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-5">
-          <span className="text-emerald-500 font-semibold text-xs tracking-widest uppercase">Realocate.ai</span>
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-emerald-500 font-semibold text-xs tracking-widest uppercase">Realocate.ai</span>
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-gray-400 hidden sm:block">{userName ?? userEmail}</span>
+              <button
+                onClick={() => signOut({ callbackUrl: "/" })}
+                className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                Sign out
+              </button>
+            </div>
+          </div>
           <h1 className="text-xl font-bold text-gray-900 mt-0.5">{title}</h1>
           <div className="mt-3">
             <div className="flex items-center justify-between text-xs text-gray-500 mb-1.5">

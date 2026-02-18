@@ -1,17 +1,38 @@
 import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { OnboardingData } from "@/types";
 
+interface OnboardingBody extends OnboardingData {
+  name: string;
+  email: string;
+  password: string;
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const body: OnboardingData = await req.json();
-    const { nationality, originCountry, destinationCountry, employmentStatus, familyStatus, hasChildren, movingDate } = body;
+    const body: OnboardingBody = await req.json();
+    const {
+      name, email, password,
+      nationality, originCountry, destinationCountry,
+      employmentStatus, familyStatus, hasChildren, movingDate,
+    } = body;
 
-    if (!nationality || !originCountry || !destinationCountry || !employmentStatus || !familyStatus) {
+    if (!name || !email || !password || !nationality || !originCountry || !destinationCountry || !employmentStatus || !familyStatus) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    // Fetch relevant task templates (country-specific + universal)
+    if (password.length < 8) {
+      return NextResponse.json({ error: "Password must be at least 8 characters" }, { status: 400 });
+    }
+
+    const existing = await prisma.user.findUnique({ where: { email } });
+    if (existing) {
+      return NextResponse.json({ error: "An account with this email already exists" }, { status: 409 });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+
     const templates = await prisma.taskTemplate.findMany({
       where: {
         OR: [
@@ -22,10 +43,11 @@ export async function POST(req: NextRequest) {
       orderBy: [{ category: "asc" }, { order: "asc" }],
     });
 
-    // Create user, profile, journey, and journey tasks in one transaction
     const user = await prisma.user.create({
       data: {
-        email: `guest_${Date.now()}@relocate.app`,
+        name,
+        email,
+        password: hashedPassword,
         profile: {
           create: {
             nationality,
