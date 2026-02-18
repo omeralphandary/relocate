@@ -9,6 +9,8 @@ import Step2Profile from "./steps/Step2Profile";
 import Step3Family from "./steps/Step3Family";
 import Step4Account from "./steps/Step4Account";
 import { OnboardingData } from "@/types";
+import { isEU } from "@/lib/eu-countries";
+import EULuckyModal from "./EULuckyModal";
 
 const STEPS = ["Where", "About you", "Family", "Account"];
 
@@ -32,6 +34,7 @@ export default function OnboardingWizard() {
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<Partial<OnboardingData>>({});
   const [account, setAccount] = useState<Partial<AccountData>>({});
+  const [showEUModal, setShowEUModal] = useState(false);
 
   const updateData = (fields: Partial<OnboardingData>) => setData((prev) => ({ ...prev, ...fields }));
   const updateAccount = (fields: Partial<AccountData>) => setAccount((prev) => ({ ...prev, ...fields }));
@@ -39,6 +42,11 @@ export default function OnboardingWizard() {
   const canAdvance = STEP_VALID[step]?.(data, account) ?? false;
 
   const handleNext = () => {
+    // After step 2: show EU lucky modal if both nationality and destination are EU
+    if (step === 2 && isEU(data.nationality ?? "") && isEU(data.destinationCountry ?? "")) {
+      setShowEUModal(true);
+      return;
+    }
     if (step < 4) {
       setStep((s) => s + 1);
     } else {
@@ -81,6 +89,12 @@ export default function OnboardingWizard() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-8">
+      {showEUModal && (
+        <EULuckyModal
+          destination={data.destinationCountry!}
+          onContinue={() => { setShowEUModal(false); setStep(3); }}
+        />
+      )}
       <div className="w-full max-w-lg bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
         <div className="mb-6">
           <span className="text-emerald-500 font-semibold text-sm tracking-wide uppercase">Realocate.ai</span>
