@@ -22,7 +22,7 @@ export default function Home() {
 
         <h1 className="text-3xl sm:text-5xl font-bold text-gray-900 leading-tight tracking-tight">
           Moving abroad?<br />
-          <span className="text-emerald-500">We've got the checklist.</span>
+          <span className="text-emerald-500">We'll handle the chaos.</span>
         </h1>
 
         <p className="mt-5 text-base sm:text-lg text-gray-500 max-w-md leading-relaxed">
