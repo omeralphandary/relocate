@@ -31,7 +31,7 @@ export default function Step2Profile({ data, onChange }: Props) {
           <select
             value={data.nationality ?? ""}
             onChange={(e) => onChange({ nationality: e.target.value })}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-white"
           >
             <option value="" disabled>Select your nationality</option>
             {COUNTRIES.map((c) => (
@@ -53,17 +53,17 @@ export default function Step2Profile({ data, onChange }: Props) {
                 className={`
                   flex items-start gap-3 p-4 rounded-xl border-2 text-left transition-all
                   ${data.employmentStatus === opt.value
-                    ? "border-indigo-600 bg-indigo-50"
+                    ? "border-emerald-500 bg-emerald-50"
                     : "border-gray-200 bg-white hover:border-gray-300"
                   }
                 `}
               >
                 <div className={`
                   mt-0.5 w-4 h-4 rounded-full border-2 flex-shrink-0 flex items-center justify-center
-                  ${data.employmentStatus === opt.value ? "border-indigo-600" : "border-gray-300"}
+                  ${data.employmentStatus === opt.value ? "border-emerald-500" : "border-gray-300"}
                 `}>
                   {data.employmentStatus === opt.value && (
-                    <div className="w-2 h-2 rounded-full bg-indigo-600" />
+                    <div className="w-2 h-2 rounded-full bg-emerald-500" />
                   )}
                 </div>
                 <div>

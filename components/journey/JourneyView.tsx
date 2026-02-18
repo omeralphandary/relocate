@@ -76,7 +76,7 @@ export default function JourneyView({ title, origin, destination, tasks: initial
       {/* Header */}
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-2xl mx-auto px-4 py-6">
-          <span className="text-indigo-600 font-semibold text-xs tracking-widest uppercase">Relocate</span>
+          <span className="text-emerald-500 font-semibold text-xs tracking-widest uppercase">Relocate</span>
           <h1 className="text-2xl font-bold text-gray-900 mt-1">{title}</h1>
 
           <div className="mt-4 flex items-center justify-between text-sm text-gray-500 mb-2">

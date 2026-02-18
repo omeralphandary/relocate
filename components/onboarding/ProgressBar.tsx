@@ -18,8 +18,8 @@ export default function ProgressBar({ currentStep, totalSteps, labels }: Progres
             <div key={label} className="flex flex-col items-center flex-1">
               <div className={`
                 w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold mb-1
-                ${isCompleted ? "bg-indigo-600 text-white" : ""}
-                ${isActive ? "bg-indigo-600 text-white ring-4 ring-indigo-100" : ""}
+                ${isCompleted ? "bg-emerald-500 text-white" : ""}
+                ${isActive ? "bg-emerald-500 text-white ring-4 ring-emerald-100" : ""}
                 ${!isCompleted && !isActive ? "bg-gray-100 text-gray-400" : ""}
               `}>
                 {isCompleted ? (
@@ -28,7 +28,7 @@ export default function ProgressBar({ currentStep, totalSteps, labels }: Progres
                   </svg>
                 ) : step}
               </div>
-              <span className={`text-xs font-medium ${isActive ? "text-indigo-600" : "text-gray-400"}`}>
+              <span className={`text-xs font-medium ${isActive ? "text-emerald-500" : "text-gray-400"}`}>
                 {label}
               </span>
             </div>
@@ -37,7 +37,7 @@ export default function ProgressBar({ currentStep, totalSteps, labels }: Progres
       </div>
       <div className="relative h-1 bg-gray-100 rounded-full mt-2">
         <div
-          className="absolute h-1 bg-indigo-600 rounded-full transition-all duration-500"
+          className="absolute h-1 bg-emerald-500 rounded-full transition-all duration-500"
           style={{ width: `${((currentStep - 1) / (totalSteps - 1)) * 100}%` }}
         />
       </div>

@@ -40,13 +40,13 @@ export default function Step3Family({ data, onChange }: Props) {
                 className={`
                   flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all
                   ${data.familyStatus === opt.value
-                    ? "border-indigo-600 bg-indigo-50"
+                    ? "border-emerald-500 bg-emerald-50"
                     : "border-gray-200 bg-white hover:border-gray-300"
                   }
                 `}
               >
                 <span className="text-2xl">{opt.emoji}</span>
-                <span className={`text-sm font-medium text-center ${data.familyStatus === opt.value ? "text-indigo-700" : "text-gray-700"}`}>
+                <span className={`text-sm font-medium text-center ${data.familyStatus === opt.value ? "text-emerald-600" : "text-gray-700"}`}>
                   {opt.label}
                 </span>
               </button>
@@ -63,7 +63,7 @@ export default function Step3Family({ data, onChange }: Props) {
             value={data.movingDate ?? ""}
             min={new Date().toISOString().split("T")[0]}
             onChange={(e) => onChange({ movingDate: e.target.value })}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-white"
           />
           <p className="text-xs text-gray-400 mt-1">Helps us prioritize time-sensitive tasks for you.</p>
         </div>

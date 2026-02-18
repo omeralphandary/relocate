@@ -29,7 +29,7 @@ export default function TaskCard({
             mt-0.5 flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all
             ${completed
               ? "bg-emerald-500 border-emerald-500"
-              : "border-gray-300 hover:border-indigo-400"
+              : "border-gray-300 hover:border-emerald-300"
             }
           `}
         >
@@ -77,7 +77,7 @@ export default function TaskCard({
               <ul className="space-y-1">
                 {documents.map((doc) => (
                   <li key={doc} className="flex items-center gap-2 text-sm text-gray-600">
-                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 flex-shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 flex-shrink-0" />
                     {doc}
                   </li>
                 ))}
@@ -97,7 +97,7 @@ export default function TaskCard({
               href={officialUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-indigo-600 hover:text-indigo-800 transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-500 hover:text-emerald-700 transition-colors"
             >
               Official source
               <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">

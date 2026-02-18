@@ -58,7 +58,7 @@ export default function OnboardingWizard() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="w-full max-w-lg bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
         <div className="mb-6">
-          <span className="text-indigo-600 font-semibold text-sm tracking-wide uppercase">Relocate</span>
+          <span className="text-emerald-500 font-semibold text-sm tracking-wide uppercase">Relocate</span>
         </div>
 
         <ProgressBar currentStep={step} totalSteps={3} labels={STEPS} />
@@ -87,7 +87,7 @@ export default function OnboardingWizard() {
               type="button"
               onClick={handleNext}
               disabled={!canAdvance || loading}
-              className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-semibold text-sm hover:bg-indigo-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className="px-6 py-3 bg-emerald-500 text-white rounded-xl font-semibold text-sm hover:bg-emerald-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {loading ? "Building your journey..." : step === 3 ? "Build my journey →" : "Next →"}
             </button>
