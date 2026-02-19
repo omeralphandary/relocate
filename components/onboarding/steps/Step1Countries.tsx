@@ -26,7 +26,7 @@ export default function Step1Countries({ data, onChange }: Props) {
             onChange={(e) => onChange({ originCountry: e.target.value })}
             className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-white"
           >
-            <option value="" disabled>Select your current country</option>
+            <option value="" disabled>Select your country of origin</option>
             {COUNTRIES.map((c) => (
               <option key={c} value={c}>{c}</option>
             ))}

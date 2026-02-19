@@ -12,6 +12,7 @@ const EMPLOYMENT_OPTIONS: { value: EmploymentStatus; label: string; description:
   { value: "employed", label: "Employed", description: "Working for a company" },
   { value: "self_employed", label: "Self-employed", description: "Running your own business" },
   { value: "freelancer", label: "Freelancer", description: "Independent contractor" },
+  { value: "student", label: "Student", description: "Enrolled in a university or academic programme" },
   { value: "unemployed", label: "Not working", description: "Between jobs or not currently employed" },
 ];
 

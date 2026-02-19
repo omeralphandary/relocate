@@ -22,6 +22,7 @@ interface CategoryCardProps {
   onToggleTask: (id: string, completed: boolean) => void;
   onEnrichTask: (id: string) => Promise<void>;
   isLocked: (task: JourneyTask) => boolean;
+  blockingNames: (task: JourneyTask) => string[];
   isAddingTask: boolean;
   onStartAddTask: () => void;
   onCancelAddTask: () => void;
@@ -107,6 +108,7 @@ export default function CategoryCard({
   onToggleTask,
   onEnrichTask,
   isLocked,
+  blockingNames,
   isAddingTask,
   onStartAddTask,
   onCancelAddTask,
@@ -176,6 +178,7 @@ export default function CategoryCard({
               tips={task.isCustom ? null : (task.template?.tips ?? null)}
               completed={task.status === "COMPLETED"}
               locked={isLocked(task)}
+              blockingNames={isLocked(task) ? blockingNames(task) : []}
               isCustom={task.isCustom}
               aiInstructions={task.aiInstructions}
               aiDocuments={task.aiDocuments}

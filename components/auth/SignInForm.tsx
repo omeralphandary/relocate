@@ -50,8 +50,8 @@ export default function SignInForm() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="w-full max-w-sm bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
         <div className="mb-8">
-          <Link href="/" className="text-emerald-500 font-bold text-lg tracking-tight">
-            Realocate.ai
+          <Link href="/" className="font-bold text-xl tracking-tight text-slate-900">
+            Realocate<span className="text-emerald-500">.ai</span>
           </Link>
           <h1 className="text-2xl font-bold text-gray-900 mt-4">Welcome back</h1>
           <p className="text-gray-500 text-sm mt-1">Sign in to continue your relocation journey.</p>

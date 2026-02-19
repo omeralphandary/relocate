@@ -37,18 +37,10 @@ export async function POST(req: NextRequest) {
     let templates = await prisma.taskTemplate.findMany({
       where: {
         AND: [
-          {
-            OR: [
-              { countries: { isEmpty: true } },
-              { countries: { has: destinationCountry } },
-            ],
-          },
-          {
-            OR: [
-              { originCountries: { isEmpty: true } },
-              { originCountries: { has: originCountry } },
-            ],
-          },
+          { OR: [{ countries: { isEmpty: true } }, { countries: { has: destinationCountry } }] },
+          { OR: [{ originCountries: { isEmpty: true } }, { originCountries: { has: originCountry } }] },
+          { OR: [{ employmentStatuses: { isEmpty: true } }, { employmentStatuses: { has: employmentStatus } }] },
+          { OR: [{ familyStatuses: { isEmpty: true } }, { familyStatuses: { has: familyStatus } }] },
         ],
       },
       orderBy: [{ category: "asc" }, { order: "asc" }],

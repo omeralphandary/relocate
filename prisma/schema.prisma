@@ -143,10 +143,10 @@ model TaskTemplate {
   aiEnriched   Boolean  @default(false)
 
   // Per-combination skeleton — empty = applies to all
-  nationalities      String[]
-  originCountries    String[]
-  employmentStatuses String[]
-  familyStatuses     String[]
+  nationalities      String[]  @default([])
+  originCountries    String[]  @default([])
+  employmentStatuses String[]  @default([])
+  familyStatuses     String[]  @default([])
 
   journeyTasks JourneyTask[]
 }

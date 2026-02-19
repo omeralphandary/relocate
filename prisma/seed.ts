@@ -165,93 +165,89 @@ async function main() {
     },
 
     // ═══════════════════════════════════════════════════════════
-    // UNITED KINGDOM
+    // UNITED STATES
     // ═══════════════════════════════════════════════════════════
 
     {
       title: "Arrange temporary accommodation",
-      description: "Book short-term accommodation for your first 2–4 weeks. You'll need a UK address to open a bank account and register with a GP.",
+      description: "Book short-term accommodation for your first 2–4 weeks — hotel, Airbnb, or extended-stay apartment. You'll need a US address to open a bank account and receive mail.",
       category: "housing", order: 1, documents: [],
-      tips: "Serviced apartments in your target area give you time to view flats properly. Avoid committing to a long lease before seeing the area.",
-      countries: ["United Kingdom"], dependsOn: [],
+      tips: "Extended-stay hotels (like Residence Inn or Home2 Suites) are cheaper long-term and include a kitchen. Book a location close to where you'll be working or looking for apartments.",
+      countries: ["United States"], dependsOn: [],
     },
     {
-      title: "Find a permanent flat or house",
-      description: "Search for a long-term rental via Rightmove, Zoopla, or a local letting agent. Most landlords require referencing and a deposit.",
+      title: "Find a permanent apartment",
+      description: "Search for long-term rental via Zillow, Apartments.com, or a local broker. US landlords typically require a credit check, proof of income (3x monthly rent), and references.",
       category: "housing", order: 2,
-      documents: ["Passport", "Proof of income or employment contract", "Previous landlord reference", "Bank statements (3 months)"],
-      tips: "Agents typically charge the equivalent of 5 weeks rent as a deposit. Use the Deposit Protection Scheme to verify yours is protected.",
-      countries: ["United Kingdom"], dependsOn: [],
+      documents: ["Passport", "Visa", "Employment offer letter or contract", "Bank statements (3 months)", "Previous landlord reference"],
+      tips: "As a new arrival without US credit history, offer 2–3 months upfront deposit or get a US co-signer. Some landlords accept ITIN letters or foreign bank statements instead.",
+      countries: ["United States"], dependsOn: [],
     },
     {
-      title: "Register with your local council",
-      description: "Notify your local council of your address for council tax purposes. This is a legal requirement.",
+      title: "Set up utilities and internet",
+      description: "Set up electricity, gas, and internet in your name once you have a permanent address.",
       category: "housing", order: 3,
-      documents: ["Tenancy agreement", "ID"],
-      officialUrl: "https://www.gov.uk/council-tax",
-      tips: "Full-time students are exempt. Single occupancy gets 25% discount. Register within 21 days of moving in.",
-      countries: ["United Kingdom"], dependsOn: [],
+      documents: ["Lease agreement", "Passport or state ID"],
+      tips: "Many US apartments include some utilities in rent — confirm before signing. For internet, compare Xfinity, AT&T, and local providers. Setup typically takes 3–5 days.",
+      countries: ["United States"], dependsOn: [],
     },
     {
-      title: "Set up utilities",
-      description: "Set up electricity, gas, and broadband in your name. Use a comparison site to find the best deal.",
-      category: "housing", order: 4,
-      documents: ["Tenancy agreement", "ID"],
-      tips: "Use uSwitch or MoneySuperMarket to compare energy tariffs. Broadband takes 1–2 weeks to activate.",
-      countries: ["United Kingdom"], dependsOn: [],
-    },
-    {
-      title: "Get a UK SIM card",
-      description: "Pick up a SIM on arrival. A UK mobile number is needed for banking, NHS registration, and daily life.",
+      title: "Get a US SIM card",
+      description: "Pick up a SIM on arrival. A US number is essential for banking, employment, and everyday life.",
       category: "telecom", order: 1,
-      documents: ["Passport or ID"],
-      tips: "Giffgaff and SMARTY offer great value SIMs with no contract. EE and O2 have the best coverage outside London.",
-      countries: ["United Kingdom"], dependsOn: [],
+      documents: ["Passport"],
+      tips: "T-Mobile and Google Fi are the best options for new arrivals — both offer prepaid plans without SSN and have good international coverage. Avoid airport kiosks; buy online or at a store for better rates.",
+      countries: ["United States"], dependsOn: [],
     },
     {
-      title: "Open a UK bank account",
-      description: "A UK bank account is essential for salary, rent, and bills. Some banks allow opening without proof of address.",
-      category: "banking", order: 1,
-      documents: ["Passport", "Proof of UK address", "Employment contract or proof of income"],
-      officialUrl: "https://www.monzo.com",
-      tips: "Monzo or Starling allow account opening online within 24 hours — ideal before you have a permanent address. High-street banks take 1–2 weeks.",
-      countries: ["United Kingdom"], dependsOn: [],
-    },
-    {
-      title: "Apply for a National Insurance number",
-      description: "Your NI number is required to work legally, pay taxes, and access benefits in the UK.",
+      title: "Apply for a Social Security Number (SSN)",
+      description: "Your SSN is required to work legally, file taxes, open a US bank account, and build credit. Apply at your local Social Security Administration office.",
       category: "legal", order: 1,
-      officialUrl: "https://www.gov.uk/apply-national-insurance-number",
-      documents: ["Passport", "Visa or right to work documentation", "Proof of UK address"],
-      tips: "Apply online via HMRC. Takes 2–8 weeks to arrive by post. You can work before receiving it.",
-      countries: ["United Kingdom"], dependsOn: [],
+      officialUrl: "https://www.ssa.gov/number-card/request-number-first-time",
+      documents: ["Passport", "Visa", "I-94 arrival record", "Employment authorisation (if applicable)"],
+      tips: "Wait at least 10 days after entry before applying — the SSA needs your entry to appear in DHS records. Processing takes 2–4 weeks. Use SSA.gov to find your nearest office and book an appointment.",
+      countries: ["United States"], dependsOn: [],
     },
     {
-      title: "Register with a GP (doctor)",
-      description: "Register with a local NHS GP surgery to access free healthcare. You can register before you need treatment.",
+      title: "Open a US bank account",
+      description: "A US bank account is essential for receiving salary, paying rent, and everyday spending. Most traditional banks require an SSN, but some accept passport + visa.",
+      category: "banking", order: 1,
+      documents: ["Passport", "Visa", "Proof of US address", "SSN or ITIN (some banks)"],
+      tips: "Chase and Bank of America open accounts with passport + visa before you have an SSN. Wise and Revolut work as a bridge immediately. Apply for an ITIN from the IRS if you need a tax ID before your SSN arrives.",
+      countries: ["United States"], dependsOn: [],
+    },
+    {
+      title: "Get health insurance",
+      description: "Health insurance is critical in the US — medical costs without coverage are extremely high. Enrol via your employer, the ACA marketplace, or a private provider.",
       category: "insurance", order: 1,
-      officialUrl: "https://www.nhs.uk/nhs-services/gps/how-to-register-with-a-gp-surgery/",
-      documents: ["ID", "Proof of address"],
-      tips: "Find your nearest accepting GP via the NHS website. Registration is free — the NHS covers you from day one of residency.",
-      countries: ["United Kingdom"], dependsOn: [],
+      officialUrl: "https://www.healthcare.gov/",
+      documents: ["Passport", "Visa", "SSN or ITIN", "Proof of address"],
+      tips: "If employed, enrol in your employer's plan during your onboarding window — missing it means waiting until open enrolment. If self-employed or between jobs, compare ACA marketplace plans at healthcare.gov. Coverage starts the month after enrolment.",
+      countries: ["United States"], dependsOn: [],
     },
     {
-      title: "Check or transfer your driving licence",
-      description: "If you have an EU/EEA licence, you may need to exchange it for a UK licence post-Brexit. Non-EU licences may have stricter rules.",
+      title: "Get a US driver's licence",
+      description: "Exchange or convert your foreign driving licence at your state's DMV. Requirements vary by state — some have bilateral agreements that waive the road test.",
       category: "transport", order: 1,
-      officialUrl: "https://www.gov.uk/exchange-foreign-driving-licence",
-      documents: ["Foreign driving licence", "Passport", "Proof of UK address", "Completed D9 form"],
-      tips: "EU licences can be used for up to 3 years. Exchange via DVLA by post — allow 6–8 weeks.",
-      countries: ["United Kingdom"], dependsOn: [],
+      officialUrl: "https://www.usa.gov/drivers-license-id",
+      documents: ["Foreign driving licence", "Passport", "Visa", "Proof of US address (two documents)", "SSN or SSN denial letter"],
+      tips: "Most states require a written knowledge test and road test for non-US licences. Book your DMV appointment online well in advance — wait times are often 2–4 weeks. Some states (e.g. California) require you to pass both tests regardless of prior experience.",
+      countries: ["United States"], dependsOn: [],
     },
     {
-      title: "Get an Oyster card or contactless payment setup",
-      description: "If in London, get an Oyster card for public transport. Elsewhere, contactless bank card works on most transport.",
+      title: "Build US credit history",
+      description: "A US credit score is essential for renting, car insurance, loans, and many subscriptions. Start building it immediately — it takes 6–12 months to establish a solid score.",
+      category: "banking", order: 2, documents: [],
+      tips: "Get a secured credit card (Discover it Secured or Capital One Secured) as soon as you have an SSN. Use it for small purchases and pay it off in full monthly. Never miss a payment — payment history is 35% of your score.",
+      countries: ["United States"], dependsOn: [],
+    },
+    {
+      title: "Set up US transportation",
+      description: "Decide whether to buy or lease a car, or rely on public transit depending on your city. Public transport is limited outside major metro areas.",
       category: "transport", order: 2,
-      documents: [],
-      officialUrl: "https://tfl.gov.uk/fares/how-to-pay-and-where-to-buy-tickets-and-oyster/",
-      tips: "Contactless bank card is now as cheap as Oyster and more convenient — no need to top up.",
-      countries: ["United Kingdom"], dependsOn: [],
+      documents: ["US driver's licence", "SSN", "Bank account", "Proof of insurance"],
+      tips: "In NYC, Chicago, or DC — use a metro card and skip the car. In LA, Houston, or most suburbs — you'll need a car. Leasing is easier than buying as a new arrival without credit history. Get renter's insurance first, as auto insurance requires proof of US address.",
+      countries: ["United States"], dependsOn: [],
     },
 
     // ═══════════════════════════════════════════════════════════
@@ -345,6 +341,193 @@ async function main() {
   ];
 
   // ═══════════════════════════════════════════════════════════
+  // STUDENT-SPECIFIC TASKS (employmentStatuses: ["student"])
+  // ═══════════════════════════════════════════════════════════
+
+  const studentTasks = [
+
+    // ─── CZECH REPUBLIC ───────────────────────────────────────
+    {
+      title: "Register with the international student office",
+      description: "Complete your enrolment (zápis) at your Czech university and register with the international student centre. They handle residence-permit support, orientation, and student services.",
+      category: "legal", order: 5,
+      documents: ["Acceptance letter", "Passport", "Proof of accommodation"],
+      tips: "Charles University and CTU both have dedicated Welcome Centres for international students — use them early. They often pre-fill parts of your residence permit application.",
+      countries: ["Czech Republic"], employmentStatuses: ["student"], dependsOn: [],
+    },
+    {
+      title: "Open a student bank account",
+      description: "Several Czech banks offer free student accounts. A local account is essential for tuition payments, student grants, and everyday spending.",
+      category: "banking", order: 3,
+      documents: ["Passport", "Student ISIC card or university enrolment confirmation", "Proof of address"],
+      tips: "Fio Banka and mBank offer free student accounts with no monthly fees. Bring your university enrolment letter — many branches fast-track the process for students.",
+      countries: ["Czech Republic"], employmentStatuses: ["student"], dependsOn: [],
+    },
+    {
+      title: "Arrange student health insurance",
+      description: "Health insurance is mandatory. EU students can use their EHIC from home. Non-EU students must take out private health insurance covering the full stay before applying for a residence permit.",
+      category: "insurance", order: 3,
+      documents: ["Passport", "University enrolment confirmation"],
+      officialUrl: "https://www.pvzp.cz/en/",
+      tips: "PVZP (Pojišťovna VZP) is the most accepted insurer for non-EU student visa applications. Get at least the minimum required coverage — upgrade later if you need wider cover.",
+      countries: ["Czech Republic"], employmentStatuses: ["student"], dependsOn: [],
+    },
+    {
+      title: "Get a student transit pass",
+      description: "Students under 26 qualify for a heavily discounted Lítačka monthly pass for Prague public transport. Apply with your ISIC card at a Lítačka service point.",
+      category: "transport", order: 5,
+      documents: ["ISIC card or student ID", "Passport"],
+      officialUrl: "https://www.pidlitacka.cz/",
+      tips: "The student monthly pass for all Prague zones is significantly cheaper than the adult rate. Activate it before your first day of term.",
+      countries: ["Czech Republic"], employmentStatuses: ["student"], dependsOn: [],
+    },
+
+    // ─── UNITED STATES ────────────────────────────────────────
+    {
+      title: "Register with the international student office (DSO)",
+      description: "Check in with your university's Designated School Official (DSO) immediately on arrival. They validate your SEVIS record, brief you on F-1/J-1 compliance, and advise on OPT/CPT eligibility.",
+      category: "legal", order: 2,
+      documents: ["Passport", "Visa", "I-20 or DS-2019", "I-94 arrival record"],
+      officialUrl: "https://studyinthestates.dhs.gov/",
+      tips: "Report to the DSO within 30 days of the programme start date on your I-20 — missing this can jeopardise your F-1 status. Keep all your immigration documents in one folder and always carry a copy.",
+      countries: ["United States"], employmentStatuses: ["student"], dependsOn: [],
+    },
+    {
+      title: "Open a student or basic checking account",
+      description: "Many US banks open accounts for international students without an SSN using your passport, I-20, and university letter. A US account is needed for stipends, TA pay, and direct debit.",
+      category: "banking", order: 3,
+      documents: ["Passport", "Visa", "I-20", "University enrolment confirmation", "Proof of US address"],
+      tips: "Chase and Bank of America both have international student account programmes. Alternatively, Wise gives you a US account number instantly with no SSN needed — useful as a bridge while you set up a traditional account.",
+      countries: ["United States"], employmentStatuses: ["student"], dependsOn: [],
+    },
+    {
+      title: "Get student health insurance",
+      description: "Most US universities require students to have health insurance and offer their own student health plan (SHIP). Enrol during your university orientation window.",
+      category: "insurance", order: 2,
+      documents: ["University enrolment confirmation", "Passport"],
+      tips: "The university SHIP is often the easiest option and is accepted at the campus health centre. If your home country provides coverage (e.g. a home insurance plan), you may be able to waive the SHIP — check the waiver requirements carefully.",
+      countries: ["United States"], employmentStatuses: ["student"], dependsOn: [],
+    },
+
+    // ─── GERMANY ──────────────────────────────────────────────
+    {
+      title: "Complete Immatrikulation (university enrolment)",
+      description: "Formally enrol at your German university, pay the semester fee (Semesterbeitrag), and receive your student ID. This is required before you can access campus services or get your Semesterticket.",
+      category: "legal", order: 2,
+      documents: ["Admission letter", "Passport", "Proof of health insurance", "Anmeldung confirmation (Meldebescheinigung)", "Bank transfer receipt for semester fee"],
+      tips: "The semester fee (typically €200–350) usually includes a Semesterticket for unlimited local transit. Pay it as soon as you receive the bank details — late payment delays your ID card.",
+      countries: ["Germany"], employmentStatuses: ["student"], dependsOn: [],
+    },
+    {
+      title: "Get student health insurance (Krankenkasse — student tariff)",
+      description: "Students under 30 in Germany must have public health insurance at the subsidised student rate (~€120/month). Register with a Krankenkasse before or immediately after enrolment.",
+      category: "insurance", order: 2,
+      documents: ["Admission letter", "Passport", "Meldebescheinigung"],
+      officialUrl: "https://www.tk.de/en/students",
+      tips: "TK (Techniker Krankenkasse) and AOK are popular with international students and have English-speaking support. Register before your enrolment deadline — the university requires proof of insurance to complete Immatrikulation.",
+      countries: ["Germany"], employmentStatuses: ["student"], dependsOn: [],
+    },
+    {
+      title: "Activate your Semesterticket",
+      description: "Your semester fee includes a Semesterticket for unlimited use of local public transport (bus, tram, U-Bahn, S-Bahn) — and in many cities, even regional trains. Activate it via your student portal.",
+      category: "transport", order: 3,
+      documents: ["Student ID", "Semester fee payment confirmation"],
+      tips: "Many German universities now include the Deutschlandticket in the semester fee — check with your Studentenwerk. If not, the €58/month Deutschlandticket is the best value transit pass in the country.",
+      countries: ["Germany"], employmentStatuses: ["student"], dependsOn: [],
+    },
+  ];
+
+  // ═══════════════════════════════════════════════════════════
+  // EDUCATION / FAMILY TASKS (familyStatuses: ["family_with_kids"])
+  // ═══════════════════════════════════════════════════════════
+
+  const educationTasks = [
+
+    // ─── CZECH REPUBLIC ───────────────────────────────────────
+    {
+      title: "Research local schools (ZŠ) in your district",
+      description: "Czech public primary schools (základní školy) are free and assigned by residence district. Research schools in your area and, if possible, visit a few before enrolling.",
+      category: "education", order: 1,
+      documents: [],
+      officialUrl: "https://www.msmt.cz/",
+      tips: "School quality varies by district. Ask expat groups and local Facebook groups for recommendations. Private schools are an option but cost CZK 5,000–20,000/month.",
+      countries: ["Czech Republic"], familyStatuses: ["family_with_kids"], dependsOn: [],
+    },
+    {
+      title: "Enrol children in school",
+      description: "Register your children at the local základní škola (primary school) or střední škola (secondary school). Bring proof of residence and vaccination records. EU children have the same rights as Czech citizens.",
+      category: "education", order: 2,
+      documents: ["Passport or birth certificate", "Proof of address (rental contract)", "Vaccination records", "Previous school records (translated if non-Czech)"],
+      tips: "Schools are required to accept children regardless of Czech language ability — language support (asistenent pedagoga) is often available. Enrol as early as possible, especially for September intake.",
+      countries: ["Czech Republic"], familyStatuses: ["family_with_kids"], dependsOn: [],
+    },
+    {
+      title: "Find a kindergarten (mateřská škola) or childcare",
+      description: "Public kindergartens are free from age 3 and mandatory from age 5. Waiting lists can be long — apply immediately after arriving or even before.",
+      category: "education", order: 3,
+      documents: ["Birth certificate", "Proof of address", "Vaccination records"],
+      tips: "Priority is given to children with registered local addresses. If public kindergarten waitlists are full, consider private bilingual kindergartens (more expensive but available). Submit applications in January–March for September intake.",
+      countries: ["Czech Republic"], familyStatuses: ["family_with_kids"], dependsOn: [],
+    },
+
+    // ─── UNITED STATES ────────────────────────────────────────
+    {
+      title: "Find and enrol children in a local public school",
+      description: "US public schools are free and assigned by school district based on your home address. Contact your local school district office to enrol — bring proof of address and immunisation records.",
+      category: "education", order: 1,
+      documents: ["Proof of address (lease or utility bill)", "Birth certificate", "Immunisation records", "Previous school records (translated if not English)"],
+      officialUrl: "https://www.ed.gov/",
+      tips: "School quality varies significantly by district and is tied to property values. Research school ratings on GreatSchools.org before choosing your neighbourhood. Children cannot be denied enrolment even without an SSN.",
+      countries: ["United States"], familyStatuses: ["family_with_kids"], dependsOn: [],
+    },
+    {
+      title: "Get children's immunisations up to US standards",
+      description: "US schools require specific vaccinations (CDC schedule) before enrolment. Review your children's records and get any missing vaccines — your paediatrician or local health department can administer them.",
+      category: "education", order: 2,
+      documents: ["Existing vaccination records", "Passport", "Insurance card (if available)"],
+      officialUrl: "https://www.cdc.gov/vaccines/schedules/",
+      tips: "Many countries use different vaccine brands or schedules — bring your full vaccination history. County health departments often provide vaccines free or at low cost if you don't have insurance yet.",
+      countries: ["United States"], familyStatuses: ["family_with_kids"], dependsOn: [],
+    },
+    {
+      title: "Find childcare or daycare",
+      description: "US childcare is largely private and expensive — $1,500–$3,500/month depending on city. Research options early: daycare centres, in-home daycares (family childcare), and au pairs.",
+      category: "education", order: 3,
+      documents: ["Birth certificate", "Immunisation records", "Proof of address"],
+      tips: "The Child and Dependent Care Tax Credit lets you claim up to $3,000 per child in childcare costs on your federal tax return. Some employers offer a Dependent Care FSA — enrol immediately if available. Waitlists for good daycares in cities are 6–18 months.",
+      countries: ["United States"], familyStatuses: ["family_with_kids"], dependsOn: [],
+    },
+
+    // ─── GERMANY ──────────────────────────────────────────────
+    {
+      title: "Find and apply to a local Grundschule (primary school)",
+      description: "School attendance is compulsory in Germany from age 6. Children are assigned to a Grundschule based on their registered address (Schulsprengel). Contact your local Schulamt (school authority) after Anmeldung.",
+      category: "education", order: 1,
+      documents: ["Meldebescheinigung", "Birth certificate", "Vaccination records (Impfpass)", "Previous school reports (translated if not German)"],
+      officialUrl: "https://www.bildungsserver.de/",
+      tips: "Enrolment is handled by the Schulamt of your district, not directly with the school. Some states offer preparatory German language classes (Vorbereitungsklassen) for children with limited German — ask the Schulamt.",
+      countries: ["Germany"], familyStatuses: ["family_with_kids"], dependsOn: [],
+    },
+    {
+      title: "Apply for a Kita (Kindertagesstätte / daycare) place",
+      description: "Children in Germany have a legal right to a Kita place from age 1. However, demand far exceeds supply in cities — apply as early as possible, ideally 12–18 months before you need the place.",
+      category: "education", order: 2,
+      documents: ["Birth certificate", "Meldebescheinigung", "Proof of employment or study (for priority)"],
+      tips: "Use the Kita-Navigator or your city's online portal to apply to multiple Kitas simultaneously. Municipal Kitas are cheaper but have longer waits. Private and church-run Kitas (Träger) often have more availability.",
+      countries: ["Germany"], familyStatuses: ["family_with_kids"], dependsOn: [],
+    },
+    {
+      title: "Apply for Kindergeld (child benefit)",
+      description: "Germany pays Kindergeld (child benefit) of €250/month per child to residents. Apply through the Familienkasse (Family Benefits Office) at the Federal Employment Agency.",
+      category: "legal", order: 5,
+      documents: ["Passport", "Child's birth certificate", "Meldebescheinigung for you and your child", "Bank account details (IBAN)", "Proof of employment or residence status"],
+      officialUrl: "https://www.arbeitsagentur.de/familie-und-kinder/kindergeld",
+      tips: "Kindergeld can be backdated up to 6 months — apply as soon as you are registered. Submit the application (Antrag auf Kindergeld) to your local Familienkasse. Processing takes 6–12 weeks.",
+      countries: ["Germany"], familyStatuses: ["family_with_kids"], dependsOn: [],
+    },
+  ];
+
+  // ═══════════════════════════════════════════════════════════
   // ORIGIN-SPECIFIC TASKS
   // These appear in addition to destination tasks, filtered by
   // where the user is moving FROM (originCountries).
@@ -424,20 +607,65 @@ async function main() {
   for (const task of tasks) {
     await prisma.taskTemplate.create({ data: task });
   }
+  for (const task of studentTasks) {
+    await prisma.taskTemplate.create({ data: task });
+  }
+  for (const task of educationTasks) {
+    await prisma.taskTemplate.create({ data: task });
+  }
   for (const task of originTasks) {
     await prisma.taskTemplate.create({ data: task });
   }
 
-  const allTasks = [...tasks, ...originTasks];
+  // ─── WIRE DEPENDENCIES ────────────────────────────────────────
+  // Map title+country[0] → id so we can reference templates by name
+  const created = await prisma.taskTemplate.findMany({ select: { id: true, title: true, countries: true } });
+  const byKey = new Map(created.map((t) => [`${t.title}|${t.countries[0] ?? ""}`, t.id]));
+  const k = (title: string, country: string) => byKey.get(`${title}|${country}`);
+
+  const dependencies: Array<[string, string, string[]]> = [
+    // Czech Republic
+    ["Register your address",                         "Czech Republic", ["Find a permanent apartment"]],
+    ["Apply for long-term residency permit",          "Czech Republic", ["Register your address", "Get health insurance"]],
+    ["Exchange or validate your driving licence",     "Czech Republic", ["Apply for long-term residency permit"]],
+    ["Lease or purchase a car",                       "Czech Republic", ["Exchange or validate your driving licence"]],
+    ["Get a parking permit",                          "Czech Republic", ["Lease or purchase a car"]],
+    ["Register as self-employed (živnostenský list)", "Czech Republic", ["Register your address"]],
+    ["Register with the tax authority",               "Czech Republic", ["Register as self-employed (živnostenský list)"]],
+    // Germany
+    ["Anmeldung — register your address",             "Germany",        ["Find a permanent flat (Wohnung)"]],
+    ["Open a German bank account",                    "Germany",        ["Anmeldung — register your address"]],
+    ["Get your Steueridentifikationsnummer (tax ID)", "Germany",        ["Anmeldung — register your address"]],
+    ["Register with health insurance (Krankenkasse)", "Germany",        ["Anmeldung — register your address"]],
+    ["Exchange or validate your driving licence",     "Germany",        ["Anmeldung — register your address"]],
+    ["Set up electricity and internet",               "Germany",        ["Anmeldung — register your address"]],
+    // United States
+    ["Open a US bank account",                        "United States",  ["Apply for a Social Security Number (SSN)"]],
+    ["Build US credit history",                       "United States",  ["Open a US bank account"]],
+    ["Set up utilities and internet",                 "United States",  ["Find a permanent apartment"]],
+    ["Get a US driver's licence",                     "United States",  ["Apply for a Social Security Number (SSN)"]],
+    ["Set up US transportation",                      "United States",  ["Get a US driver's licence"]],
+  ];
+
+  for (const [title, country, blockers] of dependencies) {
+    const id = k(title, country);
+    if (!id) { console.warn(`  ⚠ Not found: "${title}" (${country})`); continue; }
+    const blockerIds = blockers.map((bt) => k(bt, country)).filter((id): id is string => !!id);
+    await prisma.taskTemplate.update({ where: { id }, data: { dependsOn: blockerIds } });
+  }
+  console.log(`✓ Wired ${dependencies.length} dependency rules`);
+
+  const allTasks = [...tasks, ...studentTasks, ...educationTasks, ...originTasks];
   const czCount = tasks.filter((t) => t.countries.includes("Czech Republic")).length;
-  const ukCount = tasks.filter((t) => t.countries.includes("United Kingdom")).length;
+  const usCount = tasks.filter((t) => t.countries.includes("United States")).length;
   const deCount = tasks.filter((t) => t.countries.includes("Germany")).length;
   const usOriginCount = originTasks.filter((t) => t.originCountries.includes("United States")).length;
   const ilOriginCount = originTasks.filter((t) => t.originCountries.includes("Israel")).length;
   const ukOriginCount = originTasks.filter((t) => t.originCountries.includes("United Kingdom")).length;
 
   console.log(`✓ Seeded ${allTasks.length} task templates:`);
-  console.log(`  Destination — Czech Republic: ${czCount}, UK: ${ukCount}, Germany: ${deCount}`);
+  console.log(`  Destination — Czech Republic: ${czCount}, US: ${usCount}, Germany: ${deCount}`);
+  console.log(`  Student tasks: ${studentTasks.length} | Education/family tasks: ${educationTasks.length}`);
   console.log(`  Origin-specific — US citizens: ${usOriginCount}, Israeli → DE: ${ilOriginCount}, UK citizens: ${ukOriginCount}`);
 }
 

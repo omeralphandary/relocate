@@ -103,7 +103,7 @@ export default function OnboardingWizard() {
       )}
       <div className="w-full max-w-lg bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
         <div className="mb-6">
-          <span className="text-emerald-500 font-semibold text-sm tracking-wide uppercase">Realocate.ai</span>
+          <span className="font-bold text-xl tracking-tight text-slate-900">Realocate<span className="text-emerald-500">.ai</span></span>
         </div>
 
         <ProgressBar currentStep={step} totalSteps={4} labels={STEPS} />

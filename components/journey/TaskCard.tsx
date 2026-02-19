@@ -11,6 +11,7 @@ interface TaskCardProps {
   tips?: string | null;
   completed: boolean;
   locked?: boolean;
+  blockingNames?: string[];
   isCustom?: boolean;
   aiInstructions?: string | null;
   aiDocuments?: string[];
@@ -22,6 +23,7 @@ interface TaskCardProps {
 
 export default function TaskCard({
   id, title, description, documents, officialUrl, tips, completed, locked = false,
+  blockingNames = [],
   isCustom = false,
   aiInstructions, aiDocuments, aiTips,
   onToggle, onEnrich, onDelete,
@@ -123,7 +125,11 @@ export default function TaskCard({
 
           {!expanded && (
             <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">
-              {locked ? "Complete previous tasks first" : description}
+              {locked
+                ? blockingNames.length > 0
+                  ? `Complete first: ${blockingNames.join(", ")}`
+                  : "Complete previous tasks first"
+                : description}
             </p>
           )}
         </div>
@@ -132,6 +138,18 @@ export default function TaskCard({
       {/* Expanded details */}
       {expanded && (
         <div className="px-4 pb-4 ml-8 space-y-3">
+
+          {/* Locked callout */}
+          {locked && (
+            <div className="bg-amber-50 border border-amber-100 rounded-lg p-3">
+              <p className="text-xs font-semibold text-amber-700 mb-1">Locked</p>
+              <p className="text-xs text-amber-800">
+                {blockingNames.length > 0
+                  ? `Complete these first: ${blockingNames.join(", ")}`
+                  : "Complete the required tasks first."}
+              </p>
+            </div>
+          )}
 
           {/* AI instructions (preferred) or base description */}
           {hasAI ? (

@@ -6,6 +6,7 @@ import CategoryCard from "./CategoryCard";
 
 export interface JourneyTask {
   id: string;
+  taskId: string | null;
   status: string;
   isCustom: boolean;
   customTitle?: string | null;
@@ -52,7 +53,7 @@ interface JourneyViewProps {
   tasks: JourneyTask[];
 }
 
-const CATEGORY_ORDER = ["telecom", "housing", "banking", "insurance", "legal", "transport"];
+const CATEGORY_ORDER = ["telecom", "housing", "banking", "insurance", "legal", "transport", "education"];
 
 const CATEGORY_META: Record<string, {
   label: string;
@@ -68,23 +69,38 @@ const CATEGORY_META: Record<string, {
   insurance: { label: "Insurance", emoji: "🛡️", urgency: "Week 2",    timeEstimate: "1–2 days",   color: "bg-teal-50 text-teal-600 border-teal-200",        donutColor: "#14b8a6" },
   legal:     { label: "Legal",     emoji: "⚖️", urgency: "Month 1",   timeEstimate: "2–3 months", color: "bg-purple-50 text-purple-600 border-purple-200",   donutColor: "#8b5cf6" },
   transport: { label: "Transport", emoji: "🚗", urgency: "Month 1–2", timeEstimate: "1–4 weeks",  color: "bg-red-50 text-red-600 border-red-200",           donutColor: "#ef4444" },
+  education: { label: "Education",  emoji: "🎓", urgency: "Week 1–2",  timeEstimate: "1–4 weeks",  color: "bg-indigo-50 text-indigo-600 border-indigo-200",  donutColor: "#6366f1" },
 };
 
 export default function JourneyView({ journeyId, title, destination, userName, userEmail, tasks: initialTasks }: JourneyViewProps) {
   const [tasks, setTasks] = useState(initialTasks);
   const [addingCategory, setAddingCategory] = useState<string | null>(null);
+  const [archiving, setArchiving] = useState(false);
+
+  const handleNewJourney = async () => {
+    setArchiving(true);
+    await fetch(`/api/journeys/${journeyId}`, { method: "PATCH" });
+    window.location.href = "/onboarding";
+  };
 
   const completedCount = tasks.filter((t) => t.status === "COMPLETED").length;
   const totalCount = tasks.length;
   const progressPct = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
 
-  // Set of completed task IDs — used for dependency checking
-  const completedIds = new Set(
-    tasks.filter((t) => t.status === "COMPLETED").map((t) => t.id)
+  // Map from templateId → journey task, for dependency resolution
+  const templateToTask = new Map(
+    tasks.filter((t) => t.taskId).map((t) => [t.taskId!, t])
   );
 
-  const isLocked = (task: JourneyTask) =>
-    !task.isCustom && (task.template?.dependsOn ?? []).some((depId) => !completedIds.has(depId));
+  const blockingNames = (task: JourneyTask): string[] => {
+    if (task.isCustom) return [];
+    return (task.template?.dependsOn ?? [])
+      .map((depTemplateId) => templateToTask.get(depTemplateId))
+      .filter((dep): dep is JourneyTask => !!dep && dep.status !== "COMPLETED")
+      .map((dep) => dep.template?.title ?? "");
+  };
+
+  const isLocked = (task: JourneyTask): boolean => blockingNames(task).length > 0;
 
   const handleToggle = async (taskId: string, completed: boolean) => {
     const newStatus = completed ? "COMPLETED" : "PENDING";
@@ -162,9 +178,17 @@ export default function JourneyView({ journeyId, title, destination, userName, u
       <div className="bg-white border-b border-gray-100 sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-5">
           <div className="flex items-center justify-between mb-1">
-            <span className="text-emerald-500 font-semibold text-xs tracking-widest uppercase">Realocate.ai</span>
+            <span className="font-bold text-base tracking-tight text-slate-900">Realocate<span className="text-emerald-500">.ai</span></span>
             <div className="flex items-center gap-3">
               <span className="text-xs text-gray-400 hidden sm:block">{userName ?? userEmail}</span>
+              <button
+                onClick={handleNewJourney}
+                disabled={archiving}
+                className="text-xs text-gray-400 hover:text-emerald-500 transition-colors disabled:opacity-40"
+              >
+                + New journey
+              </button>
+              <span className="text-gray-200">|</span>
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
                 className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
@@ -215,6 +239,7 @@ export default function JourneyView({ journeyId, title, destination, userName, u
             onToggleTask={handleToggle}
             onEnrichTask={handleEnrich}
             isLocked={isLocked}
+            blockingNames={blockingNames}
             isAddingTask={addingCategory === category}
             onStartAddTask={() => setAddingCategory(category)}
             onCancelAddTask={() => setAddingCategory(null)}

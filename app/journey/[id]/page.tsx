@@ -46,6 +46,7 @@ export default async function JourneyPage({ params }: Props) {
       userEmail={session?.user?.email ?? null}
       tasks={journey.tasks.map((t) => ({
         id: t.id,
+        taskId: t.taskId,
         status: t.status,
         isCustom: t.taskId === null,
         customTitle: t.customTitle,

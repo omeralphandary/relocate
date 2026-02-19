@@ -69,7 +69,7 @@ export default function OnboardingCompletePage() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 text-center">
       <div className="mb-6">
-        <span className="text-emerald-500 font-bold text-lg tracking-tight">Realocate.ai</span>
+        <span className="font-bold text-xl tracking-tight text-slate-900">Realocate<span className="text-emerald-500">.ai</span></span>
       </div>
       <div className="flex items-center gap-3 mb-4">
         <svg className="w-6 h-6 animate-spin text-emerald-500" fill="none" viewBox="0 0 24 24">
