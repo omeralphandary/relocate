@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { generateJourneyTasks } from "@/lib/llm";
 import { OnboardingData } from "@/types";
 
 interface OnboardingBody extends OnboardingData {
@@ -26,14 +27,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Password must be at least 8 characters" }, { status: 400 });
     }
 
-    const existing = await prisma.user.findUnique({ where: { email } });
-    if (existing) {
-      return NextResponse.json({ error: "An account with this email already exists" }, { status: 409 });
-    }
+    // Delete any existing account for this email so the same email can be
+    // re-used freely during development / manual testing.
+    await prisma.user.deleteMany({ where: { email } });
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const templates = await prisma.taskTemplate.findMany({
+    // Look for seeded templates for this destination
+    let templates = await prisma.taskTemplate.findMany({
       where: {
         OR: [
           { countries: { isEmpty: true } },
@@ -42,6 +43,47 @@ export async function POST(req: NextRequest) {
       },
       orderBy: [{ category: "asc" }, { order: "asc" }],
     });
+
+    // No templates for this destination — try to generate them via LLM and cache for future users
+    if (templates.length === 0) {
+      console.log(`[onboarding] No templates for ${destinationCountry}, generating via LLM...`);
+      try {
+        const generated = await generateJourneyTasks({
+          nationality,
+          originCountry,
+          destinationCountry,
+          employmentStatus,
+          familyStatus,
+        });
+
+        templates = await Promise.all(
+          generated.map((t) =>
+            prisma.taskTemplate.create({
+              data: {
+                title: t.title,
+                description: t.description,
+                category: t.category,
+                documents: t.documents,
+                tips: t.tips,
+                officialUrl: t.officialUrl ?? null,
+                order: t.order,
+                countries: [destinationCountry],
+                dependsOn: [],
+                aiEnriched: true,
+              },
+            }),
+          ),
+        );
+
+        console.log(`[onboarding] Generated and saved ${templates.length} templates for ${destinationCountry}`);
+      } catch (llmErr) {
+        console.error(`[onboarding] LLM generation failed for ${destinationCountry}:`, llmErr);
+        return NextResponse.json(
+          { error: `No relocation tasks are available for "${destinationCountry}" yet, and AI generation failed. Try Czech Republic, United Kingdom, or Germany — or top up your Anthropic API credits.` },
+          { status: 503 },
+        );
+      }
+    }
 
     const user = await prisma.user.create({
       data: {
