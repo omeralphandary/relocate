@@ -1,4 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Realocate.ai — Your personal relocation guide",
+  description: "Stop juggling government websites and paperwork. Realocate.ai gives you a personalised, AI-powered relocation checklist tailored to your destination, nationality, and situation.",
+  openGraph: {
+    title: "Realocate.ai — Your personal relocation guide",
+    description: "AI-powered relocation checklist. Housing, banking, legal, telecom — personalised for your move.",
+    url: "https://realocate.ai",
+  },
+};
 
 export default function Home() {
   return (

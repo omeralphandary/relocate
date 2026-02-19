@@ -344,18 +344,101 @@ async function main() {
     },
   ];
 
+  // ═══════════════════════════════════════════════════════════
+  // ORIGIN-SPECIFIC TASKS
+  // These appear in addition to destination tasks, filtered by
+  // where the user is moving FROM (originCountries).
+  // ═══════════════════════════════════════════════════════════
+
+  const originTasks = [
+
+    // ─── US CITIZENS (moving anywhere abroad) ─────────────────
+    {
+      title: "File annual US tax return from abroad",
+      description: "US citizens are taxed on worldwide income regardless of where they live. You must continue filing Form 1040 each year. The Foreign Earned Income Exclusion (FEIE) and Foreign Tax Credit can offset most or all tax owed.",
+      category: "legal", order: 10,
+      documents: ["Passport", "Foreign tax return (if applicable)", "Foreign bank account statements", "Employer income statements"],
+      officialUrl: "https://www.irs.gov/individuals/international-taxpayers/us-citizens-and-resident-aliens-abroad",
+      tips: "File Form 2555 to claim the FEIE — you may owe nothing to the IRS. Hire a US expat tax specialist (e.g. Greenback Tax, Bright!Tax) for your first year abroad.",
+      countries: [], originCountries: ["United States"], dependsOn: [],
+    },
+    {
+      title: "Report foreign bank accounts (FBAR / FinCEN 114)",
+      description: "If you hold more than $10,000 total across foreign bank accounts at any point in the year, you must file an FBAR online with FinCEN. Failure to file carries severe penalties.",
+      category: "legal", order: 11,
+      documents: ["Foreign bank account numbers and balances", "Bank name and address"],
+      officialUrl: "https://bsaefiling.fincen.treas.gov/NoRegFBARFiler.html",
+      tips: "The FBAR deadline is April 15 with automatic extension to October 15. File via the BSA E-Filing system — it's free. Set a calendar reminder for every April.",
+      countries: [], originCountries: ["United States"], dependsOn: [],
+    },
+    {
+      title: "Notify the IRS of your foreign address",
+      description: "Inform the IRS of your new foreign address by filing Form 8822 or including the new address on your next tax return. This ensures you receive correspondence and avoids missed notices.",
+      category: "legal", order: 12,
+      documents: ["Passport", "New foreign address"],
+      officialUrl: "https://www.irs.gov/forms-pubs/about-form-8822",
+      tips: "Also notify the Social Security Administration of your foreign address if you receive benefits, and update your US bank and brokerage accounts before you leave.",
+      countries: [], originCountries: ["United States"], dependsOn: [],
+    },
+
+    // ─── ISRAELI CITIZENS → GERMANY ───────────────────────────
+    {
+      title: "Apostille your Israeli documents",
+      description: "Israeli government-issued documents (birth certificate, marriage certificate, university degrees) must be apostilled by the Israeli Ministry of Foreign Affairs before they will be accepted in Germany.",
+      category: "legal", order: 13,
+      documents: ["Original Israeli document", "Completed apostille application form"],
+      officialUrl: "https://www.gov.il/en/service/apostille_service",
+      tips: "The Israeli apostille service is available online via gov.il. Allow 5–10 business days. Each document costs approximately ₪45. Do this before you leave Israel.",
+      countries: ["Germany"], originCountries: ["Israel"], dependsOn: [],
+    },
+    {
+      title: "Get certified Hebrew-to-German translations",
+      description: "Apostilled Israeli documents still need to be translated into German by a sworn translator (vereidigter Übersetzer) before German authorities will accept them for residency, employment, or banking purposes.",
+      category: "legal", order: 14,
+      documents: ["Apostilled Israeli original documents"],
+      tips: "Only translations by certified sworn translators are accepted. Find one via the German court directory (Justizportal). Allow 5–7 business days per document. Cost: €60–120 per page.",
+      countries: ["Germany"], originCountries: ["Israel"], dependsOn: [],
+    },
+    {
+      title: "Check your Israeli pension and social security rights",
+      description: "Israel and Germany have a bilateral social security agreement. Understand how your Israeli social insurance (Bituach Leumi) contributions affect your German social security rights and whether you can transfer or maintain coverage.",
+      category: "insurance", order: 10,
+      documents: ["Israeli Bituach Leumi statement", "Passport"],
+      officialUrl: "https://www.btl.gov.il/English%20Homepage/Pages/default.aspx",
+      tips: "Contact the National Insurance Institute (Bituach Leumi) before you leave to get a statement of contributions. Periods of Israeli social insurance may count toward German pension entitlement.",
+      countries: ["Germany"], originCountries: ["Israel"], dependsOn: [],
+    },
+
+    // ─── UK CITIZENS → anywhere ───────────────────────────────
+    {
+      title: "Inform HMRC you are leaving the UK",
+      description: "Notify HMRC of your departure from the UK to ensure you are taxed correctly for the year of departure. Complete the P85 form online. This also determines whether you remain a UK tax resident.",
+      category: "legal", order: 10,
+      documents: ["National Insurance number", "P45 (if employed)", "Details of foreign address and employment"],
+      officialUrl: "https://www.gov.uk/tax-right-retire-abroad-return-to-uk",
+      tips: "The Statutory Residence Test (SRT) determines your UK tax residency status. If you spend fewer than 16 days in the UK in a year you are typically non-resident. A tax adviser can confirm your status.",
+      countries: [], originCountries: ["United Kingdom"], dependsOn: [],
+    },
+  ];
+
   for (const task of tasks) {
     await prisma.taskTemplate.create({ data: task });
   }
+  for (const task of originTasks) {
+    await prisma.taskTemplate.create({ data: task });
+  }
 
+  const allTasks = [...tasks, ...originTasks];
   const czCount = tasks.filter((t) => t.countries.includes("Czech Republic")).length;
   const ukCount = tasks.filter((t) => t.countries.includes("United Kingdom")).length;
   const deCount = tasks.filter((t) => t.countries.includes("Germany")).length;
+  const usOriginCount = originTasks.filter((t) => t.originCountries.includes("United States")).length;
+  const ilOriginCount = originTasks.filter((t) => t.originCountries.includes("Israel")).length;
+  const ukOriginCount = originTasks.filter((t) => t.originCountries.includes("United Kingdom")).length;
 
-  console.log(`✓ Seeded ${tasks.length} task templates:`);
-  console.log(`  Czech Republic: ${czCount} tasks`);
-  console.log(`  United Kingdom: ${ukCount} tasks`);
-  console.log(`  Germany: ${deCount} tasks`);
+  console.log(`✓ Seeded ${allTasks.length} task templates:`);
+  console.log(`  Destination — Czech Republic: ${czCount}, UK: ${ukCount}, Germany: ${deCount}`);
+  console.log(`  Origin-specific — US citizens: ${usOriginCount}, Israeli → DE: ${ilOriginCount}, UK citizens: ${ukOriginCount}`);
 }
 
 main()

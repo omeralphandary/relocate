@@ -38,12 +38,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ journeyId: existing.id });
     }
 
-    // Find templates for destination
+    // Find templates matching this corridor (destination + origin)
     let templates = await prisma.taskTemplate.findMany({
       where: {
-        OR: [
-          { countries: { isEmpty: true } },
-          { countries: { has: destinationCountry } },
+        AND: [
+          {
+            OR: [
+              { countries: { isEmpty: true } },
+              { countries: { has: destinationCountry } },
+            ],
+          },
+          {
+            OR: [
+              { originCountries: { isEmpty: true } },
+              { originCountries: { has: originCountry } },
+            ],
+          },
         ],
       },
       orderBy: [{ category: "asc" }, { order: "asc" }],

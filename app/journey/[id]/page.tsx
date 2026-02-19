@@ -1,10 +1,24 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import JourneyView from "@/components/journey/JourneyView";
 
 interface Props {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const journey = await prisma.journey.findUnique({
+    where: { id },
+    select: { title: true, destination: true },
+  });
+  if (!journey) return {};
+  return {
+    title: journey.title,
+    description: `Your personalised relocation checklist for moving to ${journey.destination}. Track tasks, get AI guidance, and stay on top of your move.`,
+  };
 }
 
 export default async function JourneyPage({ params }: Props) {

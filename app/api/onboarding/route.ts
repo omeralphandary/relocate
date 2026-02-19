@@ -33,12 +33,22 @@ export async function POST(req: NextRequest) {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // Look for seeded templates for this destination
+    // Look for seeded templates matching this corridor (destination + origin)
     let templates = await prisma.taskTemplate.findMany({
       where: {
-        OR: [
-          { countries: { isEmpty: true } },
-          { countries: { has: destinationCountry } },
+        AND: [
+          {
+            OR: [
+              { countries: { isEmpty: true } },
+              { countries: { has: destinationCountry } },
+            ],
+          },
+          {
+            OR: [
+              { originCountries: { isEmpty: true } },
+              { originCountries: { has: originCountry } },
+            ],
+          },
         ],
       },
       orderBy: [{ category: "asc" }, { order: "asc" }],
