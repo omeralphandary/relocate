@@ -140,7 +140,14 @@ export default function OnboardingWizard() {
                 : "Next →"}
             </button>
           </div>
-        </div>
+        {step === 4 && (
+          <p className="text-center text-xs text-gray-400 mt-4">
+            By creating an account you agree to our{" "}
+            <a href="/terms" target="_blank" className="underline hover:text-gray-600">Terms of Service</a>
+            {" "}and{" "}
+            <a href="/privacy" target="_blank" className="underline hover:text-gray-600">Privacy Policy</a>.
+          </p>
+        )}
       </div>
     </div>
   );

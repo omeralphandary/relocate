@@ -112,8 +112,13 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-white/[0.07] text-center text-xs text-slate-700 py-6">
-        © 2026 Realocate.ai — your relocation, simplified.
+      <footer className="relative z-10 border-t border-white/[0.07] text-center text-xs text-slate-700 py-6 space-y-2">
+        <p>© 2026 Realocate.ai — your relocation, simplified.</p>
+        <div className="flex items-center justify-center gap-4">
+          <Link href="/privacy" className="hover:text-slate-400 transition-colors">Privacy Policy</Link>
+          <span className="text-slate-800">·</span>
+          <Link href="/terms" className="hover:text-slate-400 transition-colors">Terms of Service</Link>
+        </div>
       </footer>
     </div>
   );
