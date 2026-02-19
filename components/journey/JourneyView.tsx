@@ -7,7 +7,14 @@ import CategoryCard from "./CategoryCard";
 export interface JourneyTask {
   id: string;
   status: string;
-  template: {
+  isCustom: boolean;
+  customTitle?: string | null;
+  customDescription?: string | null;
+  customCategory?: string | null;
+  aiInstructions: string | null;
+  aiDocuments: string[];
+  aiTips: string | null;
+  template?: {
     title: string;
     description: string;
     category: string;
@@ -15,7 +22,24 @@ export interface JourneyTask {
     documents: string[];
     tips: string | null;
     order: number;
+    dependsOn: string[];
   };
+}
+
+export function taskTitle(t: JourneyTask): string {
+  return t.isCustom ? (t.customTitle ?? "Custom task") : (t.template?.title ?? "");
+}
+
+export function taskDescription(t: JourneyTask): string {
+  return t.isCustom ? (t.customDescription ?? "") : (t.template?.description ?? "");
+}
+
+export function taskCategory(t: JourneyTask): string {
+  return t.isCustom ? (t.customCategory ?? "general") : (t.template?.category ?? "general");
+}
+
+export function taskOrder(t: JourneyTask): number {
+  return t.isCustom ? 9999 : (t.template?.order ?? 9999);
 }
 
 interface JourneyViewProps {
@@ -28,7 +52,6 @@ interface JourneyViewProps {
   tasks: JourneyTask[];
 }
 
-// Ordered by urgency + expected time-to-complete
 const CATEGORY_ORDER = ["telecom", "housing", "banking", "insurance", "legal", "transport"];
 
 const CATEGORY_META: Record<string, {
@@ -47,12 +70,21 @@ const CATEGORY_META: Record<string, {
   transport: { label: "Transport", emoji: "🚗", urgency: "Month 1–2", timeEstimate: "1–4 weeks",  color: "bg-red-50 text-red-600 border-red-200",           donutColor: "#ef4444" },
 };
 
-export default function JourneyView({ title, destination, userName, userEmail, tasks: initialTasks }: JourneyViewProps) {
+export default function JourneyView({ journeyId, title, destination, userName, userEmail, tasks: initialTasks }: JourneyViewProps) {
   const [tasks, setTasks] = useState(initialTasks);
+  const [addingCategory, setAddingCategory] = useState<string | null>(null);
 
   const completedCount = tasks.filter((t) => t.status === "COMPLETED").length;
   const totalCount = tasks.length;
   const progressPct = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+
+  // Set of completed task IDs — used for dependency checking
+  const completedIds = new Set(
+    tasks.filter((t) => t.status === "COMPLETED").map((t) => t.id)
+  );
+
+  const isLocked = (task: JourneyTask) =>
+    !task.isCustom && (task.template?.dependsOn ?? []).some((depId) => !completedIds.has(depId));
 
   const handleToggle = async (taskId: string, completed: boolean) => {
     const newStatus = completed ? "COMPLETED" : "PENDING";
@@ -72,8 +104,48 @@ export default function JourneyView({ title, destination, userName, userEmail, t
     }
   };
 
+  const handleEnrich = async (taskId: string) => {
+    const res = await fetch(`/api/tasks/${taskId}/enrich`, { method: "POST" });
+    if (!res.ok) {
+      const { error } = await res.json().catch(() => ({ error: "Unknown error" }));
+      throw new Error(error);
+    }
+    const data = await res.json();
+    setTasks((prev) =>
+      prev.map((t) =>
+        t.id === taskId
+          ? { ...t, aiInstructions: data.aiInstructions, aiDocuments: data.aiDocuments, aiTips: data.aiTips }
+          : t
+      )
+    );
+  };
+
+  const handleAddCustomTask = async (category: string, title: string) => {
+    const res = await fetch(`/api/journeys/${journeyId}/tasks`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, category }),
+    });
+    if (!res.ok) {
+      const { error } = await res.json().catch(() => ({ error: "Unknown error" }));
+      throw new Error(error);
+    }
+    const newTask = await res.json() as JourneyTask;
+    setTasks((prev) => [...prev, newTask]);
+    setAddingCategory(null);
+  };
+
+  const handleDeleteCustomTask = async (taskId: string) => {
+    setTasks((prev) => prev.filter((t) => t.id !== taskId));
+    try {
+      await fetch(`/api/tasks/${taskId}`, { method: "DELETE" });
+    } catch {
+      // silently ignore — task already removed from UI
+    }
+  };
+
   const grouped = tasks.reduce<Record<string, JourneyTask[]>>((acc, task) => {
-    const cat = task.template.category;
+    const cat = taskCategory(task);
     if (!acc[cat]) acc[cat] = [];
     acc[cat].push(task);
     return acc;
@@ -86,7 +158,7 @@ export default function JourneyView({ title, destination, userName, userEmail, t
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Sticky header with main progress bar */}
+      {/* Sticky header */}
       <div className="bg-white border-b border-gray-100 sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-5">
           <div className="flex items-center justify-between mb-1">
@@ -141,6 +213,13 @@ export default function JourneyView({ title, destination, userName, userEmail, t
             tasks={grouped[category]}
             defaultOpen={i === 0}
             onToggleTask={handleToggle}
+            onEnrichTask={handleEnrich}
+            isLocked={isLocked}
+            isAddingTask={addingCategory === category}
+            onStartAddTask={() => setAddingCategory(category)}
+            onCancelAddTask={() => setAddingCategory(null)}
+            onAddTask={handleAddCustomTask}
+            onDeleteTask={handleDeleteCustomTask}
           />
         ))}
 

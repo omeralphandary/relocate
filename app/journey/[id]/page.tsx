@@ -16,7 +16,6 @@ export default async function JourneyPage({ params }: Props) {
     include: {
       tasks: {
         include: { template: true },
-        orderBy: { template: { order: "asc" } },
       },
     },
   });
@@ -34,15 +33,25 @@ export default async function JourneyPage({ params }: Props) {
       tasks={journey.tasks.map((t) => ({
         id: t.id,
         status: t.status,
-        template: {
-          title: t.template.title,
-          description: t.template.description,
-          category: t.template.category,
-          officialUrl: t.template.officialUrl,
-          documents: t.template.documents,
-          tips: t.template.tips,
-          order: t.template.order,
-        },
+        isCustom: t.taskId === null,
+        customTitle: t.customTitle,
+        customDescription: t.customDescription,
+        customCategory: t.customCategory,
+        aiInstructions: t.aiInstructions,
+        aiDocuments: t.aiDocuments,
+        aiTips: t.aiTips,
+        template: t.template
+          ? {
+              title: t.template.title,
+              description: t.template.description,
+              category: t.template.category,
+              officialUrl: t.template.officialUrl,
+              documents: t.template.documents,
+              tips: t.template.tips,
+              order: t.template.order,
+              dependsOn: t.template.dependsOn,
+            }
+          : undefined,
       }))}
     />
   );

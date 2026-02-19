@@ -93,7 +93,7 @@ enum JourneyStatus {
 model JourneyTask {
   id          String     @id @default(cuid())
   journeyId   String
-  taskId      String     // references TaskTemplate
+  taskId      String?    // NULL for custom tasks
   status      TaskStatus @default(PENDING)
   completedAt DateTime?
   notes       String?
@@ -106,8 +106,13 @@ model JourneyTask {
   aiTips         String?  // personalised tip
   aiGeneratedAt  DateTime? // when AI content was last fetched
 
-  journey  Journey      @relation(fields: [journeyId], references: [id], onDelete: Cascade)
-  template TaskTemplate @relation(fields: [taskId], references: [id])
+  // Custom task fields — only set when taskId is NULL
+  customTitle       String?
+  customDescription String?
+  customCategory    String?
+
+  journey  Journey       @relation(fields: [journeyId], references: [id], onDelete: Cascade)
+  template TaskTemplate? @relation(fields: [taskId], references: [id])
 }
 
 enum TaskStatus {
@@ -136,6 +141,12 @@ model TaskTemplate {
 
   // AI readiness flag — marks templates designed for LLM enrichment
   aiEnriched   Boolean  @default(false)
+
+  // Per-combination skeleton — empty = applies to all
+  nationalities      String[]
+  originCountries    String[]
+  employmentStatuses String[]
+  familyStatuses     String[]
 
   journeyTasks JourneyTask[]
 }
