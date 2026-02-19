@@ -45,6 +45,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${spaceGrotesk.variable} ${geistMono.variable} antialiased`}>
         <SessionProvider>{children}</SessionProvider>
+        <div className="fixed bottom-3 right-3 z-50 text-[10px] font-semibold tracking-widest uppercase text-white/40 bg-white/5 border border-white/10 px-2.5 py-1 rounded-full pointer-events-none select-none">
+          Beta
+        </div>
       </body>
     </html>
   );
