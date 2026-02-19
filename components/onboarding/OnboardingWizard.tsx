@@ -86,7 +86,7 @@ export default function OnboardingWizard() {
 
       if (result?.error) throw new Error("Account created but sign-in failed. Please sign in manually.");
 
-      router.push(`/journey/${journeyId}`);
+      router.push(`/journey/${journeyId}?welcome=1`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unexpected error");
       setLoading(false);

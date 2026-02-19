@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import CategoryCard from "./CategoryCard";
+import BetaWelcomeModal from "./BetaWelcomeModal";
 
 export interface JourneyTask {
   id: string;
@@ -76,6 +78,19 @@ export default function JourneyView({ journeyId, title, destination, userName, u
   const [tasks, setTasks] = useState(initialTasks);
   const [addingCategory, setAddingCategory] = useState<string | null>(null);
   const [archiving, setArchiving] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(false);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (searchParams.get("welcome") === "1") {
+      setShowWelcome(true);
+      // Clean the param from the URL without a page reload
+      const url = new URL(window.location.href);
+      url.searchParams.delete("welcome");
+      router.replace(url.pathname, { scroll: false });
+    }
+  }, [searchParams, router]);
 
   const handleNewJourney = async () => {
     setArchiving(true);
@@ -174,6 +189,8 @@ export default function JourneyView({ journeyId, title, destination, userName, u
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {showWelcome && <BetaWelcomeModal onClose={() => setShowWelcome(false)} />}
+
       {/* Sticky header */}
       <div className="bg-white border-b border-gray-100 sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-5">

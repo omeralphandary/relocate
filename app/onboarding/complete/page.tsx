@@ -42,7 +42,7 @@ export default function OnboardingCompletePage() {
       .then((body: { journeyId?: string; error?: string }) => {
         if (body.error) throw new Error(body.error);
         localStorage.removeItem("onboarding_data");
-        router.replace(`/journey/${body.journeyId}`);
+        router.replace(`/journey/${body.journeyId}?welcome=1`);
       })
       .catch((err: Error) => {
         setError(err.message ?? "Something went wrong. Please try again.");
