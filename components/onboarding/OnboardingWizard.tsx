@@ -54,6 +54,12 @@ export default function OnboardingWizard() {
     }
   };
 
+  const handleGoogleSignup = () => {
+    // Persist steps 1–3 data so /onboarding/complete can pick it up after OAuth redirect
+    localStorage.setItem("onboarding_data", JSON.stringify(data));
+    signIn("google", { callbackUrl: "/onboarding/complete" });
+  };
+
   const handleSubmit = async () => {
     setLoading(true);
     setError(null);
@@ -107,7 +113,7 @@ export default function OnboardingWizard() {
             {step === 1 && <Step1Countries data={data} onChange={updateData} />}
             {step === 2 && <Step2Profile data={data} onChange={updateData} />}
             {step === 3 && <Step3Family data={data} onChange={updateData} />}
-            {step === 4 && <Step4Account data={account} onChange={updateAccount} />}
+            {step === 4 && <Step4Account data={account} onChange={updateAccount} onGoogleSignup={handleGoogleSignup} />}
           </div>
 
           {error && <p className="text-red-500 text-sm mt-4">{error}</p>}
