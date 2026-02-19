@@ -28,8 +28,8 @@ export default function PrivacyPolicy() {
               Realocate.ai is a personal project operated by Omer Alphandar (&quot;we&quot;, &quot;us&quot;, &quot;our&quot;).
               We provide an AI-powered relocation guidance platform accessible at realocate.ai.
               For privacy enquiries contact us at:{" "}
-              <a href="mailto:alphandaryomer@gmail.com" className="text-emerald-600 underline">
-                alphandaryomer@gmail.com
+              <a href="mailto:omeralph1biz@gmail.com" className="text-emerald-600 underline">
+                omeralph1biz@gmail.com
               </a>
             </p>
           </section>
@@ -150,8 +150,8 @@ export default function PrivacyPolicy() {
             </ul>
             <p className="mt-3">
               To exercise any of these rights, email{" "}
-              <a href="mailto:alphandaryomer@gmail.com" className="text-emerald-600 underline">
-                alphandaryomer@gmail.com
+              <a href="mailto:omeralph1biz@gmail.com" className="text-emerald-600 underline">
+                omeralph1biz@gmail.com
               </a>{" "}
               with the subject line &quot;GDPR Request&quot;. We will respond within 30 days.
             </p>

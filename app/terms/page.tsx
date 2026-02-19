@@ -145,8 +145,8 @@ export default function TermsOfService() {
             <h2 className="text-base font-semibold text-slate-900 mb-2">10. Termination</h2>
             <p>
               You may delete your account at any time by contacting us at{" "}
-              <a href="mailto:alphandaryomer@gmail.com" className="text-emerald-600 underline">
-                alphandaryomer@gmail.com
+              <a href="mailto:omeralph1biz@gmail.com" className="text-emerald-600 underline">
+                omeralph1biz@gmail.com
               </a>
               . We will permanently delete your data within 30 days of your request.
             </p>
@@ -180,8 +180,8 @@ export default function TermsOfService() {
             <h2 className="text-base font-semibold text-slate-900 mb-2">13. Contact</h2>
             <p>
               For any questions about these Terms, contact us at:{" "}
-              <a href="mailto:alphandaryomer@gmail.com" className="text-emerald-600 underline">
-                alphandaryomer@gmail.com
+              <a href="mailto:omeralph1biz@gmail.com" className="text-emerald-600 underline">
+                omeralph1biz@gmail.com
               </a>
             </p>
           </section>
