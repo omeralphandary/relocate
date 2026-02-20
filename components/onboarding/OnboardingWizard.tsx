@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import ProgressBar from "./ProgressBar";
 import Step1Countries from "./steps/Step1Countries";
 import Step2Profile from "./steps/Step2Profile";
@@ -12,7 +12,8 @@ import { OnboardingData } from "@/types";
 import { isEU } from "@/lib/eu-countries";
 import EULuckyModal from "./EULuckyModal";
 
-const STEPS = ["Where", "About you", "Family", "Account"];
+const STEPS_NEW    = ["Where", "About you", "Family", "Account"];
+const STEPS_RETURN = ["Where", "About you", "Family"];
 
 interface AccountData {
   name: string;
@@ -29,6 +30,12 @@ const STEP_VALID: Record<number, (d: Partial<OnboardingData>, a: Partial<Account
 
 export default function OnboardingWizard() {
   const router = useRouter();
+  const { data: session } = useSession();
+  const isAuthenticated = !!session?.user;
+
+  const STEPS = isAuthenticated ? STEPS_RETURN : STEPS_NEW;
+  const totalSteps = STEPS.length;
+
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,24 +49,47 @@ export default function OnboardingWizard() {
   const canAdvance = STEP_VALID[step]?.(data, account) ?? false;
 
   const handleNext = () => {
-    // After step 2: show EU lucky modal if both nationality and destination are EU
     if (step === 2 && (isEU(data.nationality ?? "") || isEU(data.secondNationality ?? "")) && isEU(data.destinationCountry ?? "")) {
       setShowEUModal(true);
       return;
     }
-    if (step < 4) {
+    if (step < totalSteps) {
       setStep((s) => s + 1);
     } else {
-      handleSubmit();
+      isAuthenticated ? handleSubmitAuthenticated() : handleSubmit();
     }
   };
 
   const handleGoogleSignup = () => {
-    // Persist steps 1–3 data so /onboarding/complete can pick it up after OAuth redirect
     localStorage.setItem("onboarding_data", JSON.stringify(data));
     signIn("google", { callbackUrl: "/onboarding/complete" });
   };
 
+  // Already signed in — skip account creation, POST directly to /api/onboarding/complete
+  const handleSubmitAuthenticated = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/onboarding/complete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) {
+        const body = await res.json();
+        throw new Error(body.error ?? "Something went wrong, please try again.");
+      }
+
+      const { journeyId } = await res.json();
+      router.push(`/journey/${journeyId}?welcome=1`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unexpected error");
+      setLoading(false);
+    }
+  };
+
+  // New user — create account then sign in
   const handleSubmit = async () => {
     setLoading(true);
     setError(null);
@@ -77,7 +107,6 @@ export default function OnboardingWizard() {
 
       const { journeyId } = await res.json();
 
-      // Sign in immediately after account creation
       const result = await signIn("credentials", {
         email: account.email,
         password: account.password,
@@ -93,6 +122,8 @@ export default function OnboardingWizard() {
     }
   };
 
+  const isLastStep = step === totalSteps;
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-8">
       {showEUModal && (
@@ -106,14 +137,14 @@ export default function OnboardingWizard() {
           <span className="font-bold text-xl tracking-tight text-slate-900">Realocate<span className="text-emerald-500">.ai</span></span>
         </div>
 
-        <ProgressBar currentStep={step} totalSteps={4} labels={STEPS} />
+        <ProgressBar currentStep={step} totalSteps={totalSteps} labels={STEPS} />
 
         <div className="min-h-[340px] sm:min-h-[380px] flex flex-col justify-between">
           <div>
             {step === 1 && <Step1Countries data={data} onChange={updateData} />}
             {step === 2 && <Step2Profile data={data} onChange={updateData} />}
             {step === 3 && <Step3Family data={data} onChange={updateData} />}
-            {step === 4 && <Step4Account data={account} onChange={updateAccount} onGoogleSignup={handleGoogleSignup} />}
+            {step === 4 && !isAuthenticated && <Step4Account data={account} onChange={updateAccount} onGoogleSignup={handleGoogleSignup} />}
           </div>
 
           {error && <p className="text-red-500 text-sm mt-4">{error}</p>}
@@ -135,12 +166,12 @@ export default function OnboardingWizard() {
             >
               {loading
                 ? "Building your journey..."
-                : step === 4
-                ? "Create account & start →"
+                : isLastStep
+                ? isAuthenticated ? "Start my journey →" : "Create account & start →"
                 : "Next →"}
             </button>
           </div>
-          {step === 4 && (
+          {isLastStep && !isAuthenticated && (
             <p className="text-center text-xs text-gray-400 mt-4">
               By creating an account you agree to our{" "}
               <a href="/terms" target="_blank" className="underline hover:text-gray-600">Terms of Service</a>
