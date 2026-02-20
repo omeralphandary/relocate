@@ -306,53 +306,62 @@ function StarRating({ rating }: { rating: number }) {
 
 function VendorCard({ vendor }: { vendor: Vendor }) {
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-xl p-4">
-      <div className="flex items-start justify-between gap-3 mb-2">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-semibold text-sm text-white">{vendor.name}</span>
-          {vendor.verified && (
-            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-1.5 py-0.5 rounded-full">
-              <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-              Verified
-            </span>
-          )}
-        </div>
-        <span className="text-xs text-slate-400 whitespace-nowrap flex-shrink-0">{vendor.priceRange}</span>
+    <div className="bg-slate-800 border border-slate-700 rounded-xl p-3">
+      {/* Row 1: name + verified + price + contact */}
+      <div className="flex items-center gap-2 mb-1">
+        <span className="font-semibold text-sm text-white flex-shrink-0">{vendor.name}</span>
+        {vendor.verified && (
+          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-1.5 py-0.5 rounded-full flex-shrink-0">
+            <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+            Verified
+          </span>
+        )}
+        <span className="text-xs text-slate-500 flex-1 text-right flex-shrink-0">{vendor.priceRange}</span>
+        <button className="flex-shrink-0 text-[11px] font-semibold bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1 rounded-lg transition-colors">
+          Contact
+        </button>
       </div>
 
-      <p className="text-xs text-slate-400 leading-relaxed mb-3">{vendor.tagline}</p>
+      {/* Row 2: tagline truncated */}
+      <p className="text-xs text-slate-400 truncate mb-1.5">{vendor.tagline}</p>
 
-      <div className="flex items-center gap-3 flex-wrap text-xs text-slate-500">
+      {/* Row 3: rating + location + response time */}
+      <div className="flex items-center gap-2 text-xs text-slate-500">
         <div className="flex items-center gap-1">
           <StarRating rating={vendor.rating} />
           <span className="text-amber-400 font-semibold">{vendor.rating}</span>
           <span className="text-slate-600">({vendor.reviews})</span>
         </div>
         <span className="text-slate-700">·</span>
-        <span>{vendor.location}</span>
+        <span className="truncate">{vendor.location}</span>
         <span className="text-slate-700">·</span>
-        <span>Replies {vendor.responseTime}</span>
-        <span className="text-slate-700">·</span>
-        <span>{vendor.languages.join(", ")}</span>
+        <span className="flex-shrink-0">Replies {vendor.responseTime}</span>
       </div>
-
-      <button className="mt-3 w-full text-xs font-semibold bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded-lg transition-colors">
-        Contact vendor
-      </button>
     </div>
   );
+}
+
+function categorySlug(title: string): string {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 }
 
 export default function VendorsPage() {
   const router = useRouter();
 
+  const scrollTo = (slug: string) => {
+    const el = document.getElementById(slug);
+    if (!el) return;
+    const y = el.getBoundingClientRect().top + window.scrollY - 116;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-100 sticky top-0 z-10">
-        <div className="max-w-2xl mx-auto px-4 py-5 flex items-center justify-between">
+      {/* Header + pill nav — sticky together */}
+      <div className="bg-white border-b border-gray-100 sticky top-0 z-20">
+        <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
           <span className="font-bold text-base tracking-tight text-slate-900">
             Realocate<span className="text-emerald-500">.ai</span>
           </span>
@@ -363,12 +372,25 @@ export default function VendorsPage() {
             ← Back to my journey
           </button>
         </div>
+        {/* Pill nav */}
+        <div className="flex gap-2 overflow-x-auto px-4 pb-3" style={{ scrollbarWidth: "none" }}>
+          {VENDOR_CATEGORIES.map((cat) => (
+            <button
+              key={cat.title}
+              onClick={() => scrollTo(categorySlug(cat.title))}
+              className="flex-shrink-0 flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-gray-50 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 text-gray-600 transition-colors"
+            >
+              <span>{cat.emoji}</span>
+              <span>{cat.title}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-4 py-8">
+      <div className="max-w-2xl mx-auto px-4 py-6">
         {/* Hero */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Help on the Ground</h1>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">Help on the Ground</h1>
           <p className="text-gray-500 text-sm leading-relaxed">
             Vetted, rated local experts for every step of your move. No cold calls, no agencies.
             Contact directly, pay transparently.
@@ -378,14 +400,14 @@ export default function VendorsPage() {
         {/* Category sections */}
         <div className="space-y-8">
           {VENDOR_CATEGORIES.map((cat) => (
-            <div key={cat.title}>
+            <div key={cat.title} id={categorySlug(cat.title)}>
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-xl">{cat.emoji}</span>
                 <h2 className="font-semibold text-base text-gray-900">{cat.title}</h2>
                 <span className="text-xs text-gray-400">·</span>
                 <span className="text-xs text-gray-400">{cat.vendors.length} available</span>
               </div>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {cat.vendors.map((v) => (
                   <VendorCard key={v.name} vendor={v} />
                 ))}
