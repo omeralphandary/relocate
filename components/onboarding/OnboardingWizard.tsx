@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import ProgressBar from "./ProgressBar";
@@ -15,6 +15,15 @@ import EULuckyModal from "./EULuckyModal";
 const STEPS_NEW    = ["Where", "About you", "Family", "Account"];
 const STEPS_RETURN = ["Where", "About you", "Family"];
 
+const LOADING_MESSAGES = [
+  "Analysing your relocation corridor...",
+  "Checking visa & residency requirements...",
+  "Mapping tasks for your destination...",
+  "Personalising for your profile...",
+  "Ordering tasks by dependency...",
+  "Almost ready...",
+];
+
 interface AccountData {
   name: string;
   email: string;
@@ -27,6 +36,88 @@ const STEP_VALID: Record<number, (d: Partial<OnboardingData>, a: Partial<Account
   3: (d) => !!d.familyStatus,
   4: (_, a) => !!a.name && !!a.email && (a.password?.length ?? 0) >= 8,
 };
+
+function JourneyLoadingScreen() {
+  const [msgIndex, setMsgIndex] = useState(0);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    // Cycle messages every 2.4s
+    const msgTimer = setInterval(() => {
+      setMsgIndex((i) => Math.min(i + 1, LOADING_MESSAGES.length - 1));
+    }, 2400);
+
+    // Fake progress — grows quickly to ~85%, then slows
+    const progressTimer = setInterval(() => {
+      setProgress((p) => {
+        if (p >= 85) return p + 0.3;
+        return p + 2.5;
+      });
+    }, 120);
+
+    return () => { clearInterval(msgTimer); clearInterval(progressTimer); };
+  }, []);
+
+  const clampedProgress = Math.min(progress, 97);
+
+  return (
+    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center px-6">
+      {/* Logo */}
+      <div className="mb-12">
+        <span className="font-bold text-xl tracking-tight text-white">
+          Realocate<span className="text-emerald-400">.ai</span>
+        </span>
+      </div>
+
+      {/* Spinner */}
+      <div className="relative w-20 h-20 mb-8">
+        <svg className="w-20 h-20 animate-spin" viewBox="0 0 80 80" fill="none">
+          <circle cx="40" cy="40" r="34" stroke="#1e293b" strokeWidth="6" />
+          <circle
+            cx="40" cy="40" r="34"
+            stroke="url(#grad)" strokeWidth="6"
+            strokeLinecap="round"
+            strokeDasharray="213"
+            strokeDashoffset="160"
+          />
+          <defs>
+            <linearGradient id="grad" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#34d399" />
+              <stop offset="100%" stopColor="#059669" />
+            </linearGradient>
+          </defs>
+        </svg>
+        {/* Inner dot */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse" />
+        </div>
+      </div>
+
+      {/* Headline */}
+      <h2 className="text-white text-xl font-bold mb-2 tracking-tight">
+        Building your journey
+      </h2>
+
+      {/* Cycling message */}
+      <p
+        key={msgIndex}
+        className="text-slate-400 text-sm mb-10 text-center transition-all duration-500"
+      >
+        {LOADING_MESSAGES[msgIndex]}
+      </p>
+
+      {/* Fake progress bar */}
+      <div className="w-64 h-1 bg-slate-700 rounded-full overflow-hidden">
+        <div
+          className="h-1 bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full transition-all duration-300"
+          style={{ width: `${clampedProgress}%` }}
+        />
+      </div>
+
+      <p className="text-slate-600 text-xs mt-4">This usually takes 5–15 seconds</p>
+    </div>
+  );
+}
 
 export default function OnboardingWizard() {
   const router = useRouter();
@@ -65,7 +156,6 @@ export default function OnboardingWizard() {
     signIn("google", { callbackUrl: "/onboarding/complete" });
   };
 
-  // Already signed in — skip account creation, POST directly to /api/onboarding/complete
   const handleSubmitAuthenticated = async () => {
     setLoading(true);
     setError(null);
@@ -89,7 +179,6 @@ export default function OnboardingWizard() {
     }
   };
 
-  // New user — create account then sign in
   const handleSubmit = async () => {
     setLoading(true);
     setError(null);
@@ -121,6 +210,9 @@ export default function OnboardingWizard() {
       setLoading(false);
     }
   };
+
+  // Show full-screen loading experience while LLM generates the journey
+  if (loading) return <JourneyLoadingScreen />;
 
   const isLastStep = step === totalSteps;
 
@@ -161,12 +253,10 @@ export default function OnboardingWizard() {
             <button
               type="button"
               onClick={handleNext}
-              disabled={!canAdvance || loading}
+              disabled={!canAdvance}
               className="px-6 py-3 bg-emerald-500 text-white rounded-xl font-semibold text-sm hover:bg-emerald-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              {loading
-                ? "Building your journey..."
-                : isLastStep
+              {isLastStep
                 ? isAuthenticated ? "Start my journey →" : "Create account & start →"
                 : "Next →"}
             </button>
