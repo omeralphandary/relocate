@@ -1,7 +1,8 @@
 "use client";
 
-import { COUNTRIES } from "@/lib/countries";
+import { useState } from "react";
 import { EmploymentStatus, OnboardingData } from "@/types";
+import CountrySelect from "@/components/onboarding/CountrySelect";
 
 interface Props {
   data: Partial<OnboardingData>;
@@ -17,6 +18,8 @@ const EMPLOYMENT_OPTIONS: { value: EmploymentStatus; label: string; description:
 ];
 
 export default function Step2Profile({ data, onChange }: Props) {
+  const [showSecond, setShowSecond] = useState(!!data.secondNationality);
+
   return (
     <div className="space-y-6">
       <div>
@@ -29,16 +32,41 @@ export default function Step2Profile({ data, onChange }: Props) {
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Your nationality
           </label>
-          <select
+          <CountrySelect
             value={data.nationality ?? ""}
-            onChange={(e) => onChange({ nationality: e.target.value })}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-white"
-          >
-            <option value="" disabled>Select your nationality</option>
-            {COUNTRIES.map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
+            onChange={(v) => onChange({ nationality: v })}
+            placeholder="Select your nationality"
+          />
+
+          {!showSecond ? (
+            <button
+              type="button"
+              onClick={() => setShowSecond(true)}
+              className="mt-2 text-xs text-gray-400 hover:text-emerald-500 transition-colors"
+            >
+              + Add second nationality (dual citizen?)
+            </button>
+          ) : (
+            <div className="mt-2 space-y-1">
+              <label className="block text-xs font-medium text-gray-500">Second nationality (optional)</label>
+              <div className="flex gap-2 items-start">
+                <div className="flex-1">
+                  <CountrySelect
+                    value={data.secondNationality ?? ""}
+                    onChange={(v) => onChange({ secondNationality: v || undefined })}
+                    placeholder="Select second nationality"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => { setShowSecond(false); onChange({ secondNationality: undefined }); }}
+                  className="text-gray-300 hover:text-gray-500 transition-colors px-2 text-lg mt-2.5"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         <div>

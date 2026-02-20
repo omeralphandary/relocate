@@ -55,6 +55,7 @@ export async function POST(
       taskDescription,
       category,
       nationality: profile.nationality,
+      secondNationality: profile.secondNationality,
       originCountry: profile.originCountry,
       destinationCountry: profile.destinationCountry,
       employmentStatus: profile.employmentStatus,

@@ -86,12 +86,12 @@ async function main() {
     },
     {
       title: "Apply for long-term residency permit",
-      description: "If staying longer than 90 days, apply for a long-term residency permit at the Ministry of Interior (MOI). EU citizens register right of residence; non-EU apply for residence permit.",
+      description: "If staying longer than 90 days, apply for a long-term residency permit at the Ministry of Interior (MOI). EU/EEA employees have free movement — register your right of residence at the MOI within 30 days of settling. Non-EU employed workers need an Employee Card (Zaměstnanecká karta), a combined work + residence permit applied for at the Czech embassy before entering the Czech Republic. If you are a highly qualified worker earning above 1.5× the average salary, a Blue Card may apply instead.",
       category: "legal", order: 2,
-      officialUrl: "https://www.mvcr.cz/clanek/obcane-eu-eea-a-svycarsko.aspx",
-      documents: ["Valid passport", "Proof of registered address", "Proof of sufficient funds (bank statement)", "Employment contract or business registration", "Health insurance certificate", "2x passport photos"],
-      tips: "Book MOI appointments well in advance — slots fill weeks ahead. Process takes 2–3 months.",
-      countries: ["Czech Republic"], dependsOn: [],
+      officialUrl: "https://www.mvcr.cz/clanek/employee-card.aspx",
+      documents: ["Valid passport", "Signed employment contract", "Proof of accommodation", "Health insurance certificate", "Clean criminal record from home country — apostilled (non-EU)", "2× passport photos (non-EU)"],
+      tips: "Non-EU: Apply at the Czech embassy before departure — you cannot apply from inside Czechia on a tourist visa. Processing takes up to 60 days. EU: Bring your employment contract to the MOI registration appointment.",
+      countries: ["Czech Republic"], employmentStatuses: ["employed"], dependsOn: [],
     },
     {
       title: "Register as self-employed (živnostenský list)",
@@ -604,6 +604,120 @@ async function main() {
     },
   ];
 
+  // ═══════════════════════════════════════════════════════════
+  // VISA / RESIDENCY TASKS — per employment status × destination
+  // Employed: verification of status
+  // Self-employed / freelancer / unemployed / student: full guidance
+  // ═══════════════════════════════════════════════════════════
+
+  const visaResidencyTasks = [
+
+    // ─── CZECH REPUBLIC ───────────────────────────────────────
+    {
+      title: "Apply for self-employment residency permit",
+      description: "To live and work as self-employed or freelancer in the Czech Republic for more than 90 days you need two things: (1) a Trade License (živnostenský list) from the Trade Licensing Office and (2) a Long-term Residence Permit for business from the Ministry of Interior. EU/EEA nationals only need to register their right of residence — no separate permit required, but register within 30 days of settling. Non-EU nationals must apply for the permit at the Czech embassy before entering.",
+      category: "legal", order: 2,
+      officialUrl: "https://www.mvcr.cz/clanek/long-term-residence-for-the-purpose-of-business.aspx",
+      documents: ["Valid passport", "Trade license (živnostenský list)", "Proof of accommodation", "Proof of sufficient funds (6+ months of living costs)", "Health insurance certificate", "Clean criminal record from home country — apostilled (non-EU)", "2× passport photos (non-EU)"],
+      tips: "Your trade license and residency permit applications can run in parallel. Allow 60–90 days for the permit. Some regulated trades require proof of professional qualifications.",
+      countries: ["Czech Republic"], employmentStatuses: ["self_employed", "freelancer"], dependsOn: [],
+    },
+    {
+      title: "Understand your residency options as a non-working resident",
+      description: "If you are not employed or studying but plan to stay longer than 90 days: EU/EEA nationals can register their right of residence at the Ministry of Interior — you must show proof of sufficient funds (at least CZK 117,800/year) and valid health insurance. Non-EU nationals must apply for a long-term visa (over 90 days) or a long-term residence permit at the Czech embassy in their home country — you cannot apply from inside the Czech Republic on a tourist visa.",
+      category: "legal", order: 2,
+      officialUrl: "https://www.mvcr.cz/clanek/long-term-visa.aspx",
+      documents: ["Valid passport", "Proof of accommodation", "Proof of sufficient funds (bank statements)", "Health insurance covering the full stay", "Clean criminal record — apostilled (non-EU)", "2× passport photos (non-EU)"],
+      tips: "EU: Bring all documents to your local MOI office. Non-EU: Start the embassy application at least 3 months before planned arrival — processing takes 60–90 days.",
+      countries: ["Czech Republic"], employmentStatuses: ["unemployed"], dependsOn: [],
+    },
+    {
+      title: "Apply for a student long-term residence permit",
+      description: "International students from outside the EU/EEA need a Long-term Residence Permit for the purpose of study — apply at the Czech embassy in your home country before departure. EU/EEA students have free movement and only need to register their right of residence at the MOI. Your permit is tied to your university enrolment and must be renewed annually. The university's International Office will guide you through the application.",
+      category: "legal", order: 2,
+      officialUrl: "https://www.mvcr.cz/clanek/long-term-residence-for-the-purpose-of-study.aspx",
+      documents: ["Valid passport", "University acceptance letter", "Proof of accommodation", "Proof of sufficient funds (at least CZK 4,000/month)", "Health insurance certificate", "Clean criminal record — apostilled (non-EU)", "2× passport photos (non-EU)"],
+      tips: "Non-EU: Apply at the Czech embassy at least 3 months before your programme starts — processing takes up to 60 days. Once in Czechia, report to the MOI within 3 days of arrival.",
+      countries: ["Czech Republic"], employmentStatuses: ["student"], dependsOn: [],
+    },
+
+    // ─── GERMANY ──────────────────────────────────────────────
+    {
+      title: "Confirm your work permit and Aufenthaltstitel",
+      description: "EU/EEA nationals have free movement — Anmeldung is sufficient and no separate work or residence permit is needed. Non-EU nationals who entered on a work visa must convert it to an Aufenthaltserlaubnis (residence permit for employment) at the local Ausländerbehörde within 90 days of arrival. Highly qualified workers earning ≥ €48,000/yr (or €43,759 in shortage occupations) may qualify for an EU Blue Card (Blaue Karte EU), which provides a faster path to permanent residency.",
+      category: "legal", order: 2,
+      officialUrl: "https://www.make-it-in-germany.com/en/visa-residence/types/work-qualified-professionals",
+      documents: ["Valid passport", "Employment contract", "Recognised university degree (for Blue Card)", "German health insurance certificate", "Meldebescheinigung", "Passport photos", "Completed application form"],
+      tips: "Book your Ausländerbehörde appointment as soon as you arrive — waits are 4–8 weeks. If your visa expires before the appointment, request a Fiktionsbescheinigung (bridging certificate) — it legalises your stay while your application is processed.",
+      countries: ["Germany"], employmentStatuses: ["employed"], dependsOn: [],
+    },
+    {
+      title: "Apply for a freelancer or self-employment residence permit",
+      description: "EU/EEA nationals can freelance and self-employ freely — confirm whether your profession is Freiberufler (liberal profession: IT, creative, academic, medical) registered with the Finanzamt, or Gewerbetreibender (trader) requiring a Gewerbeanmeldung. Non-EU nationals need an Aufenthaltserlaubnis zur Ausübung einer freiberuflichen Tätigkeit (freelancers) or zur selbständigen Erwerbstätigkeit (self-employed traders) from the Ausländerbehörde. You must demonstrate market demand via client contracts and financial sustainability.",
+      category: "legal", order: 2,
+      officialUrl: "https://www.make-it-in-germany.com/en/visa-residence/types/self-employed-freelancers",
+      documents: ["Valid passport", "Business plan or description of services", "Client contracts or letters of intent", "Financial projections or savings proof (typically 12 months of living costs)", "Professional qualifications if profession-specific", "Meldebescheinigung", "Health insurance certificate"],
+      tips: "Freiberufler (IT, creative, engineering) have a simpler path than Gewerbetreibende. The Ausländerbehörde may request an opinion from the relevant professional body — allow extra time. EU nationals: register at the Finanzamt within a month of starting activity.",
+      countries: ["Germany"], employmentStatuses: ["self_employed", "freelancer"], dependsOn: [],
+    },
+    {
+      title: "Understand your residency rights as a non-working resident",
+      description: "EU/EEA nationals without employment can register their right of residence in Germany with proof of sufficient funds (€942/month reference value) and comprehensive health insurance — valid as long as conditions are met. Non-EU nationals have limited options: a job-seeker visa (Arbeitssuche) allows up to 6 months to find employment; family reunification is available if your partner holds a valid German residence permit. Without a qualifying permit category, long-term residency is not possible for non-EU nationals.",
+      category: "legal", order: 2,
+      officialUrl: "https://www.make-it-in-germany.com/en/visa-residence/types/job-seekers",
+      documents: ["Valid passport", "Proof of sufficient funds", "Comprehensive health insurance", "Meldebescheinigung", "University degree and CV (for job-seeker visa)"],
+      tips: "Job-seeker visa holders may not work during the search period, but can accept a job offer and switch to a work permit immediately. If you hold a recognised degree, the job-seeker visa is straightforward to obtain.",
+      countries: ["Germany"], employmentStatuses: ["unemployed"], dependsOn: [],
+    },
+    {
+      title: "Apply for a student residence permit (Aufenthaltserlaubnis zum Studium)",
+      description: "EU/EEA students have free movement — Anmeldung is sufficient. Non-EU students who entered on a student visa must apply at the local Ausländerbehörde to convert it to an Aufenthaltserlaubnis zum Studium within 90 days of arrival. The permit is tied to your university enrolment and must be renewed annually. You are permitted to work up to 120 full days or 240 half days per year alongside your studies.",
+      category: "legal", order: 3,
+      officialUrl: "https://www.make-it-in-germany.com/en/visa-residence/types/student",
+      documents: ["Valid passport", "University admission letter", "Proof of enrolment (Immatrikulationsbescheinigung)", "Proof of financial resources (€934/month via blocked account, scholarship, or parental guarantee)", "German health insurance confirmation", "Meldebescheinigung"],
+      tips: "Book your Ausländerbehörde appointment immediately after Anmeldung — waits are 6–10 weeks. If your visa expires before the appointment, request a Fiktionsbescheinigung. Standard proof of funds is a blocked account (Sperrkonto) via Deutsche Bank or Fintiba — set it up before departure.",
+      countries: ["Germany"], employmentStatuses: ["student"], dependsOn: [],
+    },
+
+    // ─── UNITED STATES ────────────────────────────────────────
+    {
+      title: "Verify your work visa status and I-94 record",
+      description: "Check your I-94 arrival/departure record at i94.cbp.dhs.gov and confirm your authorised stay period, visa category, and employer restrictions. Common work visas: H-1B (employer-sponsored specialty occupation), L-1 (intracompany transfer), O-1 (extraordinary ability), TN (Canadian/Mexican nationals under USMCA), E-3 (Australian nationals). Your employment is tied to your sponsoring employer — changing jobs without a transfer petition in place can put you out of status.",
+      category: "legal", order: 2,
+      officialUrl: "https://i94.cbp.dhs.gov/",
+      documents: ["Passport", "Visa stamp", "I-94 printout", "I-797 approval notice (H-1B or L-1)", "Employment authorisation document (EAD) if applicable"],
+      tips: "Check your I-94 online — border errors happen and must be corrected promptly via a CBP Deferred Inspection appointment. Start your visa renewal or green card process with your employer's immigration attorney at least 6 months before status expiry.",
+      countries: ["United States"], employmentStatuses: ["employed"], dependsOn: [],
+    },
+    {
+      title: "Understand visa restrictions on self-employment",
+      description: "Most US work visas — H-1B, L-1, TN — do NOT permit self-employment or freelancing. You are authorised to work only for your sponsoring employer. Self-employment pathways include: O-1A (extraordinary ability), EB-1A (extraordinary ability immigrant visa), EB-2 NIW (national interest waiver — self-petition without a US employer), or E-2 (investor treaty visa requiring substantial capital). Working outside your authorised scope — even a single freelance invoice — is an immigration violation that can result in removal and permanent visa bars.",
+      category: "legal", order: 2,
+      officialUrl: "https://www.uscis.gov/working-in-the-united-states",
+      documents: ["Passport", "Current visa stamp and I-94 printout", "Evidence of extraordinary ability (for O-1A / EB-1A)", "Business plan and investment evidence (for E-2)"],
+      tips: "Consult a US immigration attorney before accepting any freelance work or starting a business. The O-1A and EB-2 NIW are the most accessible self-petition routes for skilled professionals. Do not take any self-employment income without legal confirmation you are authorised.",
+      countries: ["United States"], employmentStatuses: ["self_employed", "freelancer"], dependsOn: [],
+    },
+    {
+      title: "Understand visa implications of unemployment",
+      description: "If you lose your job while on a US work visa (H-1B, L-1, O-1, etc.), you have a 60-day grace period from the date of termination to: (1) find a new sponsoring employer and have a transfer petition filed, (2) change to another valid status such as B-2 visitor or F-1 student, or (3) depart the United States. Overstaying triggers automatic inadmissibility bars: 180+ days = 3-year bar; 1+ year = 10-year bar.",
+      category: "legal", order: 2,
+      officialUrl: "https://www.uscis.gov/laws-and-policy/other-resources/unlawful-presence-and-bars-to-admissibility",
+      documents: ["Passport", "I-94 record", "I-797 approval notice", "Last pay stubs (as proof of termination date)"],
+      tips: "The 60-day grace period runs from job termination, not from when you discover it. Contact your employer's immigration attorney immediately. In B-2 status you cannot work. The grace period does not apply to all visa types — confirm yours with an attorney without delay.",
+      countries: ["United States"], employmentStatuses: ["unemployed"], dependsOn: [],
+    },
+    {
+      title: "Verify your F-1 or J-1 visa status and SEVIS record",
+      description: "Confirm your SEVIS record is active, your I-20 (F-1) or DS-2019 (J-1) is current, and your I-94 shows 'D/S' (Duration of Status) — meaning you may stay as long as you are a full-time enrolled student in good standing. Key rules: maintain full-time enrolment every semester, do not work off-campus without authorisation (OPT/CPT for F-1, Academic Training for J-1), and report any change of address or programme to your DSO within 10 days.",
+      category: "legal", order: 2,
+      officialUrl: "https://studyinthestates.dhs.gov/students/maintaining-your-status",
+      documents: ["Passport", "F-1 or J-1 visa stamp", "I-20 or DS-2019", "I-94 record showing D/S", "SEVIS I-901 fee receipt"],
+      tips: "Your visa stamp can expire while you are in the US — this is normal and does not affect your status. What matters is your I-20/DS-2019 programme end date and maintaining full-time enrolment. You only need a valid visa stamp when re-entering the US after travel abroad.",
+      countries: ["United States"], employmentStatuses: ["student"], dependsOn: [],
+    },
+  ];
+
   for (const task of tasks) {
     await prisma.taskTemplate.create({ data: task });
   }
@@ -614,6 +728,9 @@ async function main() {
     await prisma.taskTemplate.create({ data: task });
   }
   for (const task of originTasks) {
+    await prisma.taskTemplate.create({ data: task });
+  }
+  for (const task of visaResidencyTasks) {
     await prisma.taskTemplate.create({ data: task });
   }
 
@@ -627,7 +744,7 @@ async function main() {
     // Czech Republic
     ["Register your address",                         "Czech Republic", ["Find a permanent apartment"]],
     ["Apply for long-term residency permit",          "Czech Republic", ["Register your address", "Get health insurance"]],
-    ["Exchange or validate your driving licence",     "Czech Republic", ["Apply for long-term residency permit"]],
+    ["Exchange or validate your driving licence",     "Czech Republic", ["Apply for long-term residency permit", "Apply for self-employment residency permit", "Understand your residency options as a non-working resident", "Apply for a student long-term residence permit"]],
     ["Lease or purchase a car",                       "Czech Republic", ["Exchange or validate your driving licence"]],
     ["Get a parking permit",                          "Czech Republic", ["Lease or purchase a car"]],
     ["Register as self-employed (živnostenský list)", "Czech Republic", ["Register your address"]],
@@ -655,7 +772,7 @@ async function main() {
   }
   console.log(`✓ Wired ${dependencies.length} dependency rules`);
 
-  const allTasks = [...tasks, ...studentTasks, ...educationTasks, ...originTasks];
+  const allTasks = [...tasks, ...studentTasks, ...educationTasks, ...originTasks, ...visaResidencyTasks];
   const czCount = tasks.filter((t) => t.countries.includes("Czech Republic")).length;
   const usCount = tasks.filter((t) => t.countries.includes("United States")).length;
   const deCount = tasks.filter((t) => t.countries.includes("Germany")).length;
@@ -667,6 +784,7 @@ async function main() {
   console.log(`  Destination — Czech Republic: ${czCount}, US: ${usCount}, Germany: ${deCount}`);
   console.log(`  Student tasks: ${studentTasks.length} | Education/family tasks: ${educationTasks.length}`);
   console.log(`  Origin-specific — US citizens: ${usOriginCount}, Israeli → DE: ${ilOriginCount}, UK citizens: ${ukOriginCount}`);
+  console.log(`  Visa/residency tasks: ${visaResidencyTasks.length}`);
 }
 
 main()

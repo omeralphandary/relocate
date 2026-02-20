@@ -1,7 +1,7 @@
 "use client";
 
-import { COUNTRIES } from "@/lib/countries";
 import { OnboardingData } from "@/types";
+import CountrySelect from "@/components/onboarding/CountrySelect";
 
 interface Props {
   data: Partial<OnboardingData>;
@@ -21,16 +21,11 @@ export default function Step1Countries({ data, onChange }: Props) {
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Moving from
           </label>
-          <select
+          <CountrySelect
             value={data.originCountry ?? ""}
-            onChange={(e) => onChange({ originCountry: e.target.value })}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-white"
-          >
-            <option value="" disabled>Select your country of origin</option>
-            {COUNTRIES.map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
+            onChange={(v) => onChange({ originCountry: v })}
+            placeholder="Select country of origin"
+          />
         </div>
 
         <div className="flex items-center gap-3">
@@ -47,16 +42,11 @@ export default function Step1Countries({ data, onChange }: Props) {
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Moving to
           </label>
-          <select
+          <CountrySelect
             value={data.destinationCountry ?? ""}
-            onChange={(e) => onChange({ destinationCountry: e.target.value })}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-white"
-          >
-            <option value="" disabled>Select your destination</option>
-            {COUNTRIES.map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
+            onChange={(v) => onChange({ destinationCountry: v })}
+            placeholder="Select destination"
+          />
         </div>
       </div>
     </div>

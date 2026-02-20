@@ -23,6 +23,7 @@ export interface TaskEnrichmentInput {
   taskDescription: string;
   category: string;
   nationality: string;
+  secondNationality?: string | null;
   originCountry: string;
   destinationCountry: string;
   employmentStatus: string;
@@ -43,10 +44,14 @@ export interface TaskEnrichmentOutput {
 export async function enrichTask(input: TaskEnrichmentInput): Promise<TaskEnrichmentOutput> {
   const client = getClient();
 
+  const nationalityLine = input.secondNationality
+    ? `- Nationality: ${input.nationality} + ${input.secondNationality} (dual citizen)`
+    : `- Nationality: ${input.nationality}`;
+
   const prompt = `You are a relocation expert helping someone move from ${input.originCountry} to ${input.destinationCountry}.
 
 User profile:
-- Nationality: ${input.nationality}
+${nationalityLine}
 - Employment status: ${input.employmentStatus}
 - Family status: ${input.familyStatus}
 ${input.movingDate ? `- Planned moving date: ${input.movingDate}` : ""}
@@ -81,6 +86,7 @@ export interface CustomTaskInput {
   userTitle: string;
   category: string;
   nationality: string;
+  secondNationality?: string | null;
   originCountry: string;
   destinationCountry: string;
   employmentStatus: string;
@@ -103,10 +109,14 @@ export interface CustomTaskOutput {
 export async function generateCustomTaskOverview(input: CustomTaskInput): Promise<CustomTaskOutput> {
   const client = getClient();
 
+  const nationalityLine = input.secondNationality
+    ? `- Nationality: ${input.nationality} + ${input.secondNationality} (dual citizen)`
+    : `- Nationality: ${input.nationality}`;
+
   const prompt = `You are a relocation expert helping someone move from ${input.originCountry} to ${input.destinationCountry}.
 
 User profile:
-- Nationality: ${input.nationality}
+${nationalityLine}
 - Employment status: ${input.employmentStatus}
 - Family status: ${input.familyStatus}
 ${input.movingDate ? `- Planned moving date: ${input.movingDate}` : ""}
@@ -154,6 +164,7 @@ export interface GeneratedTask {
  */
 export async function generateJourneyTasks(profile: {
   nationality: string;
+  secondNationality?: string | null;
   originCountry: string;
   destinationCountry: string;
   employmentStatus: string;
@@ -161,10 +172,14 @@ export async function generateJourneyTasks(profile: {
 }): Promise<GeneratedTask[]> {
   const client = getClient();
 
+  const nationalityLine = profile.secondNationality
+    ? `- Nationality: ${profile.nationality} + ${profile.secondNationality} (dual citizen)`
+    : `- Nationality: ${profile.nationality}`;
+
   const prompt = `You are a relocation expert. Generate a comprehensive relocation task list for someone moving from ${profile.originCountry} to ${profile.destinationCountry}.
 
 User profile:
-- Nationality: ${profile.nationality}
+${nationalityLine}
 - Employment: ${profile.employmentStatus}
 - Family status: ${profile.familyStatus}
 

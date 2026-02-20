@@ -193,8 +193,8 @@ describe("POST /api/onboarding/complete", () => {
     await onboardingCompletePOST(makeRequest(VALID_COMPLETE_BODY));
     const findManyCall = vi.mocked(prisma.taskTemplate.findMany).mock.calls[0][0];
     const filters = findManyCall?.where?.AND as unknown[];
-    // Should have 4 AND conditions: countries, originCountries, employmentStatuses, familyStatuses
-    expect(filters).toHaveLength(4);
+    // Should have 5 AND conditions: countries, originCountries, employmentStatuses, familyStatuses, nationalities
+    expect(filters).toHaveLength(5);
   });
 });
 

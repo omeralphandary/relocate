@@ -54,6 +54,7 @@ export async function POST(
         userTitle: title.trim(),
         category,
         nationality: profile.nationality,
+        secondNationality: profile.secondNationality,
         originCountry: profile.originCountry,
         destinationCountry: profile.destinationCountry,
         employmentStatus: profile.employmentStatus,

@@ -4,6 +4,7 @@ export type TaskCategory = "housing" | "banking" | "legal" | "telecom" | "transp
 
 export interface OnboardingData {
   nationality: string;
+  secondNationality?: string;
   originCountry: string;
   destinationCountry: string;
   employmentStatus: EmploymentStatus;

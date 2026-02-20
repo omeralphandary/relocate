@@ -56,6 +56,7 @@ model Profile {
   id               String   @id @default(cuid())
   userId           String   @unique
   nationality      String
+  secondNationality String?
   originCountry    String
   destinationCountry String
   employmentStatus String   // employed | self_employed | freelancer | unemployed

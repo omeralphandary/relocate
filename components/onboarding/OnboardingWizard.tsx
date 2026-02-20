@@ -43,7 +43,7 @@ export default function OnboardingWizard() {
 
   const handleNext = () => {
     // After step 2: show EU lucky modal if both nationality and destination are EU
-    if (step === 2 && isEU(data.nationality ?? "") && isEU(data.destinationCountry ?? "")) {
+    if (step === 2 && (isEU(data.nationality ?? "") || isEU(data.secondNationality ?? "")) && isEU(data.destinationCountry ?? "")) {
       setShowEUModal(true);
       return;
     }

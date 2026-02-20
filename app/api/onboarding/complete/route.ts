@@ -12,6 +12,7 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json() as {
       nationality?: string;
+      secondNationality?: string;
       originCountry?: string;
       destinationCountry?: string;
       employmentStatus?: string;
@@ -20,7 +21,7 @@ export async function POST(req: NextRequest) {
       movingDate?: string | null;
     };
 
-    const { nationality, originCountry, destinationCountry, employmentStatus, familyStatus, hasChildren, movingDate } = body;
+    const { nationality, secondNationality, originCountry, destinationCountry, employmentStatus, familyStatus, hasChildren, movingDate } = body;
 
     if (!nationality || !originCountry || !destinationCountry || !employmentStatus || !familyStatus) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -38,34 +39,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ journeyId: existing.id });
     }
 
-    // Find templates matching this corridor (destination + origin + employment + family)
+    const nationalityFilter = {
+      OR: [
+        { nationalities: { isEmpty: true } },
+        { nationalities: { has: nationality } },
+        ...(secondNationality ? [{ nationalities: { has: secondNationality } }] : []),
+      ],
+    };
+
+    // Find templates matching this corridor
     let templates = await prisma.taskTemplate.findMany({
       where: {
         AND: [
-          {
-            OR: [
-              { countries: { isEmpty: true } },
-              { countries: { has: destinationCountry } },
-            ],
-          },
-          {
-            OR: [
-              { originCountries: { isEmpty: true } },
-              { originCountries: { has: originCountry } },
-            ],
-          },
-          {
-            OR: [
-              { employmentStatuses: { isEmpty: true } },
-              { employmentStatuses: { has: employmentStatus } },
-            ],
-          },
-          {
-            OR: [
-              { familyStatuses: { isEmpty: true } },
-              { familyStatuses: { has: familyStatus } },
-            ],
-          },
+          { OR: [{ countries: { isEmpty: true } }, { countries: { has: destinationCountry } }] },
+          { OR: [{ originCountries: { isEmpty: true } }, { originCountries: { has: originCountry } }] },
+          { OR: [{ employmentStatuses: { isEmpty: true } }, { employmentStatuses: { has: employmentStatus } }] },
+          { OR: [{ familyStatuses: { isEmpty: true } }, { familyStatuses: { has: familyStatus } }] },
+          nationalityFilter,
         ],
       },
       orderBy: [{ category: "asc" }, { order: "asc" }],
@@ -98,8 +88,8 @@ export async function POST(req: NextRequest) {
     const journey = await prisma.$transaction(async (tx) => {
       await tx.profile.upsert({
         where: { userId },
-        update: { nationality, originCountry, destinationCountry, employmentStatus, familyStatus, hasChildren: hasChildren ?? false, movingDate: movingDate ? new Date(movingDate) : null },
-        create: { userId, nationality, originCountry, destinationCountry, employmentStatus, familyStatus, hasChildren: hasChildren ?? false, movingDate: movingDate ? new Date(movingDate) : null },
+        update: { nationality, secondNationality: secondNationality ?? null, originCountry, destinationCountry, employmentStatus, familyStatus, hasChildren: hasChildren ?? false, movingDate: movingDate ? new Date(movingDate) : null },
+        create: { userId, nationality, secondNationality: secondNationality ?? null, originCountry, destinationCountry, employmentStatus, familyStatus, hasChildren: hasChildren ?? false, movingDate: movingDate ? new Date(movingDate) : null },
       });
 
       return tx.journey.create({

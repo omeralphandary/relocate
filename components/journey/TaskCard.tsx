@@ -51,7 +51,7 @@ export default function TaskCard({
   return (
     <div className={`rounded-xl border transition-all duration-200 ${
       locked
-        ? "border-gray-100 bg-gray-50 opacity-50"
+        ? "border-amber-100 bg-gray-50 opacity-70"
         : completed
           ? "border-gray-100 bg-gray-50"
           : "border-gray-200 bg-white"
@@ -87,13 +87,20 @@ export default function TaskCard({
         {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 min-w-0">
-              <span className={`font-medium text-sm ${completed ? "line-through text-gray-400" : locked ? "text-gray-400" : "text-gray-900"}`}>
+            <div className="flex items-center gap-2 min-w-0 flex-wrap">
+              <span className={`font-medium text-sm ${completed ? "line-through text-gray-400" : locked ? "text-gray-500" : "text-gray-900"}`}>
                 {title}
               </span>
               {hasAI && (
                 <span className="flex-shrink-0 text-xs bg-violet-50 text-violet-500 border border-violet-100 px-1.5 py-0.5 rounded-full font-medium">
                   ✦ AI
+                </span>
+              )}
+              {locked && blockingNames.length > 0 && (
+                <span className="flex-shrink-0 inline-flex items-center gap-1 text-[10px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded-full">
+                  🔒 {blockingNames.length === 1
+                    ? `After: ${blockingNames[0]}`
+                    : `After ${blockingNames.length} tasks`}
                 </span>
               )}
             </div>
@@ -125,11 +132,7 @@ export default function TaskCard({
 
           {!expanded && (
             <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">
-              {locked
-                ? blockingNames.length > 0
-                  ? `Complete first: ${blockingNames.join(", ")}`
-                  : "Complete previous tasks first"
-                : description}
+              {locked ? "Expand to see details" : description}
             </p>
           )}
         </div>

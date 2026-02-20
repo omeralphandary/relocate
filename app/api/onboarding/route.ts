@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     const body: OnboardingBody = await req.json();
     const {
       name, email, password,
-      nationality, originCountry, destinationCountry,
+      nationality, secondNationality, originCountry, destinationCountry,
       employmentStatus, familyStatus, hasChildren, movingDate,
     } = body;
 
@@ -33,7 +33,15 @@ export async function POST(req: NextRequest) {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // Look for seeded templates matching this corridor (destination + origin)
+    // Look for seeded templates matching this corridor
+    const nationalityFilter = {
+      OR: [
+        { nationalities: { isEmpty: true } },
+        { nationalities: { has: nationality } },
+        ...(secondNationality ? [{ nationalities: { has: secondNationality } }] : []),
+      ],
+    };
+
     let templates = await prisma.taskTemplate.findMany({
       where: {
         AND: [
@@ -41,6 +49,7 @@ export async function POST(req: NextRequest) {
           { OR: [{ originCountries: { isEmpty: true } }, { originCountries: { has: originCountry } }] },
           { OR: [{ employmentStatuses: { isEmpty: true } }, { employmentStatuses: { has: employmentStatus } }] },
           { OR: [{ familyStatuses: { isEmpty: true } }, { familyStatuses: { has: familyStatus } }] },
+          nationalityFilter,
         ],
       },
       orderBy: [{ category: "asc" }, { order: "asc" }],
@@ -95,6 +104,7 @@ export async function POST(req: NextRequest) {
         profile: {
           create: {
             nationality,
+            secondNationality: secondNationality ?? null,
             originCountry,
             destinationCountry,
             employmentStatus,
