@@ -22,10 +22,10 @@ export default function JourneyLoadingScreen() {
 
     const progressTimer = setInterval(() => {
       setProgress((p) => {
-        if (p >= 85) return p + 0.3;
-        return p + 2.5;
+        if (p >= 90) return p + 0.05;
+        return p + 0.6;
       });
-    }, 120);
+    }, 400);
 
     return () => { clearInterval(msgTimer); clearInterval(progressTimer); };
   }, []);
@@ -75,7 +75,7 @@ export default function JourneyLoadingScreen() {
         />
       </div>
 
-      <p className="text-slate-600 text-xs mt-4">This usually takes 5–15 seconds</p>
+      <p className="text-slate-600 text-xs mt-4">Can take about 1 minute</p>
     </div>
   );
 }
