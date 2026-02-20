@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import JourneyLoadingScreen from "@/components/onboarding/JourneyLoadingScreen";
 
 export default function OnboardingCompletePage() {
   const router = useRouter();
@@ -66,19 +67,5 @@ export default function OnboardingCompletePage() {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 text-center">
-      <div className="mb-6">
-        <span className="font-bold text-xl tracking-tight text-slate-900">Realocate<span className="text-emerald-500">.ai</span></span>
-      </div>
-      <div className="flex items-center gap-3 mb-4">
-        <svg className="w-6 h-6 animate-spin text-emerald-500" fill="none" viewBox="0 0 24 24">
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-        </svg>
-        <p className="text-gray-700 font-medium">Building your relocation journey…</p>
-      </div>
-      <p className="text-sm text-gray-400">This takes just a moment.</p>
-    </div>
-  );
+  return <JourneyLoadingScreen />;
 }
