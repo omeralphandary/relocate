@@ -63,7 +63,7 @@ function AddTaskForm({
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={(e) => { if (e.key === "Enter") handleSubmit(); if (e.key === "Escape") onCancel(); }}
         placeholder="Describe your task…"
-        className="w-full text-sm bg-white border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-transparent"
+        className="w-full text-sm text-gray-900 placeholder:text-gray-400 bg-white border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-transparent"
         autoFocus
         disabled={submitting}
       />
