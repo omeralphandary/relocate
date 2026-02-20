@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
+import Link from "next/link";
 import CategoryCard from "./CategoryCard";
 import BetaWelcomeModal from "./BetaWelcomeModal";
 
@@ -264,6 +265,31 @@ export default function JourneyView({ journeyId, title, destination, userName, u
             onDeleteTask={handleDeleteCustomTask}
           />
         ))}
+
+        {/* Help on the ground — vendor marketplace teaser */}
+        <Link
+          href="/vendors"
+          className="block rounded-2xl border border-gray-200 bg-white hover:border-emerald-200 hover:bg-emerald-50/30 transition-all duration-200 shadow-sm group"
+        >
+          <div className="flex items-center gap-4 px-5 py-4">
+            <span className="text-2xl flex-shrink-0">🤝</span>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-gray-900">Help on the Ground</span>
+                <span className="text-xs font-medium px-2 py-0.5 rounded-full border bg-emerald-50 text-emerald-600 border-emerald-200">
+                  Marketplace
+                </span>
+              </div>
+              <p className="text-xs text-gray-400 mt-0.5">Vetted local experts — legal, housing, banking and more</p>
+            </div>
+            <svg
+              className="w-4 h-4 text-gray-300 group-hover:text-emerald-500 transition-colors flex-shrink-0"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </Link>
 
         {completedCount === totalCount && totalCount > 0 && (
           <div className="text-center py-10">
