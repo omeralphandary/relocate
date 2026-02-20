@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useRef } from "react";
 
 interface Vendor {
   name: string;
@@ -345,13 +346,26 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
   );
 }
 
+function categorySlug(title: string): string {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+}
+
 export default function VendorsPage() {
   const router = useRouter();
+  const navRef = useRef<HTMLDivElement>(null);
+
+  const scrollTo = (slug: string) => {
+    const el = document.getElementById(slug);
+    if (!el) return;
+    // offset for sticky header (header ~60px + pill nav ~48px)
+    const y = el.getBoundingClientRect().top + window.scrollY - 120;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-100 sticky top-0 z-10">
+      <div className="bg-white border-b border-gray-100 sticky top-0 z-20">
         <div className="max-w-2xl mx-auto px-4 py-5 flex items-center justify-between">
           <span className="font-bold text-base tracking-tight text-slate-900">
             Realocate<span className="text-emerald-500">.ai</span>
@@ -362,6 +376,24 @@ export default function VendorsPage() {
           >
             ← Back to my journey
           </button>
+        </div>
+
+        {/* Category pill nav */}
+        <div
+          ref={navRef}
+          className="flex gap-2 overflow-x-auto px-4 pb-3 scrollbar-hide"
+          style={{ scrollbarWidth: "none" }}
+        >
+          {VENDOR_CATEGORIES.map((cat) => (
+            <button
+              key={cat.title}
+              onClick={() => scrollTo(categorySlug(cat.title))}
+              className="flex-shrink-0 flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border border-gray-200 bg-gray-50 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 text-gray-600 transition-colors"
+            >
+              <span>{cat.emoji}</span>
+              <span>{cat.title}</span>
+            </button>
+          ))}
         </div>
       </div>
 
@@ -376,9 +408,9 @@ export default function VendorsPage() {
         </div>
 
         {/* Category sections */}
-        <div className="space-y-8">
+        <div className="space-y-10">
           {VENDOR_CATEGORIES.map((cat) => (
-            <div key={cat.title}>
+            <div key={cat.title} id={categorySlug(cat.title)}>
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-xl">{cat.emoji}</span>
                 <h2 className="font-semibold text-base text-gray-900">{cat.title}</h2>
