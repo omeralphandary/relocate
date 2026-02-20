@@ -29,15 +29,11 @@ export async function POST(req: NextRequest) {
 
     const userId = session.user.id;
 
-    // Return existing active journey if already set up (idempotent)
-    const existing = await prisma.journey.findFirst({
+    // Archive any existing active journey before creating a new one
+    await prisma.journey.updateMany({
       where: { userId, status: "ACTIVE" },
-      orderBy: { createdAt: "desc" },
-      select: { id: true },
+      data: { status: "ARCHIVED" },
     });
-    if (existing) {
-      return NextResponse.json({ journeyId: existing.id });
-    }
 
     const nationalityFilter = {
       OR: [

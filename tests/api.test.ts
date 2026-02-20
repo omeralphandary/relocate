@@ -19,6 +19,7 @@ vi.mock("@/lib/prisma", () => {
       findFirst: vi.fn(),
       findUnique: vi.fn(),
       update: vi.fn(),
+      updateMany: vi.fn(),
       create: vi.fn(),
     },
     taskTemplate: {
@@ -114,6 +115,7 @@ describe("POST /api/onboarding/complete", () => {
     vi.clearAllMocks();
     vi.mocked(auth).mockResolvedValue(AUTHED_SESSION as never);
     vi.mocked(prisma.journey.findFirst).mockResolvedValue(null);
+    vi.mocked(prisma.journey.updateMany).mockResolvedValue({ count: 0 } as never);
     vi.mocked(prisma.taskTemplate.findMany).mockResolvedValue(SAMPLE_TEMPLATES as never);
     vi.mocked(prisma.$transaction).mockImplementation(async (fn: (tx: typeof prisma) => Promise<unknown>) =>
       fn(prisma)
@@ -144,13 +146,15 @@ describe("POST /api/onboarding/complete", () => {
     expect(body.error).toMatch(/missing required fields/i);
   });
 
-  it("is idempotent — returns existing active journey without creating a new one", async () => {
-    vi.mocked(prisma.journey.findFirst).mockResolvedValue({ id: "journey-existing" } as never);
+  it("archives any existing active journey before creating the new one", async () => {
+    vi.mocked(prisma.journey.updateMany).mockResolvedValue({ count: 1 } as never);
     const res = await onboardingCompletePOST(makeRequest(VALID_COMPLETE_BODY));
-    expect(res.status).toBe(200);
-    const body = await res.json();
-    expect(body.journeyId).toBe("journey-existing");
-    expect(prisma.journey.create).not.toHaveBeenCalled();
+    expect(res.status).toBe(201);
+    expect(prisma.journey.updateMany).toHaveBeenCalledWith({
+      where: { userId: "user-1", status: "ACTIVE" },
+      data: { status: "ARCHIVED" },
+    });
+    expect(prisma.journey.create).toHaveBeenCalled();
   });
 
   it("falls back to LLM when no templates match the corridor", async () => {
