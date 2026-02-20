@@ -115,6 +115,14 @@ export default function JourneyView({ journeyId, title, destination, userName, u
   const totalCount = tasks.length;
   const progressPct = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
 
+  const progressPhase =
+    progressPct === 0   ? "" :
+    progressPct < 25    ? "Getting started" :
+    progressPct < 50    ? "Settling in" :
+    progressPct < 75    ? "Finding your feet" :
+    progressPct < 100   ? "Almost there" :
+                          "Fully settled";
+
   // Map from templateId → journey task, for dependency resolution
   const templateToTask = new Map(
     tasks.filter((t) => t.taskId).map((t) => [t.taskId!, t])
@@ -262,15 +270,45 @@ export default function JourneyView({ journeyId, title, destination, userName, u
           </div>
           <h1 className="text-xl font-bold text-gray-900 mt-0.5">{title}</h1>
           <div className="mt-3">
-            <div className="flex items-center justify-between text-xs text-gray-500 mb-1.5">
-              <span>{completedCount} of {totalCount} tasks completed</span>
-              <span className="font-semibold text-gray-700">{Math.round(progressPct)}%</span>
+            <div className="flex items-center justify-between text-xs mb-1.5">
+              <span className="text-gray-500">{completedCount} of {totalCount} tasks completed</span>
+              <div className="flex items-center gap-2">
+                {progressPhase && (
+                  <span className="text-emerald-600 font-medium">{progressPhase}</span>
+                )}
+                <span className="font-semibold text-gray-700">{Math.round(progressPct)}%</span>
+              </div>
             </div>
-            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-              <div
-                className="h-2 bg-emerald-500 rounded-full transition-all duration-500"
-                style={{ width: `${progressPct}%` }}
-              />
+            {/* Progress bar — layered: track / fill / pulse / milestone dots */}
+            <div className="relative h-2 my-1">
+              {/* Track */}
+              <div className="absolute inset-0 bg-gray-100 rounded-full" />
+              {/* Gradient fill */}
+              {progressPct > 0 && (
+                <div
+                  className="absolute inset-y-0 left-0 rounded-full transition-all duration-700 bg-gradient-to-r from-amber-400 to-emerald-500 z-10"
+                  style={{ width: `${progressPct}%` }}
+                />
+              )}
+              {/* Leading-edge pulse */}
+              {progressPct > 0 && progressPct < 100 && (
+                <div
+                  className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-emerald-400/50 animate-pulse z-20"
+                  style={{ left: `calc(${progressPct}% - 6px)` }}
+                />
+              )}
+              {/* Milestone markers */}
+              {[25, 50, 75].map((m) => (
+                <div
+                  key={m}
+                  className={`absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full border-2 transition-all duration-500 z-30 ${
+                    progressPct >= m
+                      ? "bg-white border-emerald-400 shadow-sm"
+                      : "bg-white border-gray-200"
+                  }`}
+                  style={{ left: `calc(${m}% - 5px)` }}
+                />
+              ))}
             </div>
           </div>
         </div>
