@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
 
 interface Vendor {
   name: string;
@@ -307,41 +306,39 @@ function StarRating({ rating }: { rating: number }) {
 
 function VendorCard({ vendor }: { vendor: Vendor }) {
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-xl p-4">
-      <div className="flex items-start justify-between gap-3 mb-2">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-semibold text-sm text-white">{vendor.name}</span>
-          {vendor.verified && (
-            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-1.5 py-0.5 rounded-full">
-              <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-              Verified
-            </span>
-          )}
-        </div>
-        <span className="text-xs text-slate-400 whitespace-nowrap flex-shrink-0">{vendor.priceRange}</span>
+    <div className="bg-slate-800 border border-slate-700 rounded-xl p-3">
+      {/* Row 1: name + verified + price + contact */}
+      <div className="flex items-center gap-2 mb-1">
+        <span className="font-semibold text-sm text-white flex-shrink-0">{vendor.name}</span>
+        {vendor.verified && (
+          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-1.5 py-0.5 rounded-full flex-shrink-0">
+            <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+            Verified
+          </span>
+        )}
+        <span className="text-xs text-slate-500 flex-1 text-right flex-shrink-0">{vendor.priceRange}</span>
+        <button className="flex-shrink-0 text-[11px] font-semibold bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1 rounded-lg transition-colors">
+          Contact
+        </button>
       </div>
 
-      <p className="text-xs text-slate-400 leading-relaxed mb-3">{vendor.tagline}</p>
+      {/* Row 2: tagline truncated */}
+      <p className="text-xs text-slate-400 truncate mb-1.5">{vendor.tagline}</p>
 
-      <div className="flex items-center gap-3 flex-wrap text-xs text-slate-500">
+      {/* Row 3: rating + location + response time */}
+      <div className="flex items-center gap-2 text-xs text-slate-500">
         <div className="flex items-center gap-1">
           <StarRating rating={vendor.rating} />
           <span className="text-amber-400 font-semibold">{vendor.rating}</span>
           <span className="text-slate-600">({vendor.reviews})</span>
         </div>
         <span className="text-slate-700">·</span>
-        <span>{vendor.location}</span>
+        <span className="truncate">{vendor.location}</span>
         <span className="text-slate-700">·</span>
-        <span>Replies {vendor.responseTime}</span>
-        <span className="text-slate-700">·</span>
-        <span>{vendor.languages.join(", ")}</span>
+        <span className="flex-shrink-0">Replies {vendor.responseTime}</span>
       </div>
-
-      <button className="mt-3 w-full text-xs font-semibold bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded-lg transition-colors">
-        Contact vendor
-      </button>
     </div>
   );
 }
@@ -352,21 +349,19 @@ function categorySlug(title: string): string {
 
 export default function VendorsPage() {
   const router = useRouter();
-  const navRef = useRef<HTMLDivElement>(null);
 
   const scrollTo = (slug: string) => {
     const el = document.getElementById(slug);
     if (!el) return;
-    // offset for sticky header (header ~60px + pill nav ~48px)
-    const y = el.getBoundingClientRect().top + window.scrollY - 120;
+    const y = el.getBoundingClientRect().top + window.scrollY - 116;
     window.scrollTo({ top: y, behavior: "smooth" });
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+      {/* Header + pill nav — sticky together */}
       <div className="bg-white border-b border-gray-100 sticky top-0 z-20">
-        <div className="max-w-2xl mx-auto px-4 py-5 flex items-center justify-between">
+        <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
           <span className="font-bold text-base tracking-tight text-slate-900">
             Realocate<span className="text-emerald-500">.ai</span>
           </span>
@@ -377,13 +372,8 @@ export default function VendorsPage() {
             ← Back to my journey
           </button>
         </div>
-
-        {/* Category pill nav */}
-        <div
-          ref={navRef}
-          className="flex gap-2 overflow-x-auto px-4 pb-3 scrollbar-hide"
-          style={{ scrollbarWidth: "none" }}
-        >
+        {/* Pill nav */}
+        <div className="flex gap-2 overflow-x-auto px-4 pb-3" style={{ scrollbarWidth: "none" }}>
           {VENDOR_CATEGORIES.map((cat) => (
             <button
               key={cat.title}
@@ -397,10 +387,10 @@ export default function VendorsPage() {
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-4 py-8">
+      <div className="max-w-2xl mx-auto px-4 py-6">
         {/* Hero */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Help on the Ground</h1>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">Help on the Ground</h1>
           <p className="text-gray-500 text-sm leading-relaxed">
             Vetted, rated local experts for every step of your move. No cold calls, no agencies.
             Contact directly, pay transparently.
@@ -408,7 +398,7 @@ export default function VendorsPage() {
         </div>
 
         {/* Category sections */}
-        <div className="space-y-10">
+        <div className="space-y-8">
           {VENDOR_CATEGORIES.map((cat) => (
             <div key={cat.title} id={categorySlug(cat.title)}>
               <div className="flex items-center gap-2 mb-3">
@@ -417,7 +407,7 @@ export default function VendorsPage() {
                 <span className="text-xs text-gray-400">·</span>
                 <span className="text-xs text-gray-400">{cat.vendors.length} available</span>
               </div>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {cat.vendors.map((v) => (
                   <VendorCard key={v.name} vendor={v} />
                 ))}
