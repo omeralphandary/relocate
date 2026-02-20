@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import CategoryCard from "./CategoryCard";
-import BetaWelcomeModal from "./BetaWelcomeModal";
+import AIGreetingCard from "./AIGreetingCard";
+import MilestoneToast from "./MilestoneToast";
 
 export interface JourneyTask {
   id: string;
@@ -75,18 +76,29 @@ const CATEGORY_META: Record<string, {
   education: { label: "Education",  emoji: "🎓", urgency: "Week 1–2",  timeEstimate: "1–4 weeks",  color: "bg-indigo-50 text-indigo-600 border-indigo-200",  donutColor: "#6366f1" },
 };
 
+type MilestoneState =
+  | { type: "first-task" }
+  | { type: "category"; category: string; label: string }
+  | null;
+
 export default function JourneyView({ journeyId, title, destination, userName, userEmail, tasks: initialTasks }: JourneyViewProps) {
   const [tasks, setTasks] = useState(initialTasks);
   const [addingCategory, setAddingCategory] = useState<string | null>(null);
   const [archiving, setArchiving] = useState(false);
-  const [showWelcome, setShowWelcome] = useState(false);
+  const [showGreeting, setShowGreeting] = useState(false);
+  const [milestone, setMilestone] = useState<MilestoneState>(null);
+
+  // Track whether user has ever completed a task (for first-task toast)
+  const hasCompletedAny = useRef(initialTasks.some((t) => t.status === "COMPLETED"));
+  // Track which categories have already triggered their milestone toast
+  const celebratedCategories = useRef<Set<string>>(new Set());
+
   const searchParams = useSearchParams();
   const router = useRouter();
 
   useEffect(() => {
     if (searchParams.get("welcome") === "1") {
-      setShowWelcome(true);
-      // Clean the param from the URL without a page reload
+      setShowGreeting(true);
       const url = new URL(window.location.href);
       url.searchParams.delete("welcome");
       router.replace(url.pathname, { scroll: false });
@@ -120,9 +132,34 @@ export default function JourneyView({ journeyId, title, destination, userName, u
 
   const handleToggle = async (taskId: string, completed: boolean) => {
     const newStatus = completed ? "COMPLETED" : "PENDING";
-    setTasks((prev) =>
-      prev.map((t) => (t.id === taskId ? { ...t, status: newStatus } : t))
-    );
+
+    setTasks((prev) => {
+      const next = prev.map((t) => (t.id === taskId ? { ...t, status: newStatus } : t));
+
+      if (completed) {
+        // First task ever?
+        if (!hasCompletedAny.current) {
+          hasCompletedAny.current = true;
+          setMilestone({ type: "first-task" });
+        } else {
+          // Category complete?
+          const toggledTask = prev.find((t) => t.id === taskId);
+          if (toggledTask) {
+            const cat = taskCategory(toggledTask);
+            const categoryTasks = next.filter((t) => taskCategory(t) === cat);
+            const allDone = categoryTasks.every((t) => t.status === "COMPLETED");
+            if (allDone && !celebratedCategories.current.has(cat)) {
+              celebratedCategories.current.add(cat);
+              const label = CATEGORY_META[cat]?.label ?? cat;
+              setMilestone({ type: "category", category: cat, label });
+            }
+          }
+        }
+      }
+
+      return next;
+    });
+
     try {
       await fetch(`/api/tasks/${taskId}`, {
         method: "PATCH",
@@ -190,7 +227,15 @@ export default function JourneyView({ journeyId, title, destination, userName, u
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {showWelcome && <BetaWelcomeModal onClose={() => setShowWelcome(false)} />}
+      {/* Milestone toast */}
+      {milestone && (
+        <MilestoneToast
+          level={milestone.type}
+          categoryLabel={milestone.type === "category" ? milestone.label : undefined}
+          userName={userName}
+          onDismiss={() => setMilestone(null)}
+        />
+      )}
 
       {/* Sticky header */}
       <div className="bg-white border-b border-gray-100 sticky top-0 z-10">
@@ -233,6 +278,18 @@ export default function JourneyView({ journeyId, title, destination, userName, u
 
       {/* Category cards */}
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-3">
+        {/* AI greeting card — shown on first visit */}
+        {showGreeting && totalCount > 0 && (
+          <AIGreetingCard
+            userName={userName}
+            destination={destination}
+            totalCount={totalCount}
+            categoryCount={sortedCategories.length}
+            firstCategory={sortedCategories[0] ?? "telecom"}
+            onDismiss={() => setShowGreeting(false)}
+          />
+        )}
+
         {totalCount === 0 && (
           <div className="text-center py-16 text-gray-400">
             <p className="text-4xl mb-3">📋</p>
@@ -266,7 +323,7 @@ export default function JourneyView({ journeyId, title, destination, userName, u
           />
         ))}
 
-        {/* Help on the ground — vendor marketplace teaser */}
+        {/* Help on the ground — vendor marketplace */}
         <Link
           href="/vendors"
           className="block rounded-2xl border border-gray-200 bg-white hover:border-emerald-200 hover:bg-emerald-50/30 transition-all duration-200 shadow-sm group"
