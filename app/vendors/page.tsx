@@ -23,7 +23,7 @@ const VENDOR_CATEGORIES: {
   {
     emoji: "⚖️",
     title: "Legal & Immigration",
-    desc: "Visa consultants, immigration lawyers, residency specialists.",
+    desc: "Help with your visa, residence permit, or work permit — in plain language.",
     vendors: [
       {
         name: "Expat Legal Group",
@@ -63,7 +63,7 @@ const VENDOR_CATEGORIES: {
   {
     emoji: "🏠",
     title: "Housing & Real Estate",
-    desc: "Local agents, property finders, short-term rentals.",
+    desc: "Help finding a flat or room — including viewing, lease-signing, and deposit.",
     vendors: [
       {
         name: "NestFinder Prague",
@@ -103,7 +103,7 @@ const VENDOR_CATEGORIES: {
   {
     emoji: "🏦",
     title: "Banking & Finance",
-    desc: "Account setup services, financial advisors, tax consultants.",
+    desc: "Opening a bank account, understanding taxes, and managing money in a new country.",
     vendors: [
       {
         name: "ExpatAccount.eu",
@@ -132,7 +132,7 @@ const VENDOR_CATEGORIES: {
   {
     emoji: "🌐",
     title: "Translation & Language",
-    desc: "Certified document translators, language tutors, notarisation.",
+    desc: "Officially stamped translations for government forms, plus language classes if you need them.",
     vendors: [
       {
         name: "CertifiedTranslate",
@@ -172,7 +172,7 @@ const VENDOR_CATEGORIES: {
   {
     emoji: "📦",
     title: "Moving & Storage",
-    desc: "International movers, freight forwarders, storage units.",
+    desc: "Companies that ship your belongings and can store them while you get settled.",
     vendors: [
       {
         name: "MoveEU",
@@ -201,7 +201,7 @@ const VENDOR_CATEGORIES: {
   {
     emoji: "🏥",
     title: "Healthcare",
-    desc: "Expat doctors, health insurance brokers, private clinics.",
+    desc: "English-speaking doctors and help choosing the right health insurance plan.",
     vendors: [
       {
         name: "ExpatMed Prague",
@@ -230,7 +230,7 @@ const VENDOR_CATEGORIES: {
   {
     emoji: "🎓",
     title: "School & Childcare",
-    desc: "International school advisors, childcare placement, tutors.",
+    desc: "Finding the right school or nursery for your kids in a new city.",
     vendors: [
       {
         name: "SchoolMatch",
@@ -259,7 +259,7 @@ const VENDOR_CATEGORIES: {
   {
     emoji: "🚗",
     title: "Transport & Driving",
-    desc: "Licence conversion specialists, car import agents, leasing.",
+    desc: "Converting your driving licence, importing a car, or renting one while you sort it out.",
     vendors: [
       {
         name: "LicenceSwap",
@@ -390,9 +390,9 @@ export default function VendorsPage() {
       <div className="max-w-2xl mx-auto px-4 py-6">
         {/* Hero */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">Help on the Ground</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">People who can help you settle in</h1>
           <p className="text-gray-500 text-sm leading-relaxed">
-            Vetted local experts for life after you land. Contact direct, no middlemen.
+            Finding a flat, opening a bank account, sorting your visa — these are people who do this every day and speak your language. Contact them directly.
           </p>
         </div>
 
@@ -400,11 +400,14 @@ export default function VendorsPage() {
         <div className="space-y-8">
           {VENDOR_CATEGORIES.map((cat) => (
             <div key={cat.title} id={categorySlug(cat.title)}>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-xl">{cat.emoji}</span>
-                <h2 className="font-semibold text-base text-gray-900">{cat.title}</h2>
-                <span className="text-xs text-gray-400">·</span>
-                <span className="text-xs text-gray-400">{cat.vendors.length} available</span>
+              <div className="mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">{cat.emoji}</span>
+                  <h2 className="font-semibold text-base text-gray-900">{cat.title}</h2>
+                  <span className="text-xs text-gray-400">·</span>
+                  <span className="text-xs text-gray-400">{cat.vendors.length} available</span>
+                </div>
+                <p className="text-xs text-gray-400 mt-0.5 ml-8">{cat.desc}</p>
               </div>
               <div className="space-y-2">
                 {cat.vendors.map((v) => (
@@ -417,9 +420,9 @@ export default function VendorsPage() {
 
         {/* CTA */}
         <div className="mt-10 bg-slate-800 border border-slate-700 rounded-2xl p-6 text-center">
-          <p className="text-white font-bold text-base mb-1">Are you a local service provider?</p>
+          <p className="text-white font-bold text-base mb-1">Do you help people who are moving?</p>
           <p className="text-slate-400 text-xs mb-4 leading-relaxed">
-            Get matched with relocators actively looking for help.
+            List your service and get found by people who need exactly what you offer.
           </p>
           <button
             disabled
