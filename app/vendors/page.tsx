@@ -319,9 +319,9 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
           </span>
         )}
         <span className="text-xs text-slate-500 flex-1 text-right flex-shrink-0">{vendor.priceRange}</span>
-        <button className="flex-shrink-0 text-[11px] font-semibold bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1 rounded-lg transition-colors">
-          Contact
-        </button>
+        <span className="flex-shrink-0 text-[10px] font-medium text-slate-400 border border-slate-600 px-2.5 py-1 rounded-lg">
+          Coming soon
+        </span>
       </div>
 
       {/* Row 2: tagline truncated */}
