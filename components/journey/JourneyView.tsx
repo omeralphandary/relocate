@@ -71,19 +71,20 @@ const CATEGORY_META: Record<string, {
   label: string;
   emoji: string;
   urgency: string;
+  preDepartureUrgency?: string;
   timeEstimate: string;
   color: string;
   donutColor: string;
 }> = {
-  // Post-arrival
+  // Post-arrival (some also appear pre-departure)
   telecom:   { label: "Telecom",            emoji: "📱", urgency: "Day 1",          timeEstimate: "~30 min",    color: "bg-orange-50 text-orange-600 border-orange-200",  donutColor: "#f97316" },
-  housing:   { label: "Housing",            emoji: "🏠", urgency: "Week 1",         timeEstimate: "2–4 weeks",  color: "bg-blue-50 text-blue-600 border-blue-200",        donutColor: "#3b82f6" },
-  banking:   { label: "Banking",            emoji: "🏦", urgency: "Week 1–2",       timeEstimate: "3–5 days",   color: "bg-green-50 text-green-600 border-green-200",     donutColor: "#10b981" },
-  insurance: { label: "Insurance & Health", emoji: "🛡️", urgency: "Week 2",         timeEstimate: "1–2 days",   color: "bg-teal-50 text-teal-600 border-teal-200",        donutColor: "#14b8a6" },
-  legal:     { label: "Legal",              emoji: "⚖️", urgency: "Month 1",        timeEstimate: "2–3 months", color: "bg-purple-50 text-purple-600 border-purple-200",   donutColor: "#8b5cf6" },
+  housing:   { label: "Housing",            emoji: "🏠", urgency: "Week 1",         preDepartureUrgency: "1–3 mo before", timeEstimate: "2–4 weeks",  color: "bg-blue-50 text-blue-600 border-blue-200",        donutColor: "#3b82f6" },
+  banking:   { label: "Banking",            emoji: "🏦", urgency: "Week 1–2",       preDepartureUrgency: "2–4 wks before", timeEstimate: "3–5 days",   color: "bg-green-50 text-green-600 border-green-200",     donutColor: "#10b981" },
+  insurance: { label: "Insurance & Health", emoji: "🛡️", urgency: "Week 2",         preDepartureUrgency: "2–3 wks before", timeEstimate: "1–2 days",   color: "bg-teal-50 text-teal-600 border-teal-200",        donutColor: "#14b8a6" },
+  legal:     { label: "Legal",              emoji: "⚖️", urgency: "Month 1",        preDepartureUrgency: "2–4 wks before", timeEstimate: "2–3 months", color: "bg-purple-50 text-purple-600 border-purple-200",   donutColor: "#8b5cf6" },
   transport: { label: "Transport",          emoji: "🚗", urgency: "Month 1–2",      timeEstimate: "1–4 weeks",  color: "bg-red-50 text-red-600 border-red-200",           donutColor: "#ef4444" },
-  education: { label: "Education",          emoji: "🎓", urgency: "Week 1–2",       timeEstimate: "1–4 weeks",  color: "bg-indigo-50 text-indigo-600 border-indigo-200",  donutColor: "#6366f1" },
-  // Pre-departure
+  education: { label: "Education",          emoji: "🎓", urgency: "Week 1–2",       preDepartureUrgency: "4–6 wks before", timeEstimate: "1–4 weeks",  color: "bg-indigo-50 text-indigo-600 border-indigo-200",  donutColor: "#6366f1" },
+  // Pre-departure only
   documents: { label: "Documents",          emoji: "📄", urgency: "6–8 wks before", timeEstimate: "2–4 weeks",  color: "bg-amber-50 text-amber-600 border-amber-200",     donutColor: "#f59e0b" },
   moving:    { label: "Moving & Shipping",  emoji: "📦", urgency: "4–8 wks before", timeEstimate: "2–8 weeks",  color: "bg-sky-50 text-sky-600 border-sky-200",           donutColor: "#0ea5e9" },
   pets:      { label: "Pets",               emoji: "🐾", urgency: "8–12 wks before",timeEstimate: "8–12 weeks", color: "bg-rose-50 text-rose-600 border-rose-200",        donutColor: "#f43f5e" },
@@ -289,6 +290,7 @@ export default function JourneyView({ journeyId, title, origin, destination, use
   const renderCards = (
     grouped: Record<string, JourneyTask[]>,
     sorted: string[],
+    phase: "pre" | "post" = "post",
   ) => (
     <>
       {sorted.length === 0 && (
@@ -297,18 +299,19 @@ export default function JourneyView({ journeyId, title, origin, destination, use
           <p className="font-medium">No tasks yet.</p>
         </div>
       )}
-      {sorted.map((category, i) => (
+      {sorted.map((category, i) => {
+        const baseMeta = CATEGORY_META[category];
+        const meta = baseMeta
+          ? {
+              ...baseMeta,
+              urgency: (phase === "pre" && baseMeta.preDepartureUrgency) ? baseMeta.preDepartureUrgency : baseMeta.urgency,
+            }
+          : { label: category, emoji: "📌", urgency: "—", timeEstimate: "—", color: "bg-gray-50 text-gray-600 border-gray-200", donutColor: "#9ca3af" };
+        return (
         <CategoryCard
           key={category}
           category={category}
-          meta={CATEGORY_META[category] ?? {
-            label: category,
-            emoji: "📌",
-            urgency: "—",
-            timeEstimate: "—",
-            color: "bg-gray-50 text-gray-600 border-gray-200",
-            donutColor: "#9ca3af",
-          }}
+          meta={meta}
           tasks={grouped[category]}
           defaultOpen={i === 0}
           onToggleTask={handleToggle}
@@ -321,7 +324,8 @@ export default function JourneyView({ journeyId, title, origin, destination, use
           onAddTask={handleAddCustomTask}
           onDeleteTask={handleDeleteCustomTask}
         />
-      ))}
+        );
+      })}
     </>
   );
 
@@ -494,7 +498,7 @@ export default function JourneyView({ journeyId, title, origin, destination, use
           {/* PRE-DEPARTURE panel */}
           {hasPreDeparture && (
             <div className="py-5 space-y-3" style={{ width: "50%", paddingLeft: "max(1rem, calc((100vw - 672px) / 2 + 1rem))", paddingRight: "max(1rem, calc((100vw - 672px) / 2 + 1rem))" }}>
-              {renderCards(preGrouped, preSorted)}
+              {renderCards(preGrouped, preSorted, "pre")}
 
               {/* Help Before You Go — pre-departure services */}
               <Link
