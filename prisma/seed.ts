@@ -729,14 +729,14 @@ async function main() {
     // ─── DOCUMENTS ────────────────────────────────────────────
     {
       title: "Renew your passport if needed",
-      description: "Check your passport expiry date. Most countries require at least 6 months of validity beyond your planned stay. Renew well in advance — passport offices often have long queues.",
+      description: "Most countries require at least 6 months of passport validity beyond your stay. Check your expiry date now and renew at least 10 weeks before you leave — passport offices get busy.",
       category: "documents", phase: "PRE_DEPARTURE", order: 1, documents: ["Current passport", "Passport photos", "Renewal application form"],
       tips: "Apply online where possible. Allow 6–10 weeks before your move date for standard processing; expedited services may be available for an extra fee.",
       countries: [], dependsOn: [],
     },
     {
       title: "Apostille or legalise your key documents",
-      description: "Many countries require official documents (birth certificate, marriage certificate, university diplomas) to be apostilled or legalised before they will be accepted by foreign authorities. This must be done in your home country.",
+      description: "Many countries require official documents (birth certificate, marriage certificate, diplomas) to be apostilled or legalised before they are accepted abroad. Do this at least 4 weeks before you leave — it must be done in your home country.",
       category: "documents", phase: "PRE_DEPARTURE", order: 2, documents: ["Original documents (birth certificate, marriage certificate, diplomas)", "Completed apostille application"],
       tips: "The apostille authority varies by country — in the UK it's the Foreign, Commonwealth & Development Office; in Israel it's the Ministry of Foreign Affairs. Allow 2–4 weeks. Do this before you leave — it's much harder from abroad.",
       countries: [], dependsOn: [],
@@ -745,14 +745,14 @@ async function main() {
     // ─── MOVING ───────────────────────────────────────────────
     {
       title: "Get international moving quotes",
-      description: "Contact at least 3 international moving companies for quotes. Compare volume-based vs flat-rate pricing, transit times, insurance coverage, and customs handling experience for your specific corridor.",
+      description: "Contact at least 3 international moving companies for quotes at least 8 weeks before your move. Compare pricing, transit times, insurance coverage, and customs handling experience.",
       category: "moving", phase: "PRE_DEPARTURE", order: 1, documents: [],
       tips: "Start at least 8 weeks before your move date. Use comparison platforms like MoveHub or Sirelo to get multiple quotes at once. Ask specifically about door-to-door vs port-to-port delivery and what's included in customs clearance.",
       countries: [], dependsOn: [],
     },
     {
       title: "Book your international mover",
-      description: "Once you've chosen a moving company, confirm the booking with a deposit. Provide a detailed inventory list, confirm pickup date and delivery timeline, and agree on insurance terms in writing.",
+      description: "Confirm your booking with a deposit at least 4–6 weeks before your move date. Provide a detailed inventory list, confirm pickup and delivery dates, and agree on insurance terms in writing.",
       category: "moving", phase: "PRE_DEPARTURE", order: 3, documents: ["Signed contract with mover", "Detailed inventory list"],
       tips: "Book at least 4–6 weeks before your move date. Get everything in writing — insurance coverage, liability for damage, and what happens if there are customs delays. Photograph valuables before packing.",
       countries: [], dependsOn: [],
@@ -761,7 +761,7 @@ async function main() {
     // ─── HOUSING (origin) ─────────────────────────────────────
     {
       title: "Give notice to terminate your current lease",
-      description: "Check your lease agreement for the required notice period (usually 1–3 months) and submit written notice to your landlord before the deadline. Missing it may mean paying rent on two homes.",
+      description: "Check your lease for the required notice period (usually 1–3 months) and submit written notice well before your departure. Missing the deadline may mean paying rent on two homes at once.",
       category: "housing", phase: "PRE_DEPARTURE", order: 20, documents: ["Signed notice letter", "Copy of lease agreement"],
       tips: "Most leases require 1–3 months' notice before you leave — check yours now. Send your notice via registered post or email with a read receipt so you have proof of the date.",
       countries: [], dependsOn: [],
@@ -770,7 +770,7 @@ async function main() {
     // ─── BANKING ──────────────────────────────────────────────
     {
       title: "Set up an international money transfer account",
-      description: "Open a Wise or similar multi-currency account to move your savings to your destination efficiently, without paying bank transfer fees and poor exchange rates.",
+      description: "Open a Wise or similar multi-currency account before you leave so you can move savings without paying bank transfer fees and poor exchange rates. Identity verification is easier while you're still in your home country.",
       category: "banking", phase: "PRE_DEPARTURE", order: 20, documents: ["Passport", "Proof of address"],
       tips: "Wise consistently offers mid-market exchange rates with transparent fees. Set it up before you leave — identity verification is easier while you're still in your home country.",
       countries: [], dependsOn: [],
@@ -788,7 +788,7 @@ async function main() {
     // ─── EDUCATION (family with kids) ────────────────────────
     {
       title: "Deregister your children from their current school",
-      description: "Formally notify your children's school of the withdrawal date and request all documentation needed to transfer to a school in your destination country.",
+      description: "Notify your children's school of their withdrawal date at least 4 weeks before your departure, and request all documentation needed to transfer to a school in your destination country.",
       category: "education", phase: "PRE_DEPARTURE", order: 20, documents: [],
       tips: "Notify the school at least 4 weeks before your departure. Request a school report, transcripts, and any assessments in English if possible. Some schools issue a 'Transfer Certificate' — confirm what format your destination school requires.",
       countries: [], familyStatuses: ["family_with_kids"], dependsOn: [],
@@ -797,7 +797,7 @@ async function main() {
     // ─── PETS ─────────────────────────────────────────────────
     {
       title: "Microchip your pet and ensure vaccinations are up to date",
-      description: "Most countries require pets to be microchipped (ISO 15-digit chip) and have up-to-date rabies vaccinations before entry. The microchip must be implanted before the rabies vaccine to be legally valid.",
+      description: "Most countries require pets to be microchipped and vaccinated against rabies before entry. Start at least 3 months before you leave — the microchip must be implanted before the rabies vaccine to be legally valid.",
       category: "pets", phase: "PRE_DEPARTURE", order: 1, documents: ["Vaccination record", "Microchip certificate"],
       tips: "Use an ISO 11784/11785 standard microchip. Keep all vet records organised in a dedicated folder — you'll need them at every step of the pet travel process. Start at least 3–4 months before departure.",
       countries: [], dependsOn: [],
