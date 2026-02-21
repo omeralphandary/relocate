@@ -483,6 +483,31 @@ export default function JourneyView({ journeyId, title, destination, userName, u
           {hasPreDeparture && (
             <div className="py-5 space-y-3" style={{ width: "50%", paddingLeft: "max(1rem, calc((100vw - 672px) / 2 + 1rem))", paddingRight: "max(1rem, calc((100vw - 672px) / 2 + 1rem))" }}>
               {renderCards(preGrouped, preSorted, showGreeting && activePhase === "pre")}
+
+              {/* Help Before You Go — pre-departure services */}
+              <Link
+                href="/movers"
+                className="block rounded-2xl border border-gray-200 bg-white hover:border-sky-200 hover:bg-sky-50/30 transition-all duration-200 shadow-sm group"
+              >
+                <div className="flex items-center gap-4 px-5 py-4">
+                  <span className="text-2xl flex-shrink-0">📦</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-gray-900">Help Before You Go</span>
+                      <span className="text-xs font-medium px-2 py-0.5 rounded-full border bg-sky-50 text-sky-600 border-sky-200">
+                        Marketplace
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-400 mt-0.5">Movers, documents, pet transport, money transfer and more</p>
+                  </div>
+                  <svg
+                    className="w-4 h-4 text-gray-300 group-hover:text-sky-500 transition-colors flex-shrink-0"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </Link>
             </div>
           )}
 
