@@ -55,8 +55,10 @@ export async function POST(req: NextRequest) {
       orderBy: [{ category: "asc" }, { order: "asc" }],
     });
 
-    // No templates for this destination — try to generate them via LLM and cache for future users
-    if (templates.length === 0) {
+    // No POST_ARRIVAL templates for this destination — try LLM. PRE_DEPARTURE templates are global
+    // and always match, so checking total length would miss missing post-arrival content.
+    const hasPostArrival = templates.some((t) => t.phase === "POST_ARRIVAL");
+    if (!hasPostArrival) {
       console.log(`[onboarding] No templates for ${destinationCountry}, generating via LLM...`);
       try {
         const generated = await generateJourneyTasks({
@@ -67,7 +69,7 @@ export async function POST(req: NextRequest) {
           familyStatus,
         });
 
-        templates = await Promise.all(
+        const llmTemplates = await Promise.all(
           generated.map((t) =>
             prisma.taskTemplate.create({
               data: {
@@ -85,8 +87,9 @@ export async function POST(req: NextRequest) {
             }),
           ),
         );
+        templates = [...templates, ...llmTemplates];
 
-        console.log(`[onboarding] Generated and saved ${templates.length} templates for ${destinationCountry}`);
+        console.log(`[onboarding] Generated and saved ${llmTemplates.length} LLM templates for ${destinationCountry}`);
       } catch (llmErr) {
         console.error(`[onboarding] LLM generation failed for ${destinationCountry}:`, llmErr);
         return NextResponse.json(
@@ -119,7 +122,7 @@ export async function POST(req: NextRequest) {
             origin: originCountry,
             destination: destinationCountry,
             tasks: {
-              create: templates.map((t) => ({ taskId: t.id })),
+              create: templates.map((t) => ({ taskId: t.id, phase: t.phase })),
             },
           },
         },
