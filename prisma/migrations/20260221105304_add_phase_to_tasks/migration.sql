@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "JourneyTask" ADD COLUMN     "phase" TEXT NOT NULL DEFAULT 'POST_ARRIVAL';
+
+-- AlterTable
+ALTER TABLE "TaskTemplate" ADD COLUMN     "phase" TEXT NOT NULL DEFAULT 'POST_ARRIVAL';

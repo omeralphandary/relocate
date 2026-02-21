@@ -12,6 +12,7 @@ export interface JourneyTask {
   id: string;
   taskId: string | null;
   status: string;
+  phase: string;
   isCustom: boolean;
   customTitle?: string | null;
   customDescription?: string | null;
@@ -47,6 +48,10 @@ export function taskOrder(t: JourneyTask): number {
   return t.isCustom ? 9999 : (t.template?.order ?? 9999);
 }
 
+export function taskPhase(t: JourneyTask): string {
+  return t.phase ?? "POST_ARRIVAL";
+}
+
 interface JourneyViewProps {
   journeyId: string;
   title: string;
@@ -57,7 +62,10 @@ interface JourneyViewProps {
   tasks: JourneyTask[];
 }
 
-const CATEGORY_ORDER = ["telecom", "housing", "banking", "insurance", "legal", "transport", "education"];
+// ─── Category metadata ─────────────────────────────────────────────────────
+
+const PRE_DEPARTURE_CATEGORY_ORDER = ["documents", "moving", "housing", "banking", "insurance", "education", "pets", "legal"];
+const POST_ARRIVAL_CATEGORY_ORDER  = ["telecom", "housing", "banking", "insurance", "legal", "transport", "education"];
 
 const CATEGORY_META: Record<string, {
   label: string;
@@ -67,13 +75,18 @@ const CATEGORY_META: Record<string, {
   color: string;
   donutColor: string;
 }> = {
-  telecom:   { label: "Telecom",   emoji: "📱", urgency: "Day 1",     timeEstimate: "~30 min",    color: "bg-orange-50 text-orange-600 border-orange-200",  donutColor: "#f97316" },
-  housing:   { label: "Housing",   emoji: "🏠", urgency: "Week 1",    timeEstimate: "2–4 weeks",  color: "bg-blue-50 text-blue-600 border-blue-200",        donutColor: "#3b82f6" },
-  banking:   { label: "Banking",   emoji: "🏦", urgency: "Week 1–2",  timeEstimate: "3–5 days",   color: "bg-green-50 text-green-600 border-green-200",     donutColor: "#10b981" },
-  insurance: { label: "Insurance", emoji: "🛡️", urgency: "Week 2",    timeEstimate: "1–2 days",   color: "bg-teal-50 text-teal-600 border-teal-200",        donutColor: "#14b8a6" },
-  legal:     { label: "Legal",     emoji: "⚖️", urgency: "Month 1",   timeEstimate: "2–3 months", color: "bg-purple-50 text-purple-600 border-purple-200",   donutColor: "#8b5cf6" },
-  transport: { label: "Transport", emoji: "🚗", urgency: "Month 1–2", timeEstimate: "1–4 weeks",  color: "bg-red-50 text-red-600 border-red-200",           donutColor: "#ef4444" },
-  education: { label: "Education",  emoji: "🎓", urgency: "Week 1–2",  timeEstimate: "1–4 weeks",  color: "bg-indigo-50 text-indigo-600 border-indigo-200",  donutColor: "#6366f1" },
+  // Post-arrival
+  telecom:   { label: "Telecom",            emoji: "📱", urgency: "Day 1",          timeEstimate: "~30 min",    color: "bg-orange-50 text-orange-600 border-orange-200",  donutColor: "#f97316" },
+  housing:   { label: "Housing",            emoji: "🏠", urgency: "Week 1",         timeEstimate: "2–4 weeks",  color: "bg-blue-50 text-blue-600 border-blue-200",        donutColor: "#3b82f6" },
+  banking:   { label: "Banking",            emoji: "🏦", urgency: "Week 1–2",       timeEstimate: "3–5 days",   color: "bg-green-50 text-green-600 border-green-200",     donutColor: "#10b981" },
+  insurance: { label: "Insurance & Health", emoji: "🛡️", urgency: "Week 2",         timeEstimate: "1–2 days",   color: "bg-teal-50 text-teal-600 border-teal-200",        donutColor: "#14b8a6" },
+  legal:     { label: "Legal",              emoji: "⚖️", urgency: "Month 1",        timeEstimate: "2–3 months", color: "bg-purple-50 text-purple-600 border-purple-200",   donutColor: "#8b5cf6" },
+  transport: { label: "Transport",          emoji: "🚗", urgency: "Month 1–2",      timeEstimate: "1–4 weeks",  color: "bg-red-50 text-red-600 border-red-200",           donutColor: "#ef4444" },
+  education: { label: "Education",          emoji: "🎓", urgency: "Week 1–2",       timeEstimate: "1–4 weeks",  color: "bg-indigo-50 text-indigo-600 border-indigo-200",  donutColor: "#6366f1" },
+  // Pre-departure
+  documents: { label: "Documents",          emoji: "📄", urgency: "6–8 wks before", timeEstimate: "2–4 weeks",  color: "bg-amber-50 text-amber-600 border-amber-200",     donutColor: "#f59e0b" },
+  moving:    { label: "Moving & Shipping",  emoji: "📦", urgency: "4–8 wks before", timeEstimate: "2–8 weeks",  color: "bg-sky-50 text-sky-600 border-sky-200",           donutColor: "#0ea5e9" },
+  pets:      { label: "Pets",               emoji: "🐾", urgency: "8–12 wks before",timeEstimate: "8–12 weeks", color: "bg-rose-50 text-rose-600 border-rose-200",        donutColor: "#f43f5e" },
 };
 
 type MilestoneState =
@@ -81,12 +94,20 @@ type MilestoneState =
   | { type: "category"; category: string; label: string }
   | null;
 
+// ─── Component ─────────────────────────────────────────────────────────────
+
 export default function JourneyView({ journeyId, title, destination, userName, userEmail, tasks: initialTasks }: JourneyViewProps) {
   const [tasks, setTasks] = useState(initialTasks);
   const [addingCategory, setAddingCategory] = useState<string | null>(null);
   const [archiving, setArchiving] = useState(false);
   const [showGreeting, setShowGreeting] = useState(false);
   const [milestone, setMilestone] = useState<MilestoneState>(null);
+
+  const hasPreDeparture = initialTasks.some((t) => taskPhase(t) === "PRE_DEPARTURE");
+  const [activePhase, setActivePhase] = useState<"pre" | "post">(hasPreDeparture ? "pre" : "post");
+
+  // Touch swipe state
+  const touchStartX = useRef<number | null>(null);
 
   // Track whether user has ever completed a task (for first-task toast)
   const hasCompletedAny = useRef(initialTasks.some((t) => t.status === "COMPLETED"));
@@ -111,19 +132,28 @@ export default function JourneyView({ journeyId, title, destination, userName, u
     window.location.href = "/onboarding";
   };
 
-  const completedCount = tasks.filter((t) => t.status === "COMPLETED").length;
-  const totalCount = tasks.length;
-  const progressPct = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+  // ─── Progress ───────────────────────────────────────────────
+  const preTasks  = tasks.filter((t) => taskPhase(t) === "PRE_DEPARTURE");
+  const postTasks = tasks.filter((t) => taskPhase(t) !== "PRE_DEPARTURE");
+
+  const preCompleted  = preTasks.filter((t) => t.status === "COMPLETED").length;
+  const postCompleted = postTasks.filter((t) => t.status === "COMPLETED").length;
+
+  const activeTasks     = activePhase === "pre" ? preTasks : postTasks;
+  const activeCompleted = activePhase === "pre" ? preCompleted : postCompleted;
+  const progressPct     = activeTasks.length > 0 ? (activeCompleted / activeTasks.length) * 100 : 0;
 
   const progressPhase =
     progressPct === 0   ? "" :
     progressPct < 25    ? "Getting started" :
-    progressPct < 50    ? "Settling in" :
-    progressPct < 75    ? "Finding your feet" :
-    progressPct < 100   ? "Almost there" :
-                          "Fully settled";
+    progressPct < 50    ? "In progress" :
+    progressPct < 75    ? "More than halfway" :
+    progressPct < 100   ? "Almost done" :
+                          activePhase === "pre" ? "Ready to fly ✈" : "Fully settled";
 
-  // Map from templateId → journey task, for dependency resolution
+  const allCompleted = tasks.length > 0 && tasks.every((t) => t.status === "COMPLETED");
+
+  // ─── Dependency resolution ──────────────────────────────────
   const templateToTask = new Map(
     tasks.filter((t) => t.taskId).map((t) => [t.taskId!, t])
   );
@@ -138,6 +168,7 @@ export default function JourneyView({ journeyId, title, destination, userName, u
 
   const isLocked = (task: JourneyTask): boolean => blockingNames(task).length > 0;
 
+  // ─── Handlers ───────────────────────────────────────────────
   const handleToggle = async (taskId: string, completed: boolean) => {
     const newStatus = completed ? "COMPLETED" : "PENDING";
 
@@ -145,12 +176,10 @@ export default function JourneyView({ journeyId, title, destination, userName, u
       const next = prev.map((t) => (t.id === taskId ? { ...t, status: newStatus } : t));
 
       if (completed) {
-        // First task ever?
         if (!hasCompletedAny.current) {
           hasCompletedAny.current = true;
           setMilestone({ type: "first-task" });
         } else {
-          // Category complete?
           const toggledTask = prev.find((t) => t.id === taskId);
           if (toggledTask) {
             const cat = taskCategory(toggledTask);
@@ -221,17 +250,91 @@ export default function JourneyView({ journeyId, title, destination, userName, u
     }
   };
 
-  const grouped = tasks.reduce<Record<string, JourneyTask[]>>((acc, task) => {
-    const cat = taskCategory(task);
-    if (!acc[cat]) acc[cat] = [];
-    acc[cat].push(task);
-    return acc;
-  }, {});
+  // ─── Touch swipe handlers ────────────────────────────────────
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
 
-  const sortedCategories = [
-    ...CATEGORY_ORDER.filter((c) => grouped[c]),
-    ...Object.keys(grouped).filter((c) => !CATEGORY_ORDER.includes(c)),
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || !hasPreDeparture) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    if (Math.abs(dx) > 60) {
+      if (dx < 0 && activePhase === "pre") setActivePhase("post");
+      if (dx > 0 && activePhase === "post") setActivePhase("pre");
+    }
+    touchStartX.current = null;
+  };
+
+  // ─── Group tasks by phase then category ─────────────────────
+  const groupByCategory = (phaseTasks: JourneyTask[]) =>
+    phaseTasks.reduce<Record<string, JourneyTask[]>>((acc, task) => {
+      const cat = taskCategory(task);
+      if (!acc[cat]) acc[cat] = [];
+      acc[cat].push(task);
+      return acc;
+    }, {});
+
+  const preGrouped  = groupByCategory(preTasks);
+  const postGrouped = groupByCategory(postTasks);
+
+  const sortCategories = (grouped: Record<string, JourneyTask[]>, order: string[]) => [
+    ...order.filter((c) => grouped[c]),
+    ...Object.keys(grouped).filter((c) => !order.includes(c)),
   ];
+
+  const preSorted  = sortCategories(preGrouped, PRE_DEPARTURE_CATEGORY_ORDER);
+  const postSorted = sortCategories(postGrouped, POST_ARRIVAL_CATEGORY_ORDER);
+
+  // ─── Render category cards for a given phase ────────────────
+  const renderCards = (
+    grouped: Record<string, JourneyTask[]>,
+    sorted: string[],
+    showGreetingCard: boolean,
+  ) => (
+    <>
+      {showGreetingCard && sorted.length > 0 && (
+        <AIGreetingCard
+          userName={userName}
+          destination={destination}
+          totalCount={tasks.length}
+          categoryCount={sorted.length}
+          firstCategory={sorted[0] ?? "telecom"}
+          onDismiss={() => setShowGreeting(false)}
+        />
+      )}
+      {sorted.length === 0 && (
+        <div className="text-center py-16 text-gray-400">
+          <p className="text-4xl mb-3">📋</p>
+          <p className="font-medium">No tasks yet.</p>
+        </div>
+      )}
+      {sorted.map((category, i) => (
+        <CategoryCard
+          key={category}
+          category={category}
+          meta={CATEGORY_META[category] ?? {
+            label: category,
+            emoji: "📌",
+            urgency: "—",
+            timeEstimate: "—",
+            color: "bg-gray-50 text-gray-600 border-gray-200",
+            donutColor: "#9ca3af",
+          }}
+          tasks={grouped[category]}
+          defaultOpen={i === 0}
+          onToggleTask={handleToggle}
+          onEnrichTask={handleEnrich}
+          isLocked={isLocked}
+          blockingNames={blockingNames}
+          isAddingTask={addingCategory === category}
+          onStartAddTask={() => setAddingCategory(category)}
+          onCancelAddTask={() => setAddingCategory(null)}
+          onAddTask={handleAddCustomTask}
+          onDeleteTask={handleDeleteCustomTask}
+        />
+      ))}
+    </>
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -247,7 +350,8 @@ export default function JourneyView({ journeyId, title, destination, userName, u
 
       {/* Sticky header */}
       <div className="bg-white border-b border-gray-100 sticky top-0 z-10">
-        <div className="max-w-2xl mx-auto px-4 py-5">
+        <div className="max-w-2xl mx-auto px-4 pt-5 pb-0">
+          {/* Logo + actions row */}
           <div className="flex items-center justify-between mb-1">
             <span className="font-bold text-base tracking-tight text-slate-900">Realocate<span className="text-emerald-500">.ai</span></span>
             <div className="flex items-center gap-3">
@@ -268,10 +372,14 @@ export default function JourneyView({ journeyId, title, destination, userName, u
               </button>
             </div>
           </div>
+
+          {/* Journey title */}
           <h1 className="text-xl font-bold text-gray-900 mt-0.5">{title}</h1>
+
+          {/* Phase progress bar */}
           <div className="mt-3">
             <div className="flex items-center justify-between text-xs mb-1.5">
-              <span className="text-gray-500">{completedCount} of {totalCount} tasks completed</span>
+              <span className="text-gray-500">{activeCompleted} of {activeTasks.length} tasks completed</span>
               <div className="flex items-center gap-2">
                 {progressPhase && (
                   <span className="text-emerald-600 font-medium">{progressPhase}</span>
@@ -279,25 +387,29 @@ export default function JourneyView({ journeyId, title, destination, userName, u
                 <span className="font-semibold text-gray-700">{Math.round(progressPct)}%</span>
               </div>
             </div>
-            {/* Progress bar — layered: track / fill / pulse / milestone dots */}
             <div className="relative h-2 my-1">
-              {/* Track */}
               <div className="absolute inset-0 bg-gray-100 rounded-full" />
-              {/* Gradient fill */}
               {progressPct > 0 && (
                 <div
-                  className="absolute inset-y-0 left-0 rounded-full transition-all duration-700 bg-gradient-to-r from-amber-400 to-emerald-500 z-10"
-                  style={{ width: `${progressPct}%` }}
+                  className="absolute inset-y-0 left-0 rounded-full transition-all duration-700 z-10"
+                  style={{
+                    width: `${progressPct}%`,
+                    background: activePhase === "pre"
+                      ? "linear-gradient(90deg, #f59e0b, #0ea5e9)"
+                      : "linear-gradient(90deg, #fbbf24, #10b981)",
+                  }}
                 />
               )}
-              {/* Leading-edge pulse */}
               {progressPct > 0 && progressPct < 100 && (
                 <div
-                  className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-emerald-400/50 animate-pulse z-20"
-                  style={{ left: `calc(${progressPct}% - 6px)` }}
+                  className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full animate-pulse z-20"
+                  style={{
+                    left: `calc(${progressPct}% - 6px)`,
+                    backgroundColor: activePhase === "pre" ? "#38bdf8" : "#34d399",
+                    opacity: 0.6,
+                  }}
                 />
               )}
-              {/* Milestone markers */}
               {[25, 50, 75].map((m) => (
                 <div
                   key={m}
@@ -311,89 +423,122 @@ export default function JourneyView({ journeyId, title, destination, userName, u
               ))}
             </div>
           </div>
+
+          {/* Phase tab switcher — only shown when there are pre-departure tasks */}
+          {hasPreDeparture && (
+            <div className="flex mt-3 -mx-4">
+              <button
+                onClick={() => setActivePhase("pre")}
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-semibold border-b-2 transition-all duration-200 ${
+                  activePhase === "pre"
+                    ? "border-sky-500 text-sky-600"
+                    : "border-transparent text-gray-400 hover:text-gray-600"
+                }`}
+              >
+                <span>✈</span>
+                <span>Before You Go</span>
+                <span className={`text-xs font-medium px-1.5 py-0.5 rounded-full ${
+                  activePhase === "pre" ? "bg-sky-100 text-sky-600" : "bg-gray-100 text-gray-400"
+                }`}>
+                  {preCompleted}/{preTasks.length}
+                </span>
+              </button>
+              <button
+                onClick={() => setActivePhase("post")}
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-semibold border-b-2 transition-all duration-200 ${
+                  activePhase === "post"
+                    ? "border-emerald-500 text-emerald-600"
+                    : "border-transparent text-gray-400 hover:text-gray-600"
+                }`}
+              >
+                <span>🏠</span>
+                <span>After You Land</span>
+                <span className={`text-xs font-medium px-1.5 py-0.5 rounded-full ${
+                  activePhase === "post" ? "bg-emerald-100 text-emerald-600" : "bg-gray-100 text-gray-400"
+                }`}>
+                  {postCompleted}/{postTasks.length}
+                </span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Category cards */}
-      <div className="max-w-2xl mx-auto px-4 py-5 space-y-3">
-        {/* AI greeting card — shown on first visit */}
-        {showGreeting && totalCount > 0 && (
-          <AIGreetingCard
-            userName={userName}
-            destination={destination}
-            totalCount={totalCount}
-            categoryCount={sortedCategories.length}
-            firstCategory={sortedCategories[0] ?? "telecom"}
-            onDismiss={() => setShowGreeting(false)}
-          />
-        )}
-
-        {totalCount === 0 && (
-          <div className="text-center py-16 text-gray-400">
-            <p className="text-4xl mb-3">📋</p>
-            <p className="font-medium">No tasks yet — make sure the database is seeded.</p>
-          </div>
-        )}
-
-        {sortedCategories.map((category, i) => (
-          <CategoryCard
-            key={category}
-            category={category}
-            meta={CATEGORY_META[category] ?? {
-              label: category,
-              emoji: "📌",
-              urgency: "—",
-              timeEstimate: "—",
-              color: "bg-gray-50 text-gray-600 border-gray-200",
-              donutColor: "#9ca3af",
-            }}
-            tasks={grouped[category]}
-            defaultOpen={i === 0}
-            onToggleTask={handleToggle}
-            onEnrichTask={handleEnrich}
-            isLocked={isLocked}
-            blockingNames={blockingNames}
-            isAddingTask={addingCategory === category}
-            onStartAddTask={() => setAddingCategory(category)}
-            onCancelAddTask={() => setAddingCategory(null)}
-            onAddTask={handleAddCustomTask}
-            onDeleteTask={handleDeleteCustomTask}
-          />
-        ))}
-
-        {/* Help on the ground — vendor marketplace */}
-        <Link
-          href="/vendors"
-          className="block rounded-2xl border border-gray-200 bg-white hover:border-emerald-200 hover:bg-emerald-50/30 transition-all duration-200 shadow-sm group"
+      {/* Sliding content area */}
+      <div
+        style={{ overflowX: "hidden" }}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        <div
+          className="flex transition-transform duration-300 ease-in-out"
+          style={{
+            width: hasPreDeparture ? "200%" : "100%",
+            transform: hasPreDeparture
+              ? activePhase === "pre" ? "translateX(0)" : "translateX(-50%)"
+              : "translateX(0)",
+          }}
         >
-          <div className="flex items-center gap-4 px-5 py-4">
-            <span className="text-2xl flex-shrink-0">🤝</span>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-gray-900">Help on the Ground</span>
-                <span className="text-xs font-medium px-2 py-0.5 rounded-full border bg-emerald-50 text-emerald-600 border-emerald-200">
-                  Marketplace
-                </span>
-              </div>
-              <p className="text-xs text-gray-400 mt-0.5">Vetted local experts — legal, housing, banking and more</p>
+          {/* PRE-DEPARTURE panel */}
+          {hasPreDeparture && (
+            <div className="py-5 space-y-3" style={{ width: "50%", paddingLeft: "max(1rem, calc((100vw - 672px) / 2 + 1rem))", paddingRight: "max(1rem, calc((100vw - 672px) / 2 + 1rem))" }}>
+              {renderCards(preGrouped, preSorted, showGreeting && activePhase === "pre")}
             </div>
-            <svg
-              className="w-4 h-4 text-gray-300 group-hover:text-emerald-500 transition-colors flex-shrink-0"
-              fill="none" viewBox="0 0 24 24" stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </div>
-        </Link>
+          )}
 
-        {completedCount === totalCount && totalCount > 0 && (
-          <div className="text-center py-10">
-            <p className="text-4xl mb-3">🎉</p>
-            <p className="text-lg font-bold text-gray-900">Relocation complete!</p>
-            <p className="text-gray-500 text-sm mt-1">Welcome to {destination}.</p>
+          {/* POST-ARRIVAL panel */}
+          <div
+            className="py-5 space-y-3"
+            style={{
+              width: hasPreDeparture ? "50%" : "100%",
+              paddingLeft: hasPreDeparture
+                ? "max(1rem, calc((100vw - 672px) / 2 + 1rem))"
+                : undefined,
+              paddingRight: hasPreDeparture
+                ? "max(1rem, calc((100vw - 672px) / 2 + 1rem))"
+                : undefined,
+            }}
+          >
+            <div className={hasPreDeparture ? "" : "max-w-2xl mx-auto px-4"}>
+              {renderCards(postGrouped, postSorted, showGreeting && activePhase === "post")}
+
+              {/* Help on the Ground — vendor marketplace */}
+              <Link
+                href="/vendors"
+                className="block rounded-2xl border border-gray-200 bg-white hover:border-emerald-200 hover:bg-emerald-50/30 transition-all duration-200 shadow-sm group"
+              >
+                <div className="flex items-center gap-4 px-5 py-4">
+                  <span className="text-2xl flex-shrink-0">🤝</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-gray-900">Help on the Ground</span>
+                      <span className="text-xs font-medium px-2 py-0.5 rounded-full border bg-emerald-50 text-emerald-600 border-emerald-200">
+                        Marketplace
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-400 mt-0.5">Vetted local experts — legal, housing, banking and more</p>
+                  </div>
+                  <svg
+                    className="w-4 h-4 text-gray-300 group-hover:text-emerald-500 transition-colors flex-shrink-0"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </Link>
+            </div>
           </div>
-        )}
+        </div>
       </div>
+
+      {/* All-done celebration */}
+      {allCompleted && (
+        <div className="text-center py-10">
+          <p className="text-4xl mb-3">🎉</p>
+          <p className="text-lg font-bold text-gray-900">Relocation complete!</p>
+          <p className="text-gray-500 text-sm mt-1">Welcome to {destination}.</p>
+        </div>
+      )}
     </div>
   );
 }

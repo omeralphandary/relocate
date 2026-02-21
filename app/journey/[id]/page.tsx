@@ -48,6 +48,7 @@ export default async function JourneyPage({ params }: Props) {
         id: t.id,
         taskId: t.taskId,
         status: t.status,
+        phase: t.phase,
         isCustom: t.taskId === null,
         customTitle: t.customTitle,
         customDescription: t.customDescription,

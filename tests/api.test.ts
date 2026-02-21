@@ -75,6 +75,7 @@ const SAMPLE_TEMPLATES = [
     title: "Register at the Einwohnermeldeamt",
     description: "Register your address.",
     category: "legal",
+    phase: "POST_ARRIVAL",
     documents: ["Passport", "Rental contract"],
     tips: "Book online in advance.",
     officialUrl: null,
