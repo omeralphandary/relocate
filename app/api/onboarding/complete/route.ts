@@ -63,21 +63,25 @@ export async function POST(req: NextRequest) {
       orderBy: [{ category: "asc" }, { order: "asc" }],
     });
 
-    // Fall back to LLM for unknown destinations
-    if (templates.length === 0) {
+    // Fall back to LLM for unknown destinations — check POST_ARRIVAL specifically,
+    // since PRE_DEPARTURE templates are global and always match, masking missing post-arrival content.
+    const hasPostArrival = templates.some((t) => t.phase === "POST_ARRIVAL");
+    if (!hasPostArrival) {
       try {
         const generated = await generateJourneyTasks({ nationality, originCountry, destinationCountry, employmentStatus, familyStatus });
-        templates = await Promise.all(
+        const llmTemplates = await Promise.all(
           generated.map((t) =>
             prisma.taskTemplate.create({
               data: {
                 title: t.title, description: t.description, category: t.category,
                 documents: t.documents, tips: t.tips, officialUrl: t.officialUrl ?? null,
                 order: t.order, countries: [destinationCountry], dependsOn: [], aiEnriched: true,
+                // phase defaults to POST_ARRIVAL — correct for LLM-generated content
               },
             })
           )
         );
+        templates = [...templates, ...llmTemplates];
       } catch {
         return NextResponse.json(
           { error: `No relocation tasks available for "${destinationCountry}" and AI generation failed.` },
