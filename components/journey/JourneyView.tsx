@@ -378,7 +378,11 @@ export default function JourneyView({ journeyId, title, destination, userName, u
             <h1 className="text-xl font-bold text-gray-900 leading-tight">
               {userName ? `${userName.split(" ")[0]}'s` : "Your"} relocation journey
             </h1>
-            <p className="text-xs text-gray-400 mt-0.5 font-medium tracking-wide">{title}</p>
+            <div className="inline-flex items-center gap-2 mt-1.5 px-3 py-1 rounded-full bg-gray-100 border border-gray-200">
+              <span className="text-sm font-semibold text-gray-700">{origin}</span>
+              <span className="text-emerald-500 font-bold text-sm">→</span>
+              <span className="text-sm font-semibold text-gray-700">{destination}</span>
+            </div>
           </div>
 
           {/* Phase progress bar */}
