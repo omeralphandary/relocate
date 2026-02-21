@@ -23,7 +23,7 @@ const VENDOR_CATEGORIES: {
   {
     emoji: "📦",
     title: "International Movers",
-    desc: "Door-to-door international moving companies, freight forwarders.",
+    desc: "Companies that pack, ship, and deliver your belongings to your new home.",
     vendors: [
       {
         name: "MoveEU",
@@ -63,7 +63,7 @@ const VENDOR_CATEGORIES: {
   {
     emoji: "📄",
     title: "Document & Apostille Services",
-    desc: "Apostille, legalisation, notarisation and police clearance.",
+    desc: "Getting your documents officially stamped so they're accepted abroad.",
     vendors: [
       {
         name: "DocuGlobal",
@@ -103,7 +103,7 @@ const VENDOR_CATEGORIES: {
   {
     emoji: "🌐",
     title: "Certified Translation",
-    desc: "Sworn translators, certified translations for government authorities.",
+    desc: "Translating your documents into the local language so authorities will accept them.",
     vendors: [
       {
         name: "CertifiedTranslate",
@@ -132,7 +132,7 @@ const VENDOR_CATEGORIES: {
   {
     emoji: "🗄️",
     title: "Storage",
-    desc: "Short and long-term self-storage, climate-controlled units.",
+    desc: "A safe place to keep your things while you travel or before your new home is ready.",
     vendors: [
       {
         name: "BoxDrop Storage",
@@ -161,7 +161,7 @@ const VENDOR_CATEGORIES: {
   {
     emoji: "🚢",
     title: "Car & Vehicle Shipping",
-    desc: "Vehicle export, import, customs clearance and delivery.",
+    desc: "Shipping your car to another country, including all the paperwork.",
     vendors: [
       {
         name: "AutoExport EU",
@@ -190,7 +190,7 @@ const VENDOR_CATEGORIES: {
   {
     emoji: "🐾",
     title: "Pet Relocation",
-    desc: "Pet transport specialists, health certificates, airline coordination.",
+    desc: "Taking your pet with you — vet paperwork, airline rules, and safe transport handled.",
     vendors: [
       {
         name: "PetJet Europe",
@@ -219,7 +219,7 @@ const VENDOR_CATEGORIES: {
   {
     emoji: "💸",
     title: "Money Transfer",
-    desc: "International wire transfers, currency exchange, multi-currency accounts.",
+    desc: "Sending money abroad cheaply, or keeping accounts in two currencies at once.",
     vendors: [
       {
         name: "Wise (formerly TransferWise)",
@@ -248,7 +248,7 @@ const VENDOR_CATEGORIES: {
   {
     emoji: "🏥",
     title: "Pre-departure Health",
-    desc: "Medical record exports, travel vaccinations, prescription consultations.",
+    desc: "Getting your medical history together and any vaccinations you need before you go.",
     vendors: [
       {
         name: "MedExport Records",
@@ -374,9 +374,9 @@ export default function MoversPage() {
       <div className="max-w-2xl mx-auto px-4 py-6">
         {/* Hero */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">Help Before You Go</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">Things to sort before you leave</h1>
           <p className="text-gray-500 text-sm leading-relaxed">
-            Specialists for the move itself. Contact direct, no middlemen.
+            Packing and shipping, translating your documents, moving your pet — these are people who handle it every day. Contact them directly.
           </p>
         </div>
 
@@ -384,11 +384,14 @@ export default function MoversPage() {
         <div className="space-y-8">
           {VENDOR_CATEGORIES.map((cat) => (
             <div key={cat.title} id={categorySlug(cat.title)}>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-xl">{cat.emoji}</span>
-                <h2 className="font-semibold text-base text-gray-900">{cat.title}</h2>
-                <span className="text-xs text-gray-400">·</span>
-                <span className="text-xs text-gray-400">{cat.vendors.length} available</span>
+              <div className="mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">{cat.emoji}</span>
+                  <h2 className="font-semibold text-base text-gray-900">{cat.title}</h2>
+                  <span className="text-xs text-gray-400">·</span>
+                  <span className="text-xs text-gray-400">{cat.vendors.length} available</span>
+                </div>
+                <p className="text-xs text-gray-400 mt-0.5 ml-8">{cat.desc}</p>
               </div>
               <div className="space-y-2">
                 {cat.vendors.map((v) => (
@@ -401,9 +404,9 @@ export default function MoversPage() {
 
         {/* CTA */}
         <div className="mt-10 bg-slate-800 border border-slate-700 rounded-2xl p-6 text-center">
-          <p className="text-white font-bold text-base mb-1">Are you a relocation service provider?</p>
+          <p className="text-white font-bold text-base mb-1">Do you help people who are moving?</p>
           <p className="text-slate-400 text-xs mb-4 leading-relaxed">
-            Get matched with relocators actively planning their move.
+            List your service and get found by people who need exactly what you offer.
           </p>
           <button
             disabled
