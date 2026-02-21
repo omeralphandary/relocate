@@ -376,8 +376,7 @@ export default function MoversPage() {
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900 mb-1">Help Before You Go</h1>
           <p className="text-gray-500 text-sm leading-relaxed">
-            Vetted specialists for every part of your pre-departure — movers, documents, pet transport and more.
-            Contact directly, no middlemen.
+            Specialists for the move itself. Contact direct, no middlemen.
           </p>
         </div>
 
@@ -404,7 +403,7 @@ export default function MoversPage() {
         <div className="mt-10 bg-slate-800 border border-slate-700 rounded-2xl p-6 text-center">
           <p className="text-white font-bold text-base mb-1">Are you a relocation service provider?</p>
           <p className="text-slate-400 text-xs mb-4 leading-relaxed">
-            Join the Realocate network. Get matched with relocators actively planning their move.
+            Get matched with relocators actively planning their move.
           </p>
           <button
             disabled

@@ -392,8 +392,7 @@ export default function VendorsPage() {
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900 mb-1">Help on the Ground</h1>
           <p className="text-gray-500 text-sm leading-relaxed">
-            Vetted, rated local experts for every step of your move. No cold calls, no agencies.
-            Contact directly, pay transparently.
+            Vetted local experts for life after you land. Contact direct, no middlemen.
           </p>
         </div>
 
@@ -420,7 +419,7 @@ export default function VendorsPage() {
         <div className="mt-10 bg-slate-800 border border-slate-700 rounded-2xl p-6 text-center">
           <p className="text-white font-bold text-base mb-1">Are you a local service provider?</p>
           <p className="text-slate-400 text-xs mb-4 leading-relaxed">
-            Join the Realocate vendor network. Get matched with relocators who need exactly what you offer.
+            Get matched with relocators actively looking for help.
           </p>
           <button
             disabled
