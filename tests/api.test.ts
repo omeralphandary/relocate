@@ -15,6 +15,9 @@ import { NextRequest } from "next/server";
 
 vi.mock("@/lib/prisma", () => {
   const prisma = {
+    user: {
+      findUnique: vi.fn(),
+    },
     journey: {
       findFirst: vi.fn(),
       findUnique: vi.fn(),
@@ -115,6 +118,7 @@ describe("POST /api/onboarding/complete", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(auth).mockResolvedValue(AUTHED_SESSION as never);
+    vi.mocked(prisma.user.findUnique).mockResolvedValue({ id: "user-1" } as never);
     vi.mocked(prisma.journey.findFirst).mockResolvedValue(null);
     vi.mocked(prisma.journey.updateMany).mockResolvedValue({ count: 0 } as never);
     vi.mocked(prisma.taskTemplate.findMany).mockResolvedValue(SAMPLE_TEMPLATES as never);
@@ -136,6 +140,14 @@ describe("POST /api/onboarding/complete", () => {
     vi.mocked(auth).mockResolvedValue(null as never);
     const res = await onboardingCompletePOST(makeRequest(VALID_COMPLETE_BODY));
     expect(res.status).toBe(401);
+  });
+
+  it("returns 401 when session JWT points to a deleted user (stale cookie)", async () => {
+    vi.mocked(prisma.user.findUnique).mockResolvedValue(null as never);
+    const res = await onboardingCompletePOST(makeRequest(VALID_COMPLETE_BODY));
+    expect(res.status).toBe(401);
+    const body = await res.json();
+    expect(body.error).toMatch(/account not found/i);
   });
 
   it("returns 400 when required fields are missing", async () => {

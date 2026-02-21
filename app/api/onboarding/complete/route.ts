@@ -29,6 +29,12 @@ export async function POST(req: NextRequest) {
 
     const userId = session.user.id;
 
+    // Guard: JWT can outlive account deletion (e.g. reset-user in dev, or future account deletion)
+    const userExists = await prisma.user.findUnique({ where: { id: userId }, select: { id: true } });
+    if (!userExists) {
+      return NextResponse.json({ error: "Account not found. Please sign out and sign in again." }, { status: 401 });
+    }
+
     // Archive any existing active journey before creating a new one
     await prisma.journey.updateMany({
       where: { userId, status: "ACTIVE" },
