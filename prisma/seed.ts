@@ -731,7 +731,7 @@ async function main() {
       title: "Renew your passport if needed",
       description: "Check your passport expiry date. Most countries require at least 6 months of validity beyond your planned stay. Renew well in advance — passport offices often have long queues.",
       category: "documents", phase: "PRE_DEPARTURE", order: 1, documents: ["Current passport", "Passport photos", "Renewal application form"],
-      tips: "Apply online where possible. Allow 6–10 weeks for standard processing; expedited services may be available for an extra fee.",
+      tips: "Apply online where possible. Allow 6–10 weeks before your move date for standard processing; expedited services may be available for an extra fee.",
       countries: [], dependsOn: [],
     },
     {
@@ -747,14 +747,14 @@ async function main() {
       title: "Get international moving quotes",
       description: "Contact at least 3 international moving companies for quotes. Compare volume-based vs flat-rate pricing, transit times, insurance coverage, and customs handling experience for your specific corridor.",
       category: "moving", phase: "PRE_DEPARTURE", order: 1, documents: [],
-      tips: "Use comparison platforms like MoveHub or Sirelo to get multiple quotes at once. Ask specifically about door-to-door vs port-to-port delivery and what's included in customs clearance.",
+      tips: "Start at least 8 weeks before your move date. Use comparison platforms like MoveHub or Sirelo to get multiple quotes at once. Ask specifically about door-to-door vs port-to-port delivery and what's included in customs clearance.",
       countries: [], dependsOn: [],
     },
     {
       title: "Book your international mover",
       description: "Once you've chosen a moving company, confirm the booking with a deposit. Provide a detailed inventory list, confirm pickup date and delivery timeline, and agree on insurance terms in writing.",
       category: "moving", phase: "PRE_DEPARTURE", order: 3, documents: ["Signed contract with mover", "Detailed inventory list"],
-      tips: "Get everything in writing — especially insurance coverage, liability for damage, and what happens if there are customs delays at destination. Photograph valuables before packing.",
+      tips: "Book at least 4–6 weeks before your move date. Get everything in writing — insurance coverage, liability for damage, and what happens if there are customs delays. Photograph valuables before packing.",
       countries: [], dependsOn: [],
     },
 
@@ -763,7 +763,7 @@ async function main() {
       title: "Give notice to terminate your current lease",
       description: "Check your lease agreement for the required notice period (usually 1–3 months) and submit written notice to your landlord before the deadline. Missing it may mean paying rent on two homes.",
       category: "housing", phase: "PRE_DEPARTURE", order: 20, documents: ["Signed notice letter", "Copy of lease agreement"],
-      tips: "Send your notice via registered post or email with a read receipt — you need proof of the date. Negotiate your move-out date to align with your travel plans and avoid any gap.",
+      tips: "Most leases require 1–3 months' notice before you leave — check yours now. Send your notice via registered post or email with a read receipt so you have proof of the date.",
       countries: [], dependsOn: [],
     },
 
@@ -781,7 +781,7 @@ async function main() {
       title: "Export your medical records and vaccination history",
       description: "Request copies of your full medical records, vaccination certificates, and any ongoing treatment plans from your GP, specialists, and dentist before you leave.",
       category: "insurance", phase: "PRE_DEPARTURE", order: 20, documents: ["Medical records request form"],
-      tips: "Ask for records in English where possible, or arrange certified translation. In countries with digital health systems (UK, Nordics), records are often downloadable from the patient portal.",
+      tips: "Request records at least 2–3 weeks before you leave — some GPs take time. Ask for records in English where possible, or arrange certified translation. In countries with digital health systems (UK, Nordics), records are often downloadable from the patient portal.",
       countries: [], dependsOn: [],
     },
 
@@ -790,7 +790,7 @@ async function main() {
       title: "Deregister your children from their current school",
       description: "Formally notify your children's school of the withdrawal date and request all documentation needed to transfer to a school in your destination country.",
       category: "education", phase: "PRE_DEPARTURE", order: 20, documents: [],
-      tips: "Request a school report, transcripts, and any assessments in English if possible. Some schools issue a 'Transfer Certificate' — confirm what format your destination school requires before withdrawal.",
+      tips: "Notify the school at least 4 weeks before your departure. Request a school report, transcripts, and any assessments in English if possible. Some schools issue a 'Transfer Certificate' — confirm what format your destination school requires.",
       countries: [], familyStatuses: ["family_with_kids"], dependsOn: [],
     },
 
@@ -806,7 +806,7 @@ async function main() {
       title: "Get an official international pet health certificate",
       description: "Most countries require an official health certificate issued by an accredited vet and endorsed by your national veterinary authority within a specific window before travel (often 7–10 days before departure).",
       category: "pets", phase: "PRE_DEPARTURE", order: 2, documents: ["Microchip certificate", "Rabies vaccination record", "Vet health certificate", "Government endorsement"],
-      tips: "Time the vet appointment carefully — most certificates are only valid for 10 days. Requirements differ significantly by destination country (EU vs US vs Australia). Check your destination's specific requirements on their official government site.",
+      tips: "Book the vet appointment no more than 10 days before your travel date — certificates expire quickly. Requirements differ significantly by destination country (EU vs US vs Australia). Check the specific requirements on your destination's official government site.",
       countries: [], dependsOn: [],
     },
 
@@ -815,7 +815,7 @@ async function main() {
       title: "Set up mail forwarding from your origin address",
       description: "Arrange for your post to be redirected to your new address (or a trusted contact) and update your address with key institutions before you leave — bank, pension, tax authority, subscriptions.",
       category: "legal", phase: "PRE_DEPARTURE", order: 20, documents: [],
-      tips: "Most postal services offer mail forwarding for 3–12 months. Prioritise updating: your bank, tax authority (HMRC P85 / IRS Form 8822 / equivalent), pension, and investment accounts.",
+      tips: "Set this up at least 2 weeks before you leave. Most postal services offer mail forwarding for 3–12 months. Prioritise updating your bank, tax authority, pension, and investment accounts.",
       countries: [], dependsOn: [],
     },
   ];
