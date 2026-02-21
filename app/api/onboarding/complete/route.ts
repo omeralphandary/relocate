@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
           title: `${originCountry} → ${destinationCountry}`,
           origin: originCountry,
           destination: destinationCountry,
-          tasks: { create: templates.map((t) => ({ taskId: t.id })) },
+          tasks: { create: templates.map((t) => ({ taskId: t.id, phase: t.phase })) },
         },
       });
     });

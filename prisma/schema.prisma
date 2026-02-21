@@ -99,6 +99,7 @@ model JourneyTask {
   status      TaskStatus @default(PENDING)
   completedAt DateTime?
   notes       String?
+  phase       String     @default("POST_ARRIVAL") // PRE_DEPARTURE | POST_ARRIVAL
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
@@ -129,7 +130,8 @@ model TaskTemplate {
   id           String   @id @default(cuid())
   title        String
   description  String
-  category     String   // housing | banking | legal | telecom | transport | insurance
+  category     String   // housing | banking | legal | telecom | transport | insurance | documents | moving | pets
+  phase        String   @default("POST_ARRIVAL") // PRE_DEPARTURE | POST_ARRIVAL
   officialUrl  String?
   documents    String[] // list of required documents
   tips         String?
