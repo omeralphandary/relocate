@@ -373,8 +373,13 @@ export default function JourneyView({ journeyId, title, destination, userName, u
             </div>
           </div>
 
-          {/* Journey title */}
-          <h1 className="text-xl font-bold text-gray-900 mt-0.5">{title}</h1>
+          {/* Journey heading */}
+          <div className="mt-2">
+            <h1 className="text-xl font-bold text-gray-900 leading-tight">
+              {userName ? `${userName.split(" ")[0]}'s` : "Your"} relocation journey
+            </h1>
+            <p className="text-xs text-gray-400 mt-0.5 font-medium tracking-wide">{title}</p>
+          </div>
 
           {/* Phase progress bar */}
           <div className="mt-3">
