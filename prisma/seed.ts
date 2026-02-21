@@ -741,20 +741,6 @@ async function main() {
       tips: "The apostille authority varies by country — in the UK it's the Foreign, Commonwealth & Development Office; in Israel it's the Ministry of Foreign Affairs. Allow 2–4 weeks. Do this before you leave — it's much harder from abroad.",
       countries: [], dependsOn: [],
     },
-    {
-      title: "Get certified translations of your documents",
-      description: "Documents in languages other than the official language of your destination country must be translated by a sworn or certified translator. This is required for residency applications, employment, and banking.",
-      category: "documents", phase: "PRE_DEPARTURE", order: 3, documents: ["Apostilled originals to be translated"],
-      tips: "Only translations by court-certified translators are accepted by government authorities — general translation services are not. Allow 5–7 business days per document, and budget €60–120 per page.",
-      countries: [], dependsOn: [],
-    },
-    {
-      title: "Obtain a police clearance certificate",
-      description: "Most countries require a clean criminal record certificate from your home country as part of residency permit or work permit applications. It must typically be apostilled as well.",
-      category: "documents", phase: "PRE_DEPARTURE", order: 4, documents: ["Passport or national ID", "Application form"],
-      tips: "Processing times vary — allow 2–8 weeks. Some countries only accept certificates issued within the last 3–6 months, so time your application carefully. Apply early.",
-      countries: [], dependsOn: [],
-    },
 
     // ─── MOVING ───────────────────────────────────────────────
     {
@@ -765,31 +751,10 @@ async function main() {
       countries: [], dependsOn: [],
     },
     {
-      title: "Decide what to ship, sell, store, or donate",
-      description: "Take stock of all your belongings and make clear decisions before the move. Shipping volume directly determines your moving cost — every cubic metre counts.",
-      category: "moving", phase: "PRE_DEPARTURE", order: 2, documents: [],
-      tips: "Furniture and large appliances are usually not worth shipping internationally — selling locally and buying at the destination is often cheaper. Focus shipping on personal items, clothes, books, and irreplaceable belongings.",
-      countries: [], dependsOn: [],
-    },
-    {
       title: "Book your international mover",
       description: "Once you've chosen a moving company, confirm the booking with a deposit. Provide a detailed inventory list, confirm pickup date and delivery timeline, and agree on insurance terms in writing.",
       category: "moving", phase: "PRE_DEPARTURE", order: 3, documents: ["Signed contract with mover", "Detailed inventory list"],
       tips: "Get everything in writing — especially insurance coverage, liability for damage, and what happens if there are customs delays at destination. Photograph valuables before packing.",
-      countries: [], dependsOn: [],
-    },
-    {
-      title: "Arrange storage for items not being shipped",
-      description: "If you're not shipping everything immediately, arrange a storage unit for items you'll retrieve later or keep in your origin country.",
-      category: "moving", phase: "PRE_DEPARTURE", order: 4, documents: ["Storage unit rental agreement"],
-      tips: "Compare climate-controlled vs standard storage. Price is usually per cubic metre per month. Ensure the facility is insured and has CCTV. Most self-storage providers let you pay month-to-month.",
-      countries: [], dependsOn: [],
-    },
-    {
-      title: "Decide whether to ship or sell your car",
-      description: "Shipping a car internationally is expensive (€800–2,500+) and the car may not meet local emissions or safety standards. Research import duties and registration requirements before deciding.",
-      category: "moving", phase: "PRE_DEPARTURE", order: 5, documents: [],
-      tips: "In the EU, cars registered in one EU country are generally road-legal in others without re-registration. For non-EU destinations, check import duty rates — they can be 20–100%+ of the car's value. Selling and buying locally is often cheaper.",
       countries: [], dependsOn: [],
     },
 
@@ -801,13 +766,6 @@ async function main() {
       tips: "Send your notice via registered post or email with a read receipt — you need proof of the date. Negotiate your move-out date to align with your travel plans and avoid any gap.",
       countries: [], dependsOn: [],
     },
-    {
-      title: "Recover your rental deposit",
-      description: "Arrange a check-out inspection with your landlord, document the state of the property thoroughly, and ensure you receive your deposit back within the legally required timeframe.",
-      category: "housing", phase: "PRE_DEPARTURE", order: 21, documents: ["Move-out photos", "Proof of original deposit payment"],
-      tips: "Take time-stamped photos of every room before handing over keys. Many countries have deposit protection schemes — if your landlord is unresponsive, contact the scheme directly. Know your legal rights.",
-      countries: [], dependsOn: [],
-    },
 
     // ─── BANKING ──────────────────────────────────────────────
     {
@@ -815,13 +773,6 @@ async function main() {
       description: "Open a Wise or similar multi-currency account to move your savings to your destination efficiently, without paying bank transfer fees and poor exchange rates.",
       category: "banking", phase: "PRE_DEPARTURE", order: 20, documents: ["Passport", "Proof of address"],
       tips: "Wise consistently offers mid-market exchange rates with transparent fees. Set it up before you leave — identity verification is easier while you're still in your home country.",
-      countries: [], dependsOn: [],
-    },
-    {
-      title: "Notify your bank and financial institutions of your move",
-      description: "Inform your bank, pension provider, investment accounts, and insurance companies of your upcoming address change. Many banks freeze accounts if they detect overseas transactions without warning.",
-      category: "banking", phase: "PRE_DEPARTURE", order: 21, documents: [],
-      tips: "Ask your bank whether you can keep your account active from abroad — some close accounts of non-residents. Revolut and Wise accounts remain usable globally as a backup.",
       countries: [], dependsOn: [],
     },
 
@@ -833,13 +784,6 @@ async function main() {
       tips: "Ask for records in English where possible, or arrange certified translation. In countries with digital health systems (UK, Nordics), records are often downloadable from the patient portal.",
       countries: [], dependsOn: [],
     },
-    {
-      title: "Stock up on prescription medication for the transition period",
-      description: "Get a 2–3 month supply of any regular prescriptions before you leave. Medications may have different brand names or limited availability at your destination, and it takes time to register with a local doctor.",
-      category: "insurance", phase: "PRE_DEPARTURE", order: 21, documents: ["Prescription from your GP", "Explanatory letter from doctor (in English)"],
-      tips: "Ask your doctor for a letter explaining your condition and current medication in English — you'll need it to transfer care. Check customs rules for bringing medication into your destination country; some require a doctor's letter.",
-      countries: [], dependsOn: [],
-    },
 
     // ─── EDUCATION (family with kids) ────────────────────────
     {
@@ -847,13 +791,6 @@ async function main() {
       description: "Formally notify your children's school of the withdrawal date and request all documentation needed to transfer to a school in your destination country.",
       category: "education", phase: "PRE_DEPARTURE", order: 20, documents: [],
       tips: "Request a school report, transcripts, and any assessments in English if possible. Some schools issue a 'Transfer Certificate' — confirm what format your destination school requires before withdrawal.",
-      countries: [], familyStatuses: ["family_with_kids"], dependsOn: [],
-    },
-    {
-      title: "Gather and translate school records for your children",
-      description: "Collect school transcripts, grade reports, and any special education or medical plans. Have them translated and certified if required by your destination country's school system.",
-      category: "education", phase: "PRE_DEPARTURE", order: 21, documents: ["School transcripts", "Attendance records", "Any special education plans"],
-      tips: "IB and Cambridge qualifications are widely recognised internationally. For national curricula, ask the destination school's admissions office exactly what documentation they need — requirements vary significantly.",
       countries: [], familyStatuses: ["family_with_kids"], dependsOn: [],
     },
 
@@ -872,13 +809,6 @@ async function main() {
       tips: "Time the vet appointment carefully — most certificates are only valid for 10 days. Requirements differ significantly by destination country (EU vs US vs Australia). Check your destination's specific requirements on their official government site.",
       countries: [], dependsOn: [],
     },
-    {
-      title: "Book pet-friendly travel and arrange in-cabin or cargo transport",
-      description: "Most airlines have specific rules for pets — size limits for in-cabin travel, breed restrictions, and separate booking requirements for cargo transport. Pet spaces are limited and must be booked early.",
-      category: "pets", phase: "PRE_DEPARTURE", order: 3, documents: ["Pet health certificate", "Airline pet booking confirmation"],
-      tips: "Small pets under 8kg (including carrier) often travel in-cabin. Brachycephalic breeds (pugs, French bulldogs, Persian cats) are frequently banned from cargo. Use an IATA-approved carrier. Some routes have seasonal cargo restrictions in summer due to heat.",
-      countries: [], dependsOn: [],
-    },
 
     // ─── LEGAL / ADMIN ────────────────────────────────────────
     {
@@ -886,13 +816,6 @@ async function main() {
       description: "Arrange for your post to be redirected to your new address (or a trusted contact) and update your address with key institutions before you leave — bank, pension, tax authority, subscriptions.",
       category: "legal", phase: "PRE_DEPARTURE", order: 20, documents: [],
       tips: "Most postal services offer mail forwarding for 3–12 months. Prioritise updating: your bank, tax authority (HMRC P85 / IRS Form 8822 / equivalent), pension, and investment accounts.",
-      countries: [], dependsOn: [],
-    },
-    {
-      title: "Notify government authorities of your departure",
-      description: "Many countries require or strongly recommend formally notifying government bodies when you leave permanently — this affects your tax residency status, benefits eligibility, and social contributions.",
-      category: "legal", phase: "PRE_DEPARTURE", order: 21, documents: [],
-      tips: "UK: complete the P85 form to inform HMRC. Germany: Abmeldung at the Einwohnermeldeamt. US citizens: notify the IRS of your foreign address via Form 8822. Netherlands: deregister at the gemeentehuis. Check your specific country's requirements.",
       countries: [], dependsOn: [],
     },
   ];
