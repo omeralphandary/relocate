@@ -10,6 +10,7 @@ interface Props {
 }
 
 const FIRST_CATEGORY_HINT: Record<string, string> = {
+  // Post-arrival
   telecom: "get a local SIM — you'll need it on day 1",
   housing: "sort your accommodation before anything else",
   banking: "open a local bank account early",
@@ -17,6 +18,10 @@ const FIRST_CATEGORY_HINT: Record<string, string> = {
   insurance: "register for health cover",
   transport: "handle your driving licence conversion",
   education: "enrol in school or language classes",
+  // Pre-departure
+  documents: "sort your passport and apostilles first — everything else depends on them",
+  moving: "get moving quotes now — good companies book up fast",
+  pets: "pet travel paperwork takes weeks — start immediately",
 };
 
 export default function AIGreetingCard({ userName, destination, totalCount, categoryCount, firstCategory, onDismiss }: Props) {
