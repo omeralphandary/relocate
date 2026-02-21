@@ -289,19 +289,8 @@ export default function JourneyView({ journeyId, title, origin, destination, use
   const renderCards = (
     grouped: Record<string, JourneyTask[]>,
     sorted: string[],
-    showGreetingCard: boolean,
   ) => (
     <>
-      {showGreetingCard && sorted.length > 0 && (
-        <AIGreetingCard
-          userName={userName}
-          destination={destination}
-          totalCount={tasks.length}
-          categoryCount={sorted.length}
-          firstCategory={sorted[0] ?? "telecom"}
-          onDismiss={() => setShowGreeting(false)}
-        />
-      )}
       {sorted.length === 0 && (
         <div className="text-center py-16 text-gray-400">
           <p className="text-4xl mb-3">📋</p>
@@ -473,6 +462,20 @@ export default function JourneyView({ journeyId, title, origin, destination, use
         </div>
       </div>
 
+      {/* AI greeting — shown above panels so it's visible regardless of active tab */}
+      {showGreeting && (
+        <div className="max-w-2xl mx-auto px-4 pt-4">
+          <AIGreetingCard
+            userName={userName}
+            destination={destination}
+            totalCount={tasks.length}
+            categoryCount={preSorted.length + postSorted.length}
+            firstCategory={preSorted[0] ?? postSorted[0] ?? "telecom"}
+            onDismiss={() => setShowGreeting(false)}
+          />
+        </div>
+      )}
+
       {/* Sliding content area */}
       <div
         style={{ overflowX: "hidden" }}
@@ -491,7 +494,7 @@ export default function JourneyView({ journeyId, title, origin, destination, use
           {/* PRE-DEPARTURE panel */}
           {hasPreDeparture && (
             <div className="py-5 space-y-3" style={{ width: "50%", paddingLeft: "max(1rem, calc((100vw - 672px) / 2 + 1rem))", paddingRight: "max(1rem, calc((100vw - 672px) / 2 + 1rem))" }}>
-              {renderCards(preGrouped, preSorted, showGreeting && activePhase === "pre")}
+              {renderCards(preGrouped, preSorted)}
 
               {/* Help Before You Go — pre-departure services */}
               <Link
@@ -534,7 +537,7 @@ export default function JourneyView({ journeyId, title, origin, destination, use
             }}
           >
             <div className={hasPreDeparture ? "" : "max-w-2xl mx-auto px-4"}>
-              {renderCards(postGrouped, postSorted, showGreeting && activePhase === "post")}
+              {renderCards(postGrouped, postSorted)}
 
               {/* Help on the Ground — vendor marketplace */}
               <Link

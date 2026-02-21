@@ -15,8 +15,29 @@ export default function CountrySelect({ value, onChange, placeholder }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const ALIASES: Record<string, string> = {
+    us: "United States", usa: "United States",
+    uk: "United Kingdom", gb: "United Kingdom",
+    uae: "United Arab Emirates",
+    cz: "Czech Republic",
+    de: "Germany", fr: "France", es: "Spain", it: "Italy",
+    nl: "Netherlands", pl: "Poland", at: "Austria",
+    ch: "Switzerland", se: "Sweden", no: "Norway",
+    dk: "Denmark", fi: "Finland", be: "Belgium",
+    pt: "Portugal", ie: "Ireland", ru: "Russia",
+    il: "Israel", au: "Australia", nz: "New Zealand",
+    za: "South Africa", sg: "Singapore", jp: "Japan",
+    kr: "South Korea", cn: "China", in: "India",
+    br: "Brazil", ca: "Canada", mx: "Mexico",
+    sa: "Saudi Arabia", tr: "Turkey", ae: "United Arab Emirates",
+  };
+
+  const aliasTarget = ALIASES[search.toLowerCase()];
   const filtered = search
-    ? COUNTRIES.filter((c) => c.toLowerCase().includes(search.toLowerCase()))
+    ? COUNTRIES.filter((c) =>
+        c.toLowerCase().includes(search.toLowerCase()) ||
+        (aliasTarget !== undefined && c === aliasTarget)
+      )
     : COUNTRIES;
 
   useEffect(() => {
