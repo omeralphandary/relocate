@@ -96,7 +96,7 @@ type MilestoneState =
 
 // ─── Component ─────────────────────────────────────────────────────────────
 
-export default function JourneyView({ journeyId, title, destination, userName, userEmail, tasks: initialTasks }: JourneyViewProps) {
+export default function JourneyView({ journeyId, title, origin, destination, userName, userEmail, tasks: initialTasks }: JourneyViewProps) {
   const [tasks, setTasks] = useState(initialTasks);
   const [addingCategory, setAddingCategory] = useState<string | null>(null);
   const [archiving, setArchiving] = useState(false);
