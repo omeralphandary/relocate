@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { generateCustomTaskOverview } from "@/lib/llm";
 
-const VALID_CATEGORIES = ["housing", "banking", "legal", "telecom", "transport", "insurance", "general"];
+const VALID_CATEGORIES = ["housing", "banking", "legal", "telecom", "transport", "insurance", "education", "documents", "moving", "pets", "general"];
 
 export async function POST(
   req: NextRequest,
