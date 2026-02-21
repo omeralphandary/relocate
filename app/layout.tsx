@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import SessionProvider from "@/components/SessionProvider";
 import "./globals.css";
 
@@ -44,6 +45,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${spaceGrotesk.variable} ${geistMono.variable} antialiased`}>
+        <Script
+          defer
+          data-domain="realocate.ai"
+          src="https://plausible.io/js/script.js"
+          strategy="afterInteractive"
+        />
         <SessionProvider>{children}</SessionProvider>
         <div className="fixed bottom-3 right-3 z-50 text-[10px] font-semibold tracking-widest uppercase text-white/40 bg-white/5 border border-white/10 px-2.5 py-1 rounded-full pointer-events-none select-none">
           Beta
