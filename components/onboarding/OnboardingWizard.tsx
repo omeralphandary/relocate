@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import ProgressBar from "./ProgressBar";
 import Step1Countries from "./steps/Step1Countries";
 import Step2Profile from "./steps/Step2Profile";
@@ -166,8 +166,17 @@ export default function OnboardingWizard() {
         />
       )}
       <div className="w-full max-w-lg bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
-        <div className="mb-6">
+        <div className="mb-6 flex items-center justify-between">
           <span className="font-bold text-xl tracking-tight text-slate-900">Realocate<span className="text-emerald-500">.ai</span></span>
+          {isAuthenticated && (
+            <button
+              type="button"
+              onClick={() => signOut({ callbackUrl: "/onboarding" })}
+              className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              Sign out →
+            </button>
+          )}
         </div>
 
         <ProgressBar currentStep={step} totalSteps={3} labels={STEPS} />
