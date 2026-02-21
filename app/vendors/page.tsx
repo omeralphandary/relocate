@@ -23,7 +23,7 @@ const VENDOR_CATEGORIES: {
   {
     emoji: "⚖️",
     title: "Legal & Immigration",
-    desc: "Help with your visa, residence permit, or work permit — in plain language.",
+    desc: "Help with your visa, residence permit, or work permit. In plain language.",
     vendors: [
       {
         name: "Expat Legal Group",
@@ -63,7 +63,7 @@ const VENDOR_CATEGORIES: {
   {
     emoji: "🏠",
     title: "Housing & Real Estate",
-    desc: "Help finding a flat or room — including viewing, lease-signing, and deposit.",
+    desc: "Help finding a flat or room, including viewing, lease-signing, and deposit.",
     vendors: [
       {
         name: "NestFinder Prague",
@@ -78,7 +78,7 @@ const VENDOR_CATEGORIES: {
       },
       {
         name: "Expat Homes",
-        tagline: "Furnished short-term rentals from 1 week — no Czech required.",
+        tagline: "Furnished short-term rentals from 1 week. No Czech required.",
         rating: 4.6,
         reviews: 218,
         priceRange: "€100–300",
@@ -89,7 +89,7 @@ const VENDOR_CATEGORIES: {
       },
       {
         name: "ReloProp",
-        tagline: "Property finder service — we shortlist, you choose.",
+        tagline: "Property finder service. We shortlist, you choose.",
         rating: 4.7,
         reviews: 141,
         priceRange: "€300–700",
@@ -107,7 +107,7 @@ const VENDOR_CATEGORIES: {
     vendors: [
       {
         name: "ExpatAccount.eu",
-        tagline: "Bank account setup guaranteed within 5 business days — any nationality.",
+        tagline: "Bank account setup guaranteed within 5 business days, for any nationality.",
         rating: 4.9,
         reviews: 537,
         priceRange: "€80–200",
@@ -136,7 +136,7 @@ const VENDOR_CATEGORIES: {
     vendors: [
       {
         name: "CertifiedTranslate",
-        tagline: "Sworn translations accepted by Czech authorities — 48-hour turnaround.",
+        tagline: "Sworn translations accepted by Czech authorities. 48-hour turnaround.",
         rating: 4.9,
         reviews: 682,
         priceRange: "€40–180",
@@ -147,7 +147,7 @@ const VENDOR_CATEGORIES: {
       },
       {
         name: "LingoLocal",
-        tagline: "1-on-1 Czech language coaching for expats — beginner to B1.",
+        tagline: "1-on-1 Czech language coaching for expats, from beginner to B1.",
         rating: 4.8,
         reviews: 319,
         priceRange: "€30–60/hr",
@@ -176,7 +176,7 @@ const VENDOR_CATEGORIES: {
     vendors: [
       {
         name: "MoveEU",
-        tagline: "Door-to-door international moves across 40 countries — fixed price quotes.",
+        tagline: "Door-to-door international moves across 40 countries, with fixed price quotes.",
         rating: 4.7,
         reviews: 891,
         priceRange: "€800–3,500",
@@ -216,7 +216,7 @@ const VENDOR_CATEGORIES: {
       },
       {
         name: "GlobalCover Insurance",
-        tagline: "Expat health insurance — compare & enrol in 10 minutes.",
+        tagline: "Expat health insurance. Compare and enrol in 10 minutes.",
         rating: 4.7,
         reviews: 338,
         priceRange: "€50–200/mo",
@@ -263,7 +263,7 @@ const VENDOR_CATEGORIES: {
     vendors: [
       {
         name: "LicenceSwap",
-        tagline: "Foreign driving licence exchange — paperwork, appointments, done.",
+        tagline: "Foreign driving licence exchange. Paperwork and appointments handled.",
         rating: 4.8,
         reviews: 267,
         priceRange: "€120–300",
@@ -392,7 +392,7 @@ export default function VendorsPage() {
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900 mb-1">People who can help you settle in</h1>
           <p className="text-gray-500 text-sm leading-relaxed">
-            Finding a flat, opening a bank account, sorting your visa — these are people who do this every day and speak your language. Contact them directly.
+            Finding a flat, opening a bank account, sorting your visa. These are people who do this every day and speak your language. Contact them directly.
           </p>
         </div>
 

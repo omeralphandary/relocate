@@ -27,7 +27,7 @@ const VENDOR_CATEGORIES: {
     vendors: [
       {
         name: "MoveEU",
-        tagline: "Door-to-door international moves across 40 countries — fixed-price quotes in 24 hrs.",
+        tagline: "Door-to-door international moves across 40 countries, with fixed-price quotes in 24 hrs.",
         rating: 4.7,
         reviews: 891,
         priceRange: "€800–3,500",
@@ -38,7 +38,7 @@ const VENDOR_CATEGORIES: {
       },
       {
         name: "Seven Seas Worldwide",
-        tagline: "Shared container and full-container loads — cost-effective for solo movers.",
+        tagline: "Shared container and full-container loads, cost-effective for solo movers.",
         rating: 4.6,
         reviews: 1240,
         priceRange: "€400–2,500",
@@ -67,7 +67,7 @@ const VENDOR_CATEGORIES: {
     vendors: [
       {
         name: "DocuGlobal",
-        tagline: "Apostille and legalisation for 40+ countries — tracked and guaranteed.",
+        tagline: "Apostille and legalisation for 40+ countries, tracked and guaranteed.",
         rating: 4.9,
         reviews: 463,
         priceRange: "€50–200",
@@ -89,7 +89,7 @@ const VENDOR_CATEGORIES: {
       },
       {
         name: "ClearanceKing",
-        tagline: "Police clearance certificates, FBI checks and Interpol records — handled end-to-end.",
+        tagline: "Police clearance certificates, FBI checks and Interpol records, all handled for you.",
         rating: 4.6,
         reviews: 189,
         priceRange: "€80–250",
@@ -107,7 +107,7 @@ const VENDOR_CATEGORIES: {
     vendors: [
       {
         name: "CertifiedTranslate",
-        tagline: "Sworn translations accepted by EU authorities — 48-hour turnaround guaranteed.",
+        tagline: "Sworn translations accepted by EU authorities. 48-hour turnaround guaranteed.",
         rating: 4.9,
         reviews: 682,
         priceRange: "€40–180",
@@ -136,7 +136,7 @@ const VENDOR_CATEGORIES: {
     vendors: [
       {
         name: "BoxDrop Storage",
-        tagline: "From 1 week storage while you're in transit — insured and accessible.",
+        tagline: "From 1 week storage while you're in transit. Insured and accessible.",
         rating: 4.5,
         reviews: 213,
         priceRange: "€60–150/mo",
@@ -165,7 +165,7 @@ const VENDOR_CATEGORIES: {
     vendors: [
       {
         name: "AutoExport EU",
-        tagline: "Roll-on roll-off vehicle shipping between EU countries — door-to-port.",
+        tagline: "Roll-on roll-off vehicle shipping between EU countries, door-to-port.",
         rating: 4.6,
         reviews: 327,
         priceRange: "€400–1,800",
@@ -190,11 +190,11 @@ const VENDOR_CATEGORIES: {
   {
     emoji: "🐾",
     title: "Pet Relocation",
-    desc: "Taking your pet with you — vet paperwork, airline rules, and safe transport handled.",
+    desc: "Taking your pet with you. Vet paperwork, airline rules, and safe transport all handled.",
     vendors: [
       {
         name: "PetJet Europe",
-        tagline: "End-to-end pet relocation — vet paperwork, airline booking, door-to-door.",
+        tagline: "Full pet relocation service: vet paperwork, airline booking, door-to-door delivery.",
         rating: 4.9,
         reviews: 284,
         priceRange: "€300–1,200",
@@ -223,7 +223,7 @@ const VENDOR_CATEGORIES: {
     vendors: [
       {
         name: "Wise (formerly TransferWise)",
-        tagline: "Mid-market exchange rates, no hidden fees — the go-to for expat transfers.",
+        tagline: "Mid-market exchange rates, no hidden fees. The go-to for expat transfers.",
         rating: 4.9,
         reviews: 4820,
         priceRange: "0.3–1.5% fee",
@@ -234,7 +234,7 @@ const VENDOR_CATEGORIES: {
       },
       {
         name: "CurrencyFair",
-        tagline: "Peer-to-peer currency exchange — often beats bank rates by 3–5x.",
+        tagline: "Peer-to-peer currency exchange, often beating bank rates by 3–5x.",
         rating: 4.7,
         reviews: 1260,
         priceRange: "€3 flat + 0.45%",
@@ -252,7 +252,7 @@ const VENDOR_CATEGORIES: {
     vendors: [
       {
         name: "MedExport Records",
-        tagline: "Request and digitise your full medical history — GP, dental, specialist, all in one file.",
+        tagline: "Request and digitise your full medical history: GP, dental, and specialist records in one file.",
         rating: 4.8,
         reviews: 193,
         priceRange: "€50–150",
@@ -263,7 +263,7 @@ const VENDOR_CATEGORIES: {
       },
       {
         name: "TravelVax Clinics",
-        tagline: "Travel vaccination advice and certificates for any destination — walk-in or booked.",
+        tagline: "Travel vaccination advice and certificates for any destination. Walk-in or pre-booked.",
         rating: 4.7,
         reviews: 341,
         priceRange: "€30–150/vaccine",
@@ -376,7 +376,7 @@ export default function MoversPage() {
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900 mb-1">Things to sort before you leave</h1>
           <p className="text-gray-500 text-sm leading-relaxed">
-            Packing and shipping, translating your documents, moving your pet — these are people who handle it every day. Contact them directly.
+            Packing and shipping, translating your documents, moving your pet. These are people who handle it every day. Contact them directly.
           </p>
         </div>
 
