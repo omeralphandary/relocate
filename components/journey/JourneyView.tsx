@@ -127,6 +127,10 @@ export default function JourneyView({ journeyId, title, origin, destination, use
     }
   }, [searchParams, router]);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [activePhase]);
+
   const handleNewJourney = async () => {
     setArchiving(true);
     await fetch(`/api/journeys/${journeyId}`, { method: "PATCH" });
