@@ -338,6 +338,94 @@ async function main() {
       tips: "The Deutschlandticket at €58/month is the best deal in Germany — use any train, tram, bus, and metro in the entire country.",
       countries: ["Germany"], dependsOn: [],
     },
+
+    // ═══════════════════════════════════════════════════════════
+    // UNITED KINGDOM
+    // ═══════════════════════════════════════════════════════════
+
+    {
+      title: "Arrange temporary accommodation",
+      description: "Book short-term accommodation for your first 2–4 weeks — serviced apartment, hotel, or short-let. A UK address is needed for bank accounts, GP registration, and official correspondence.",
+      category: "housing", order: 1, documents: [],
+      tips: "Serviced apartments beat hotels for stays over a week. Book in the area you expect to settle — London boroughs vary enormously in character, commute time, and price.",
+      countries: ["United Kingdom"], dependsOn: [],
+    },
+    {
+      title: "Find a permanent flat",
+      description: "Search for a long-term rental on Rightmove or Zoopla, or through a letting agent. UK landlords require references, 3 months' bank statements, and proof of income (typically 2.5× monthly rent).",
+      category: "housing", order: 2,
+      documents: ["Passport or BRP", "Employment contract or offer letter", "Bank statements (3 months)", "Previous landlord reference"],
+      tips: "As a new arrival without UK credit history, offer 2–3 months' rent upfront to strengthen your application. Holding deposit is capped at 1 week's rent. Check both Rightmove and Zoopla — listings often differ.",
+      countries: ["United Kingdom"], dependsOn: [],
+    },
+    {
+      title: "Complete Right to Rent verification",
+      description: "Landlords are legally required to verify your right to rent before your tenancy starts. Use the UKVI online service to generate a share code — share it with your landlord rather than handing over physical documents.",
+      category: "housing", order: 3,
+      officialUrl: "https://www.gov.uk/prove-right-to-rent",
+      documents: ["Passport", "BRP or visa vignette", "Share Code (from UKVI online service)"],
+      tips: "Generate your share code at gov.uk/prove-right-to-rent — valid for 90 days and more reliable than physical document checks. If your BRP hasn't arrived yet, your passport with visa vignette is sufficient.",
+      countries: ["United Kingdom"], dependsOn: [],
+    },
+    {
+      title: "Set up utilities and broadband",
+      description: "Set up gas, electricity, and broadband in your name once you have a permanent address.",
+      category: "housing", order: 4,
+      documents: ["Tenancy agreement", "Passport or BRP"],
+      tips: "Use uSwitch or MoneySuperMarket to compare energy suppliers. Order broadband the day you sign the lease — installation takes 1–2 weeks. Water is supplied by your regional provider automatically; you just register.",
+      countries: ["United Kingdom"], dependsOn: [],
+    },
+    {
+      title: "Get a UK SIM card",
+      description: "Pick up a SIM on arrival. A UK number is essential for bank account setup, GP registration, and everyday life.",
+      category: "telecom", order: 1,
+      documents: ["Passport"],
+      tips: "Three and Voxi (Vodafone) offer the best value SIM-only plans. EE has the strongest rural coverage. All networks offer prepaid SIMs at the airport — switch to a monthly contract once you have a UK address.",
+      countries: ["United Kingdom"], dependsOn: [],
+    },
+    {
+      title: "Open a UK bank account",
+      description: "A UK bank account is required for receiving salary, paying rent by direct debit, and building a credit footprint. Digital banks are the fastest route for new arrivals.",
+      category: "banking", order: 1,
+      documents: ["Passport", "BRP or visa", "Proof of UK address"],
+      tips: "Monzo and Starling open accounts same-day using just your passport and a selfie — no UK address required upfront. Use one as your primary account while you set up a traditional bank account (Barclays, HSBC, Lloyds) which needs proof of address. HSBC Global Money is useful if you already bank with HSBC internationally.",
+      countries: ["United Kingdom"], dependsOn: [],
+    },
+    {
+      title: "Apply for a National Insurance (NI) number",
+      description: "Your NI number is required to work legally in the UK, pay taxes, and receive state benefits. Apply online through HMRC — it arrives by post in 4–8 weeks.",
+      category: "legal", order: 1,
+      officialUrl: "https://www.gov.uk/apply-national-insurance-number",
+      documents: ["Passport", "BRP", "Proof of UK address"],
+      tips: "You can start work before your NI number arrives — give your employer the confirmation email reference. Most employers accept this for up to 3 months while you wait.",
+      countries: ["United Kingdom"], dependsOn: [],
+    },
+    {
+      title: "Register with an NHS GP",
+      description: "Register with a local GP surgery to access free NHS healthcare. If you paid the Immigration Health Surcharge (IHS) with your visa, you have full NHS access from day one.",
+      category: "insurance", order: 1,
+      officialUrl: "https://www.nhs.uk/nhs-services/gps/how-to-register-with-a-gp-surgery/",
+      documents: ["Passport or BRP", "Proof of UK address"],
+      tips: "Find GPs accepting new patients at nhs.uk/find-a-gp. GPs cannot refuse to register you for lack of proof of address. Book a new patient health check once registered.",
+      countries: ["United Kingdom"], employmentStatuses: ["employed", "self_employed", "freelancer", "unemployed"], dependsOn: [],
+    },
+    {
+      title: "Set up daily transport",
+      description: "Set up transport for daily commuting and travel. Contactless payment works across all London Transport; a Railcard gives 1/3 off national rail fares.",
+      category: "transport", order: 1, documents: [],
+      officialUrl: "https://tfl.gov.uk/",
+      tips: "In London: tap your contactless bank card on any reader — no Oyster card needed. Outside London: get a 16–25, 26–30, or Two Together Railcard (£30/year) for 1/3 off rail fares. National Express coaches are the cheapest option for intercity travel.",
+      countries: ["United Kingdom"], dependsOn: [],
+    },
+    {
+      title: "Exchange or validate your driving licence",
+      description: "Exchange your foreign driving licence for a UK one at the DVLA. Terms depend on your home country — some have bilateral agreements allowing direct exchange; others require UK theory and practical tests.",
+      category: "transport", order: 2,
+      officialUrl: "https://www.gov.uk/exchange-foreign-driving-licence",
+      documents: ["Foreign driving licence", "Passport or BRP", "Proof of UK address", "DVLA D9 application form"],
+      tips: "EU/EEA licences exchange without re-testing. Israeli and Indian licences require passing the UK theory test (£23) and practical test (£62). Book theory test slots early — they fill weeks in advance in major cities.",
+      countries: ["United Kingdom"], dependsOn: [],
+    },
   ];
 
   // ═══════════════════════════════════════════════════════════
@@ -407,6 +495,33 @@ async function main() {
       documents: ["University enrolment confirmation", "Passport"],
       tips: "The university SHIP is often the easiest option and is accepted at the campus health centre. If your home country provides coverage (e.g. a home insurance plan), you may be able to waive the SHIP — check the waiver requirements carefully.",
       countries: ["United States"], employmentStatuses: ["student"], dependsOn: [],
+    },
+
+    // ─── UNITED KINGDOM ───────────────────────────────────────
+    {
+      title: "Register with the international student office",
+      description: "Check in with your university's international student support team on arrival. They'll confirm your CAS (Confirmation of Acceptance for Studies) details, brief you on Student visa compliance obligations, and guide you through local services.",
+      category: "legal", order: 5,
+      documents: ["Passport with visa vignette", "BRP", "CAS letter"],
+      tips: "Report to the international office within the first week — universities are required to report non-attendance to UKVI. Keep copies of all immigration documents and update your address in the university system whenever you move.",
+      countries: ["United Kingdom"], employmentStatuses: ["student"], dependsOn: [],
+    },
+    {
+      title: "Open a student bank account",
+      description: "Open a UK bank account to receive student loans, bursaries, or part-time pay. Many banks offer fee-free student accounts with interest-free overdrafts.",
+      category: "banking", order: 3,
+      documents: ["Passport", "BRP", "University enrolment confirmation", "Proof of UK address"],
+      tips: "Santander and Barclays offer the best student account perks (railcards, cashback). Monzo and Starling work immediately with just your passport if you need a bridge account while your main account is being set up.",
+      countries: ["United Kingdom"], employmentStatuses: ["student"], dependsOn: [],
+    },
+    {
+      title: "Register with NHS GP as a student",
+      description: "Register with a GP surgery near your university or accommodation. As a student who paid the Immigration Health Surcharge (IHS), you have full NHS access including mental health services.",
+      category: "insurance", order: 2,
+      officialUrl: "https://www.nhs.uk/nhs-services/gps/how-to-register-with-a-gp-surgery/",
+      documents: ["Passport or BRP", "University accommodation address or term-time address"],
+      tips: "Many universities have an on-campus GP or health centre — register there first for convenience. You can also register with a local NHS GP. Both are free. University counselling and mental health services are separate and also free.",
+      countries: ["United Kingdom"], employmentStatuses: ["student"], dependsOn: [],
     },
 
     // ─── GERMANY ──────────────────────────────────────────────
@@ -564,15 +679,15 @@ async function main() {
       countries: [], originCountries: ["United States"], dependsOn: [],
     },
 
-    // ─── ISRAELI CITIZENS → GERMANY ───────────────────────────
+    // ─── ISRAELI CITIZENS → anywhere ──────────────────────────
     {
       title: "Apostille your Israeli documents",
-      description: "Israeli government-issued documents (birth certificate, marriage certificate, university degrees) must be apostilled by the Israeli Ministry of Foreign Affairs before they will be accepted in Germany.",
-      category: "legal", order: 13,
-      documents: ["Original Israeli document", "Completed apostille application form"],
+      description: "Israeli government-issued documents (birth certificate, marriage certificate, university degrees) must be apostilled by the Israeli Ministry of Foreign Affairs before they will be accepted abroad. Do this before you leave — it cannot be done remotely.",
+      category: "documents", phase: "PRE_DEPARTURE", order: 3,
+      documents: ["Original documents to be apostilled", "Completed apostille application form"],
       officialUrl: "https://www.gov.il/en/service/apostille_service",
-      tips: "The Israeli apostille service is available online via gov.il. Allow 5–10 business days. Each document costs approximately ₪45. Do this before you leave Israel.",
-      countries: ["Germany"], originCountries: ["Israel"], dependsOn: [],
+      tips: "The Israeli apostille service is available online via gov.il. Allow 5–10 business days. Each document costs approximately ₪45. Do not leave without at least: birth certificate, marriage certificate (if applicable), university degree, and police clearance.",
+      countries: [], originCountries: ["Israel"], dependsOn: [],
     },
     {
       title: "Get certified Hebrew-to-German translations",
@@ -590,6 +705,44 @@ async function main() {
       officialUrl: "https://www.btl.gov.il/English%20Homepage/Pages/default.aspx",
       tips: "Contact the National Insurance Institute (Bituach Leumi) before you leave to get a statement of contributions. Periods of Israeli social insurance may count toward German pension entitlement.",
       countries: ["Germany"], originCountries: ["Israel"], dependsOn: [],
+    },
+
+    // ─── INDIAN CITIZENS → anywhere ───────────────────────────
+    {
+      title: "Get MEA apostille on your key Indian documents",
+      description: "India is a member of the Hague Apostille Convention. Get apostilles on key documents (birth certificate, marriage certificate, degree certificates, police clearance) from the Ministry of External Affairs (MEA) before you leave — it is significantly harder to arrange from abroad.",
+      category: "documents", phase: "PRE_DEPARTURE", order: 3,
+      officialUrl: "https://www.mea.gov.in/apostille.htm",
+      documents: ["Original documents to be apostilled", "MEA application form"],
+      tips: "The MEA eApostille portal processes eligible documents in 1–3 days at ₹50 per document. Priority: birth certificate, degree certificates, marriage certificate (if applicable), and police clearance certificate (PCC from your local passport office).",
+      countries: [], originCountries: ["India"], dependsOn: [],
+    },
+    {
+      title: "Convert your Indian bank accounts to NRE or NRO status",
+      description: "Once you become an NRI you are legally required under FEMA to convert resident savings/current accounts to NRO (Non-Resident Ordinary) status. You can also open an NRE (Non-Resident External) account to park foreign earnings tax-free in India.",
+      category: "banking", phase: "PRE_DEPARTURE", order: 21,
+      officialUrl: "https://rbi.org.in/",
+      documents: ["Passport", "Proof of NRI status (visa or employment contract abroad)", "Existing account details"],
+      tips: "Inform your bank before you leave — the conversion is straightforward and most major banks (SBI, HDFC, ICICI, Axis) have dedicated NRI cells. NRE accounts: for foreign earnings, fully repatriable, interest is tax-free in India. NRO accounts: for Indian-source income (rent, dividends).",
+      countries: [], originCountries: ["India"], dependsOn: [],
+    },
+    {
+      title: "Check your EPF / PPF balance and decide on withdrawal or retention",
+      description: "Your Employees' Provident Fund (EPF) can be withdrawn after 2 months of unemployment abroad, or left to grow. PPF accounts can be maintained as an NRI but no new contributions are permitted once you become non-resident.",
+      category: "banking", order: 11,
+      officialUrl: "https://www.epfindia.gov.in/",
+      documents: ["UAN (Universal Account Number)", "Passport", "Proof of NRI status"],
+      tips: "EPF withdrawal as NRI is subject to TDS (10–20% depending on years of service). Consider leaving it if you plan to return — EPF interest accrues tax-free. Online withdrawal via the EPFO member portal takes 10–15 working days.",
+      countries: [], originCountries: ["India"], dependsOn: [],
+    },
+    {
+      title: "File your Indian ITR and notify the tax authority of your NRI status",
+      description: "You must file an Indian Income Tax Return for the year of departure showing resident status for the days spent in India. Going forward as an NRI, only India-sourced income (rent, dividends, interest) is taxable in India — foreign earnings are exempt.",
+      category: "legal", order: 11,
+      officialUrl: "https://www.incometax.gov.in/",
+      documents: ["PAN card", "Passport with travel history", "Form 16 or salary slips", "Previous ITRs"],
+      tips: "Your residency status under FEMA changes as soon as you leave India with the intent to stay abroad permanently. Consult a CA experienced in NRI taxation — RNOR (Resident but Not Ordinarily Resident) status for the first 2 years abroad gives favourable treatment on foreign income.",
+      countries: [], originCountries: ["India"], dependsOn: [],
     },
 
     // ─── UK CITIZENS → anywhere ───────────────────────────────
@@ -677,6 +830,44 @@ async function main() {
       documents: ["Valid passport", "University admission letter", "Proof of enrolment (Immatrikulationsbescheinigung)", "Proof of financial resources (€934/month via blocked account, scholarship, or parental guarantee)", "German health insurance confirmation", "Meldebescheinigung"],
       tips: "Book your Ausländerbehörde appointment immediately after Anmeldung — waits are 6–10 weeks. If your visa expires before the appointment, request a Fiktionsbescheinigung. Standard proof of funds is a blocked account (Sperrkonto) via Deutsche Bank or Fintiba — set it up before departure.",
       countries: ["Germany"], employmentStatuses: ["student"], dependsOn: [],
+    },
+
+    // ─── UNITED KINGDOM ────────────────────────────────────────
+    {
+      title: "Collect your BRP and verify your visa conditions",
+      description: "Collect your Biometric Residence Permit (BRP) from the designated Post Office within 10 days of arrival. Check every detail on the BRP (name, DOB, work conditions) and report any errors to UKVI immediately. Your visa conditions determine work hours, public funds access, and travel restrictions.",
+      category: "legal", order: 2,
+      officialUrl: "https://www.gov.uk/biometric-residence-permits",
+      documents: ["Passport with visa vignette", "BRP collection letter"],
+      tips: "The BRP collection location is printed on your visa vignette — take it to that specific Post Office within 10 days. Failure to collect triggers a UKVI reporting obligation. Skilled Worker visas typically permit full-time work for your sponsor only — check your conditions for any restrictions.",
+      countries: ["United Kingdom"], employmentStatuses: ["employed"], dependsOn: [],
+    },
+    {
+      title: "Confirm your self-employment visa eligibility",
+      description: "Self-employment in the UK is restricted to specific visa types. The Global Talent visa and Innovator Founder visa explicitly allow self-employment. Skilled Worker and most sponsored visas do NOT permit freelancing or running a business. Confirm your visa category before taking any self-employment income.",
+      category: "legal", order: 2,
+      officialUrl: "https://www.gov.uk/global-talent",
+      documents: ["Passport", "BRP", "Visa decision letter"],
+      tips: "The Global Talent visa (endorsed by Tech Nation, Royal Society, British Academy, etc.) is the gold standard for skilled self-employed workers — full flexibility, no sponsor needed. If on a Skilled Worker visa, you can apply to switch once you meet the endorsing body's criteria.",
+      countries: ["United Kingdom"], employmentStatuses: ["self_employed", "freelancer"], dependsOn: [],
+    },
+    {
+      title: "Understand your residency options as a non-working UK resident",
+      description: "Without a work visa, long-term residency in the UK requires a qualifying category: family visa (spouse/partner of a UK citizen or settled person), ancestry visa (Commonwealth citizens with UK-born grandparent), or a High Net Worth route. The Standard Visitor visa is strictly for short stays and does not permit working or extended residency.",
+      category: "legal", order: 2,
+      officialUrl: "https://www.gov.uk/browse/visas-immigration/family-visas",
+      documents: ["Passport", "Evidence of qualifying relationship or financial status"],
+      tips: "Family visa applicants must meet the financial requirement (minimum £29,000/year sponsor income from 2024). ILR (Indefinite Leave to Remain) is available after 5 continuous years under most routes — set a calendar reminder well in advance of your visa expiry.",
+      countries: ["United Kingdom"], employmentStatuses: ["unemployed"], dependsOn: [],
+    },
+    {
+      title: "Register your Student visa and collect your BRP",
+      description: "Collect your BRP from the designated Post Office within 10 days of arrival. Register with your university's international student office — they'll confirm your CAS details and guide you on Tier 4/Student visa compliance. Maintain full-time enrolment and notify UKVI of any address or course changes.",
+      category: "legal", order: 2,
+      officialUrl: "https://www.gov.uk/student-visa",
+      documents: ["Passport with visa vignette", "BRP collection letter", "CAS letter from university"],
+      tips: "Students can work up to 20 hours per week during term time and full-time during official vacations — check your BRP conditions. The Graduate visa (2 years post-study work) is available after completing a UK degree — apply before your Student visa expires.",
+      countries: ["United Kingdom"], employmentStatuses: ["student"], dependsOn: [],
     },
 
     // ─── UNITED STATES ────────────────────────────────────────
@@ -810,6 +1001,34 @@ async function main() {
       countries: [], dependsOn: [],
     },
 
+    // ─── DESTINATION-SPECIFIC ─────────────────────────────────
+    {
+      title: "Apply for your Czech visa at the embassy before departure",
+      description: "Non-EU/EEA nationals must apply for a Czech long-term visa or Employee/Student Card at the Czech embassy in their home country before travelling. You cannot apply from inside the Czech Republic on a tourist visa — if you arrive without the right visa, you will need to leave and reapply.",
+      category: "legal", phase: "PRE_DEPARTURE", order: 4,
+      officialUrl: "https://www.mvcr.cz/clanek/employee-card.aspx",
+      documents: ["Valid passport (6+ months validity)", "Signed employment contract or university acceptance letter", "Proof of accommodation in Czech Republic", "Health insurance certificate covering the full stay", "Criminal record certificate — apostilled", "2× passport photos"],
+      tips: "Processing takes up to 60 days. Book your embassy appointment as early as possible — slots are limited. If employed, your Czech employer can often assist with the application or recommend an immigration lawyer.",
+      countries: ["Czech Republic"], dependsOn: [],
+    },
+    {
+      title: "Open a German blocked account (Sperrkonto) before departure",
+      description: "Non-EU visa applicants (especially students and job-seekers) are required to demonstrate financial self-sufficiency via a blocked account (Sperrkonto) holding approximately €11,208 per year of stay. This must be set up before your visa interview.",
+      category: "banking", phase: "PRE_DEPARTURE", order: 21,
+      officialUrl: "https://www.expatrio.com/blocked-account",
+      documents: ["Passport", "University admission letter or visa application reference"],
+      tips: "Fintiba and Expatrio are the fastest and most popular options — both are German-regulated and accepted by German embassies worldwide. Setup takes 2–5 days. Funds are released monthly once you're in Germany.",
+      countries: ["Germany"], dependsOn: [],
+    },
+    {
+      title: "Get a certified Hebrew-to-German translation of your key documents",
+      description: "Even after apostilling, Israeli documents must be translated into German by a sworn translator (vereidigter Übersetzer) before German authorities accept them for residency, employment, or banking.",
+      category: "documents", phase: "PRE_DEPARTURE", order: 4,
+      documents: ["Apostilled Israeli original documents"],
+      tips: "Only translations by court-certified sworn translators are accepted. Find one via the German court directory (Justizportal) or a German translation agency. Allow 5–7 business days per document, cost: €60–120 per page. Prioritise: birth certificate, degree, marriage certificate.",
+      countries: ["Germany"], originCountries: ["Israel"], dependsOn: [],
+    },
+
     // ─── LEGAL / ADMIN ────────────────────────────────────────
     {
       title: "Set up mail forwarding from your origin address",
@@ -861,6 +1080,11 @@ async function main() {
     ["Register with health insurance (Krankenkasse)", "Germany",        ["Anmeldung — register your address"]],
     ["Exchange or validate your driving licence",     "Germany",        ["Anmeldung — register your address"]],
     ["Set up electricity and internet",               "Germany",        ["Anmeldung — register your address"]],
+    // United Kingdom
+    ["Complete Right to Rent verification",            "United Kingdom", ["Find a permanent flat"]],
+    ["Set up utilities and broadband",                "United Kingdom", ["Find a permanent flat"]],
+    ["Open a UK bank account",                        "United Kingdom", ["Apply for a National Insurance (NI) number"]],
+    ["Exchange or validate your driving licence",     "United Kingdom", ["Collect your BRP and verify your visa conditions", "Confirm your self-employment visa eligibility", "Understand your residency options as a non-working UK resident", "Register your Student visa and collect your BRP"]],
     // United States
     ["Open a US bank account",                        "United States",  ["Apply for a Social Security Number (SSN)"]],
     ["Build US credit history",                       "United States",  ["Open a US bank account"]],
@@ -880,16 +1104,18 @@ async function main() {
   const czCount = tasks.filter((t) => t.countries.includes("Czech Republic")).length;
   const usCount = tasks.filter((t) => t.countries.includes("United States")).length;
   const deCount = tasks.filter((t) => t.countries.includes("Germany")).length;
+  const ukCount = tasks.filter((t) => t.countries.includes("United Kingdom")).length;
   const usOriginCount = originTasks.filter((t) => t.originCountries.includes("United States")).length;
   const ilOriginCount = originTasks.filter((t) => t.originCountries.includes("Israel")).length;
+  const inOriginCount = originTasks.filter((t) => t.originCountries.includes("India")).length;
   const ukOriginCount = originTasks.filter((t) => t.originCountries.includes("United Kingdom")).length;
 
   console.log(`✓ Seeded ${allTasks.length} task templates:`);
-  console.log(`  POST_ARRIVAL — Czech Republic: ${czCount}, US: ${usCount}, Germany: ${deCount}`);
+  console.log(`  POST_ARRIVAL — Czech Republic: ${czCount}, US: ${usCount}, Germany: ${deCount}, UK: ${ukCount}`);
   console.log(`  Student tasks: ${studentTasks.length} | Education/family tasks: ${educationTasks.length}`);
-  console.log(`  Origin-specific — US citizens: ${usOriginCount}, Israeli → DE: ${ilOriginCount}, UK citizens: ${ukOriginCount}`);
+  console.log(`  Origin-specific — US: ${usOriginCount}, Israeli: ${ilOriginCount}, Indian: ${inOriginCount}, UK: ${ukOriginCount}`);
   console.log(`  Visa/residency tasks: ${visaResidencyTasks.length}`);
-  console.log(`  PRE_DEPARTURE tasks: ${preDepartureTasks.length} (global — Before You Go phase)`);
+  console.log(`  PRE_DEPARTURE tasks: ${preDepartureTasks.length} (global + corridor-specific)`);
 }
 
 main()
