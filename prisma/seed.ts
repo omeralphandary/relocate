@@ -201,7 +201,7 @@ async function main() {
     },
     {
       title: "Apply for a Social Security Number (SSN)",
-      description: "Your SSN is required to work legally, file taxes, open a US bank account, and build credit. Apply at your local Social Security Administration office.",
+      description: "Your SSN is required to work legally, file taxes, and build US credit history. Apply at your local Social Security Administration office — you can open a bank account before it arrives.",
       category: "legal", order: 1,
       officialUrl: "https://www.ssa.gov/number-card/request-number-first-time",
       documents: ["Passport", "Visa", "I-94 arrival record", "Employment authorisation (if applicable)"],
@@ -1083,10 +1083,10 @@ async function main() {
     // United Kingdom
     ["Complete Right to Rent verification",            "United Kingdom", ["Find a permanent flat"]],
     ["Set up utilities and broadband",                "United Kingdom", ["Find a permanent flat"]],
-    ["Open a UK bank account",                        "United Kingdom", ["Apply for a National Insurance (NI) number"]],
+    ["Open a UK bank account",                        "United Kingdom", ["Find a permanent flat"]],
     ["Exchange or validate your driving licence",     "United Kingdom", ["Collect your BRP and verify your visa conditions", "Confirm your self-employment visa eligibility", "Understand your residency options as a non-working UK resident", "Register your Student visa and collect your BRP"]],
     // United States
-    ["Open a US bank account",                        "United States",  ["Apply for a Social Security Number (SSN)"]],
+    ["Open a US bank account",                        "United States",  []],
     ["Build US credit history",                       "United States",  ["Open a US bank account"]],
     ["Set up utilities and internet",                 "United States",  ["Find a permanent apartment"]],
     ["Get a US driver's licence",                     "United States",  ["Apply for a Social Security Number (SSN)"]],
