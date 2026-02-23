@@ -351,7 +351,7 @@ export default function MoversPage() {
           </span>
           <button
             onClick={() => router.back()}
-            className="text-xs text-gray-400 hover:text-sky-500 transition-colors"
+            className="text-sm font-medium text-gray-600 hover:text-emerald-500 transition-colors"
           >
             ← Back to my journey
           </button>
