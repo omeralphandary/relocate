@@ -60,6 +60,7 @@ model Profile {
   secondNationality String?
   originCountry    String
   destinationCountry String
+  destinationCity  String?
   employmentStatus String   // employed | self_employed | freelancer | unemployed
   familyStatus     String   // single | couple | family_with_kids
   hasChildren      Boolean  @default(false)

@@ -26,6 +26,7 @@ export interface TaskEnrichmentInput {
   secondNationality?: string | null;
   originCountry: string;
   destinationCountry: string;
+  destinationCity?: string | null;
   employmentStatus: string;
   familyStatus: string;
   movingDate?: string | null;
@@ -48,7 +49,11 @@ export async function enrichTask(input: TaskEnrichmentInput): Promise<TaskEnrich
     ? `- Nationality: ${input.nationality} + ${input.secondNationality} (dual citizen)`
     : `- Nationality: ${input.nationality}`;
 
-  const prompt = `You are a relocation expert helping someone move from ${input.originCountry} to ${input.destinationCountry}.
+  const destination = input.destinationCity
+    ? `${input.destinationCity}, ${input.destinationCountry}`
+    : input.destinationCountry;
+
+  const prompt = `You are a relocation expert helping someone move from ${input.originCountry} to ${destination}.
 
 User profile:
 ${nationalityLine}
@@ -65,7 +70,7 @@ Respond ONLY with a valid JSON object in this exact format:
 {
   "instructions": "Step-by-step instructions specific to this user's situation (2-4 sentences)",
   "documents": ["Document 1", "Document 2"],
-  "tips": "One practical insider tip specific to ${input.destinationCountry}"
+  "tips": "One practical insider tip specific to ${destination}"
 }`;
 
   const message = await client.messages.create({
@@ -89,6 +94,7 @@ export interface CustomTaskInput {
   secondNationality?: string | null;
   originCountry: string;
   destinationCountry: string;
+  destinationCity?: string | null;
   employmentStatus: string;
   familyStatus: string;
   movingDate?: string | null;
@@ -113,7 +119,11 @@ export async function generateCustomTaskOverview(input: CustomTaskInput): Promis
     ? `- Nationality: ${input.nationality} + ${input.secondNationality} (dual citizen)`
     : `- Nationality: ${input.nationality}`;
 
-  const prompt = `You are a relocation expert helping someone move from ${input.originCountry} to ${input.destinationCountry}.
+  const destination = input.destinationCity
+    ? `${input.destinationCity}, ${input.destinationCountry}`
+    : input.destinationCountry;
+
+  const prompt = `You are a relocation expert helping someone move from ${input.originCountry} to ${destination}.
 
 User profile:
 ${nationalityLine}
@@ -131,7 +141,7 @@ Respond ONLY with a valid JSON object in this exact format:
   "description": "1-2 sentence overview of what this task involves",
   "instructions": "Step-by-step instructions specific to this user's situation (2-4 sentences)",
   "documents": ["Document 1", "Document 2"],
-  "tips": "One practical insider tip specific to ${input.destinationCountry}"
+  "tips": "One practical insider tip specific to ${destination}"
 }`;
 
   const message = await client.messages.create({
@@ -157,6 +167,7 @@ export async function generateBaselineTips(profile: {
   secondNationality?: string | null;
   originCountry: string;
   destinationCountry: string;
+  destinationCity?: string | null;
   employmentStatus: string;
   familyStatus: string;
 }): Promise<string[]> {
@@ -166,13 +177,17 @@ export async function generateBaselineTips(profile: {
     ? `${profile.nationality} + ${profile.secondNationality} (dual citizen)`
     : profile.nationality;
 
-  const prompt = `You are a senior relocation expert. A ${nationalityLine} person is moving from ${profile.originCountry} to ${profile.destinationCountry}. They are ${profile.employmentStatus.replace("_", "-")} and their family status is ${profile.familyStatus.replace("_", " ")}.
+  const destination = profile.destinationCity
+    ? `${profile.destinationCity}, ${profile.destinationCountry}`
+    : profile.destinationCountry;
+
+  const prompt = `You are a senior relocation expert. A ${nationalityLine} person is moving from ${profile.originCountry} to ${destination}. They are ${profile.employmentStatus.replace("_", "-")} and their family status is ${profile.familyStatus.replace("_", " ")}.
 
 Generate exactly 4 short, sharp, corridor-specific insider tips they need to know before diving into their checklist. These should be the kind of things a friend who already made this move would tell you — not generic advice.
 
 Each tip must be:
 - 1 sentence, max 20 words
-- Specific to this exact corridor (${profile.originCountry} → ${profile.destinationCountry})
+- Specific to this exact corridor (${profile.originCountry} → ${destination})
 - Immediately actionable or eye-opening
 
 Respond ONLY with a valid JSON array of 4 strings:
@@ -210,6 +225,7 @@ export async function generateJourneyTasks(profile: {
   secondNationality?: string | null;
   originCountry: string;
   destinationCountry: string;
+  destinationCity?: string | null;
   employmentStatus: string;
   familyStatus: string;
 }): Promise<GeneratedTask[]> {
@@ -219,7 +235,11 @@ export async function generateJourneyTasks(profile: {
     ? `- Nationality: ${profile.nationality} + ${profile.secondNationality} (dual citizen)`
     : `- Nationality: ${profile.nationality}`;
 
-  const prompt = `You are a relocation expert. Generate a comprehensive relocation task list for someone moving from ${profile.originCountry} to ${profile.destinationCountry}.
+  const destination = profile.destinationCity
+    ? `${profile.destinationCity}, ${profile.destinationCountry}`
+    : profile.destinationCountry;
+
+  const prompt = `You are a relocation expert. Generate a comprehensive relocation task list for someone moving from ${profile.originCountry} to ${destination}.
 
 User profile:
 ${nationalityLine}
@@ -230,7 +250,7 @@ Generate 12-16 essential relocation tasks covering these categories: housing, te
 
 Important:
 - Order tasks by urgency (most urgent first within each category)
-- Include country-specific details for ${profile.destinationCountry}
+- Include country-specific details for ${destination}
 - Each task should be actionable and specific
 
 Respond ONLY with a valid JSON array:
@@ -240,7 +260,7 @@ Respond ONLY with a valid JSON array:
     "description": "1-2 sentence description of exactly what to do and why",
     "category": "housing|telecom|banking|insurance|legal|transport",
     "documents": ["Required document 1", "Required document 2"],
-    "tips": "One practical insider tip specific to ${profile.destinationCountry}",
+    "tips": "One practical insider tip specific to ${destination}",
     "officialUrl": "https://relevant-government-url.${profile.destinationCountry} or null",
     "order": 1
   }

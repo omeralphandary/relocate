@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     const body: OnboardingBody = await req.json();
     const {
       name, email, password,
-      nationality, secondNationality, originCountry, destinationCountry,
+      nationality, secondNationality, originCountry, destinationCountry, destinationCity,
       employmentStatus, familyStatus, hasChildren, movingDate,
     } = body;
 
@@ -65,6 +65,7 @@ export async function POST(req: NextRequest) {
           nationality,
           originCountry,
           destinationCountry,
+          destinationCity,
           employmentStatus,
           familyStatus,
         });
@@ -110,6 +111,7 @@ export async function POST(req: NextRequest) {
             secondNationality: secondNationality ?? null,
             originCountry,
             destinationCountry,
+            destinationCity: destinationCity ?? null,
             employmentStatus,
             familyStatus,
             hasChildren: hasChildren ?? false,

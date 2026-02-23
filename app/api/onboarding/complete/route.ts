@@ -15,13 +15,14 @@ export async function POST(req: NextRequest) {
       secondNationality?: string;
       originCountry?: string;
       destinationCountry?: string;
+      destinationCity?: string;
       employmentStatus?: string;
       familyStatus?: string;
       hasChildren?: boolean;
       movingDate?: string | null;
     };
 
-    const { nationality, secondNationality, originCountry, destinationCountry, employmentStatus, familyStatus, hasChildren, movingDate } = body;
+    const { nationality, secondNationality, originCountry, destinationCountry, destinationCity, employmentStatus, familyStatus, hasChildren, movingDate } = body;
 
     if (!nationality || !originCountry || !destinationCountry || !employmentStatus || !familyStatus) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -68,7 +69,7 @@ export async function POST(req: NextRequest) {
     const hasPostArrival = templates.some((t) => t.phase === "POST_ARRIVAL");
     if (!hasPostArrival) {
       try {
-        const generated = await generateJourneyTasks({ nationality, originCountry, destinationCountry, employmentStatus, familyStatus });
+        const generated = await generateJourneyTasks({ nationality, originCountry, destinationCountry, destinationCity, employmentStatus, familyStatus });
         const llmTemplates = await Promise.all(
           generated.map((t) =>
             prisma.taskTemplate.create({
@@ -93,7 +94,7 @@ export async function POST(req: NextRequest) {
     // Generate corridor-specific baseline tips — fire and forget on failure
     let baselineTips: string[] = [];
     try {
-      baselineTips = await generateBaselineTips({ nationality, secondNationality, originCountry, destinationCountry, employmentStatus, familyStatus });
+      baselineTips = await generateBaselineTips({ nationality, secondNationality, originCountry, destinationCountry, destinationCity, employmentStatus, familyStatus });
     } catch {
       // Non-fatal — journey still creates without tips
     }
@@ -102,8 +103,8 @@ export async function POST(req: NextRequest) {
     const journey = await prisma.$transaction(async (tx) => {
       await tx.profile.upsert({
         where: { userId },
-        update: { nationality, secondNationality: secondNationality ?? null, originCountry, destinationCountry, employmentStatus, familyStatus, hasChildren: hasChildren ?? false, movingDate: movingDate ? new Date(movingDate) : null },
-        create: { userId, nationality, secondNationality: secondNationality ?? null, originCountry, destinationCountry, employmentStatus, familyStatus, hasChildren: hasChildren ?? false, movingDate: movingDate ? new Date(movingDate) : null },
+        update: { nationality, secondNationality: secondNationality ?? null, originCountry, destinationCountry, destinationCity: destinationCity ?? null, employmentStatus, familyStatus, hasChildren: hasChildren ?? false, movingDate: movingDate ? new Date(movingDate) : null },
+        create: { userId, nationality, secondNationality: secondNationality ?? null, originCountry, destinationCountry, destinationCity: destinationCity ?? null, employmentStatus, familyStatus, hasChildren: hasChildren ?? false, movingDate: movingDate ? new Date(movingDate) : null },
       });
 
       return tx.journey.create({

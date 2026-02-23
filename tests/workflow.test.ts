@@ -563,15 +563,16 @@ describe("DELETE /api/tasks/[taskId]", () => {
     expect(prisma.journeyTask.delete).toHaveBeenCalledWith({ where: { id: "jt-custom-1" } });
   });
 
-  it("returns 400 when trying to delete a system task", async () => {
+  it("deletes a system task (all tasks are now deletable)", async () => {
     vi.mocked(prisma.journeyTask.findUnique).mockResolvedValue(SAMPLE_JOURNEY_TASK as never);
+    vi.mocked(prisma.journeyTask.delete).mockResolvedValue(SAMPLE_JOURNEY_TASK as never);
     const res = await taskDELETE(
       new NextRequest("http://localhost/", { method: "DELETE" }),
       { params },
     );
-    expect(res.status).toBe(400);
+    expect(res.status).toBe(200);
     const body = await res.json();
-    expect(body.error).toMatch(/cannot delete system tasks/i);
+    expect(body.deleted).toBe(true);
   });
 
   it("returns 401 when not authenticated", async () => {

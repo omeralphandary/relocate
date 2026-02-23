@@ -44,10 +44,25 @@ export default function Step1Countries({ data, onChange }: Props) {
           </label>
           <CountrySelect
             value={data.destinationCountry ?? ""}
-            onChange={(v) => onChange({ destinationCountry: v })}
+            onChange={(v) => onChange({ destinationCountry: v, destinationCity: "" })}
             placeholder="Select destination"
           />
         </div>
+
+        {data.destinationCountry && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Which city? <span className="text-gray-400 font-normal">(optional)</span>
+            </label>
+            <input
+              type="text"
+              value={data.destinationCity ?? ""}
+              onChange={(e) => onChange({ destinationCity: e.target.value })}
+              placeholder={`e.g. Berlin, Munich, Hamburg`}
+              className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:border-transparent"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

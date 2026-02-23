@@ -58,6 +58,7 @@ export async function POST(
       secondNationality: profile.secondNationality,
       originCountry: profile.originCountry,
       destinationCountry: profile.destinationCountry,
+      destinationCity: profile.destinationCity,
       employmentStatus: profile.employmentStatus,
       familyStatus: profile.familyStatus,
       movingDate: profile.movingDate?.toISOString() ?? null,
