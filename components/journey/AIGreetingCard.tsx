@@ -34,7 +34,7 @@ export default function AIGreetingCard({ userName, destination, totalCount, cate
   useEffect(() => {
     const t = setTimeout(() => {
       setShaking(true);
-      setTimeout(() => setShaking(false), 700);
+      setTimeout(() => setShaking(false), 900);
     }, 2000);
     return () => clearTimeout(t);
   }, []);
