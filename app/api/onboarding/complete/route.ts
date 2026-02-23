@@ -118,8 +118,6 @@ export async function POST(req: NextRequest) {
                 customCategory: t.category,
                 aiDocuments: t.documents,
                 aiTips: t.tips,
-                aiInstructions: t.instructions ?? null,
-                aiGeneratedAt: new Date(),
               })),
             ],
           },

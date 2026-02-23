@@ -96,7 +96,6 @@ const SAMPLE_LLM_TASKS = [
   {
     title: "Get a SIM card",
     description: "Buy a local SIM card.",
-    instructions: "Visit a Telekom store with your passport and rental contract.",
     category: "telecom",
     documents: [],
     tips: "Telekom is reliable.",
