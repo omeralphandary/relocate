@@ -866,7 +866,6 @@ async function main() {
     ["Build US credit history",                       "United States",  ["Open a US bank account"]],
     ["Set up utilities and internet",                 "United States",  ["Find a permanent apartment"]],
     ["Get a US driver's licence",                     "United States",  ["Apply for a Social Security Number (SSN)"]],
-    ["Set up US transportation",                      "United States",  ["Get a US driver's licence"]],
   ];
 
   for (const [title, country, blockers] of dependencies) {
