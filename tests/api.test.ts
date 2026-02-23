@@ -27,7 +27,6 @@ vi.mock("@/lib/prisma", () => {
     },
     taskTemplate: {
       findMany: vi.fn(),
-      create: vi.fn(),
     },
     profile: {
       upsert: vi.fn(),
@@ -43,6 +42,7 @@ vi.mock("@/auth", () => ({
 
 vi.mock("@/lib/llm", () => ({
   generateJourneyTasks: vi.fn(),
+  generateBaselineTips: vi.fn().mockResolvedValue([]),
   enrichTask: vi.fn(),
   generateCustomTaskOverview: vi.fn(),
 }));
@@ -96,6 +96,7 @@ const SAMPLE_LLM_TASKS = [
   {
     title: "Get a SIM card",
     description: "Buy a local SIM card.",
+    instructions: "Visit a Telekom store with your passport and rental contract.",
     category: "telecom",
     documents: [],
     tips: "Telekom is reliable.",
@@ -173,13 +174,44 @@ describe("POST /api/onboarding/complete", () => {
   it("falls back to LLM when no templates match the corridor", async () => {
     vi.mocked(prisma.taskTemplate.findMany).mockResolvedValue([]);
     vi.mocked(generateJourneyTasks).mockResolvedValue(SAMPLE_LLM_TASKS as never);
-    vi.mocked(prisma.taskTemplate.create).mockResolvedValue(SAMPLE_TEMPLATES[0] as never);
 
     const res = await onboardingCompletePOST(makeRequest(VALID_COMPLETE_BODY));
     expect(res.status).toBe(201);
     expect(generateJourneyTasks).toHaveBeenCalledWith(
       expect.objectContaining({ destinationCountry: "Germany" })
     );
+  });
+
+  it("falls back to LLM when only origin-specific POST_ARRIVAL tasks exist (hasPostArrival bug regression)", async () => {
+    // These match the corridor but have countries: [] — they are origin-specific (e.g. US tax tasks),
+    // not destination-specific. The hasPostArrival check must NOT count these.
+    const originOnlyTemplates = [
+      {
+        id: "tpl-us-tax",
+        title: "File annual US tax return from abroad",
+        description: "File your US taxes.",
+        category: "legal",
+        phase: "POST_ARRIVAL",
+        countries: [],          // not tied to any destination
+        originCountries: ["United States"],
+        employmentStatuses: [],
+        familyStatuses: [],
+        documents: [],
+        tips: null,
+        officialUrl: null,
+        order: 1,
+        dependsOn: [],
+        aiEnriched: false,
+        nationalities: [],
+      },
+    ];
+    vi.mocked(prisma.taskTemplate.findMany).mockResolvedValue(originOnlyTemplates as never);
+    vi.mocked(generateJourneyTasks).mockResolvedValue(SAMPLE_LLM_TASKS as never);
+
+    const res = await onboardingCompletePOST(makeRequest(VALID_COMPLETE_BODY));
+    expect(res.status).toBe(201);
+    // LLM must fire because the only POST_ARRIVAL match has countries: []
+    expect(generateJourneyTasks).toHaveBeenCalled();
   });
 
   it("returns 503 when no templates match and LLM fails", async () => {

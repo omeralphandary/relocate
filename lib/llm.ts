@@ -212,13 +212,14 @@ export interface GeneratedTask {
   category: string;
   documents: string[];
   tips: string;
+  instructions: string;
   officialUrl?: string | null;
   order: number;
 }
 
 /**
  * Generates a full task list for a corridor not covered by seed data.
- * Results are saved as TaskTemplate records so subsequent users benefit from them.
+ * Tasks are created directly as JourneyTask records (taskId: null) — not saved as templates.
  */
 export async function generateJourneyTasks(profile: {
   nationality: string;
@@ -239,29 +240,40 @@ export async function generateJourneyTasks(profile: {
     ? `${profile.destinationCity}, ${profile.destinationCountry}`
     : profile.destinationCountry;
 
-  const prompt = `You are a relocation expert. Generate a comprehensive relocation task list for someone moving from ${profile.originCountry} to ${destination}.
+  const prompt = `You are a relocation expert. Generate a comprehensive POST-ARRIVAL task list for someone moving from ${profile.originCountry} to ${destination}.
 
 User profile:
 ${nationalityLine}
 - Employment: ${profile.employmentStatus}
 - Family status: ${profile.familyStatus}
 
-Generate 12-16 essential relocation tasks covering these categories: housing, telecom, banking, insurance, legal, transport.
+Generate 12-16 essential post-arrival tasks. You MUST cover ALL of these core categories with at least one task each:
+- housing (find accommodation, register address)
+- banking (open local bank account, set up local payments)
+- legal (residence permit, registration, visa compliance)
+- telecom (local SIM card or mobile plan)
+- transport (local transport card, driving licence exchange if applicable)
+- insurance (health insurance, contents insurance)
+- documents (notarise or translate key documents for local use)
+
+Additional categories to include if relevant: education (language courses), general (register with GP/doctor).
 
 Important:
-- Order tasks by urgency (most urgent first within each category)
-- Include country-specific details for ${destination}
-- Each task should be actionable and specific
+- These are POST-ARRIVAL tasks specific to ${destination}
+- Order tasks by urgency (most urgent first)
+- Include country-specific details, office names, and realistic timelines for ${destination}
+- Each task must be actionable and specific to this destination
 
 Respond ONLY with a valid JSON array:
 [
   {
     "title": "Short, clear task title",
-    "description": "1-2 sentence description of exactly what to do and why",
-    "category": "housing|telecom|banking|insurance|legal|transport",
+    "description": "1-2 sentence overview of what this task involves and why",
+    "instructions": "Step-by-step instructions for this user's specific situation (2-4 sentences, mention country-specific offices or processes)",
+    "category": "housing|banking|legal|telecom|transport|insurance|documents|education|general",
     "documents": ["Required document 1", "Required document 2"],
     "tips": "One practical insider tip specific to ${destination}",
-    "officialUrl": "https://relevant-government-url.${profile.destinationCountry} or null",
+    "officialUrl": "https://relevant-government-url or null",
     "order": 1
   }
 ]`;
