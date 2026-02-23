@@ -30,7 +30,7 @@ export default function Step2Profile({ data, onChange }: Props) {
       <div className="space-y-5">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Your nationality
+            Your nationality <span className="text-red-500">*</span>
           </label>
           <CountrySelect
             value={data.nationality ?? ""}
@@ -71,7 +71,7 @@ export default function Step2Profile({ data, onChange }: Props) {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Employment status
+            Employment status <span className="text-red-500">*</span>
           </label>
           <div className="grid grid-cols-1 gap-3">
             {EMPLOYMENT_OPTIONS.map((opt) => (

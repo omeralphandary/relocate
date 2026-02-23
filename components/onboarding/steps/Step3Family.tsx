@@ -24,7 +24,7 @@ export default function Step3Family({ data, onChange }: Props) {
       <div className="space-y-5">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Who's moving with you?
+            Who's moving with you? <span className="text-red-500">*</span>
           </label>
           <div className="grid grid-cols-3 gap-2 sm:gap-3">
             {FAMILY_OPTIONS.map((opt) => (

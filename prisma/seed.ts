@@ -119,7 +119,7 @@ async function main() {
       category: "insurance", order: 1,
       documents: ["Passport", "Proof of address or residency application"],
       tips: "VZP (Všeobecná zdravotní pojišťovna) is the largest public insurer. Private options: Maxima or IMG for expats.",
-      countries: ["Czech Republic"], dependsOn: [],
+      countries: ["Czech Republic"], employmentStatuses: ["employed", "self_employed", "freelancer", "unemployed"], dependsOn: [],
     },
     {
       title: "Set up home and contents insurance",
@@ -223,7 +223,7 @@ async function main() {
       officialUrl: "https://www.healthcare.gov/",
       documents: ["Passport", "Visa", "SSN or ITIN", "Proof of address"],
       tips: "If employed, enrol in your employer's plan during your onboarding window — missing it means waiting until open enrolment. If self-employed or between jobs, compare ACA marketplace plans at healthcare.gov. Coverage starts the month after enrolment.",
-      countries: ["United States"], dependsOn: [],
+      countries: ["United States"], employmentStatuses: ["employed", "self_employed", "freelancer", "unemployed"], dependsOn: [],
     },
     {
       title: "Get a US driver's licence",
@@ -318,7 +318,7 @@ async function main() {
       documents: ["Passport", "Meldebescheinigung", "Employment contract"],
       officialUrl: "https://www.tk.de/en",
       tips: "TK (Techniker Krankenkasse) and AOK are popular public insurers. Registration is free — your employer pays half the premium.",
-      countries: ["Germany"], dependsOn: [],
+      countries: ["Germany"], employmentStatuses: ["employed", "self_employed", "freelancer", "unemployed"], dependsOn: [],
     },
     {
       title: "Exchange or validate your driving licence",
