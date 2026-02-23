@@ -32,6 +32,7 @@ export default async function JourneyPage({ params }: Props) {
         include: { template: true },
       },
     },
+    // baselineTips included by default (not a relation)
   });
 
   if (!journey) notFound();
@@ -42,6 +43,7 @@ export default async function JourneyPage({ params }: Props) {
       title={journey.title}
       origin={journey.origin}
       destination={journey.destination}
+      baselineTips={journey.baselineTips}
       userName={session?.user?.name ?? null}
       userEmail={session?.user?.email ?? null}
       tasks={journey.tasks.map((t) => ({
