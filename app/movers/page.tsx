@@ -267,7 +267,7 @@ const VENDOR_CATEGORIES: {
         rating: 4.7,
         reviews: 341,
         priceRange: "€30–150/vaccine",
-        location: "Berlin / Vienna / Amsterdam",
+        location: "EU-wide",
         responseTime: "Same day",
         languages: ["EN", "DE", "FR"],
         verified: true,

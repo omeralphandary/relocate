@@ -53,7 +53,7 @@ const VENDOR_CATEGORIES: {
         rating: 4.8,
         reviews: 97,
         priceRange: "€250–600",
-        location: "Berlin / Amsterdam",
+        location: "EU-wide",
         responseTime: "Same day",
         languages: ["EN", "DE", "NL"],
         verified: false,
