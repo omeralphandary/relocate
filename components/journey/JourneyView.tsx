@@ -6,6 +6,7 @@ import { signOut } from "next-auth/react";
 import Link from "next/link";
 import CategoryCard from "./CategoryCard";
 import AIGreetingCard from "./AIGreetingCard";
+import BaselineTipsCard from "./BaselineTipsCard";
 import MilestoneToast from "./MilestoneToast";
 
 export interface JourneyTask {
@@ -57,6 +58,7 @@ interface JourneyViewProps {
   title: string;
   origin: string;
   destination: string;
+  baselineTips: string[];
   userName: string | null;
   userEmail: string | null;
   tasks: JourneyTask[];
@@ -97,11 +99,12 @@ type MilestoneState =
 
 // ─── Component ─────────────────────────────────────────────────────────────
 
-export default function JourneyView({ journeyId, title, origin, destination, userName, userEmail, tasks: initialTasks }: JourneyViewProps) {
+export default function JourneyView({ journeyId, title, origin, destination, baselineTips: initialTips, userName, userEmail, tasks: initialTasks }: JourneyViewProps) {
   const [tasks, setTasks] = useState(initialTasks);
   const [addingCategory, setAddingCategory] = useState<string | null>(null);
   const [archiving, setArchiving] = useState(false);
   const [showGreeting, setShowGreeting] = useState(false);
+  const [tips, setTips] = useState(initialTips);
   const [milestone, setMilestone] = useState<MilestoneState>(null);
 
   const hasPreDeparture = initialTasks.some((t) => taskPhase(t) === "PRE_DEPARTURE");
@@ -130,6 +133,11 @@ export default function JourneyView({ journeyId, title, origin, destination, use
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [activePhase]);
+
+  const handleDismissTips = async () => {
+    setTips([]);
+    await fetch(`/api/journeys/${journeyId}/tips`, { method: "DELETE" });
+  };
 
   const handleNewJourney = async () => {
     setArchiving(true);
@@ -480,6 +488,18 @@ export default function JourneyView({ journeyId, title, origin, destination, use
             categoryCount={preSorted.length + postSorted.length}
             firstCategory={preSorted[0] ?? postSorted[0] ?? "telecom"}
             onDismiss={() => setShowGreeting(false)}
+          />
+        </div>
+      )}
+
+      {/* Baseline tips card — corridor-specific AI insights, dismissable */}
+      {tips.length > 0 && (
+        <div className="max-w-2xl mx-auto px-4 pt-4">
+          <BaselineTipsCard
+            origin={origin}
+            destination={destination}
+            tips={tips}
+            onDismiss={handleDismissTips}
           />
         </div>
       )}

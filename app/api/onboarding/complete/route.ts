@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { generateJourneyTasks } from "@/lib/llm";
+import { generateJourneyTasks, generateBaselineTips } from "@/lib/llm";
 
 export async function POST(req: NextRequest) {
   try {
@@ -90,6 +90,14 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Generate corridor-specific baseline tips — fire and forget on failure
+    let baselineTips: string[] = [];
+    try {
+      baselineTips = await generateBaselineTips({ nationality, secondNationality, originCountry, destinationCountry, employmentStatus, familyStatus });
+    } catch {
+      // Non-fatal — journey still creates without tips
+    }
+
     // Upsert profile + create journey in a transaction
     const journey = await prisma.$transaction(async (tx) => {
       await tx.profile.upsert({
@@ -104,6 +112,7 @@ export async function POST(req: NextRequest) {
           title: `${originCountry} → ${destinationCountry}`,
           origin: originCountry,
           destination: destinationCountry,
+          baselineTips,
           tasks: { create: templates.map((t) => ({ taskId: t.id, phase: t.phase })) },
         },
       });

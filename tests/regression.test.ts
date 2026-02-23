@@ -133,7 +133,8 @@ describe("PRE_DEPARTURE phase propagation", () => {
     await onboardingCompletePOST(req(BASE_BODY));
 
     const createCall = vi.mocked(prisma.journey.create).mock.calls[0][0];
-    const tasks = createCall.data.tasks.create as Array<{ taskId: string; phase: string }>;
+    const tasksInput = createCall.data.tasks as { create: Array<{ taskId: string; phase: string }> };
+    const tasks = tasksInput.create;
 
     const preDeptTask = tasks.find((t) => t.taskId === "tpl-pre");
     const postArrTask = tasks.find((t) => t.taskId === "tpl-post");
@@ -149,8 +150,8 @@ describe("PRE_DEPARTURE phase propagation", () => {
     await onboardingCompletePOST(req(BASE_BODY));
 
     const createCall = vi.mocked(prisma.journey.create).mock.calls[0][0];
-    const tasks = createCall.data.tasks.create as Array<{ phase?: string }>;
-    expect(tasks.every((t) => t.phase !== undefined)).toBe(true);
+    const tasksInput = createCall.data.tasks as { create: Array<{ phase?: string }> };
+    expect(tasksInput.create.every((t) => t.phase !== undefined)).toBe(true);
   });
 });
 

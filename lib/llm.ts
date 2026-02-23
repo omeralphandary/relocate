@@ -148,6 +148,49 @@ Respond ONLY with a valid JSON object in this exact format:
   return JSON.parse(jsonMatch[0]) as CustomTaskOutput;
 }
 
+/**
+ * Generates 4–5 corridor-specific quick-insight bullets shown on the journey view.
+ * Fired once at journey creation time; result is stored on Journey.baselineTips.
+ */
+export async function generateBaselineTips(profile: {
+  nationality: string;
+  secondNationality?: string | null;
+  originCountry: string;
+  destinationCountry: string;
+  employmentStatus: string;
+  familyStatus: string;
+}): Promise<string[]> {
+  const client = getClient();
+
+  const nationalityLine = profile.secondNationality
+    ? `${profile.nationality} + ${profile.secondNationality} (dual citizen)`
+    : profile.nationality;
+
+  const prompt = `You are a senior relocation expert. A ${nationalityLine} person is moving from ${profile.originCountry} to ${profile.destinationCountry}. They are ${profile.employmentStatus.replace("_", "-")} and their family status is ${profile.familyStatus.replace("_", " ")}.
+
+Generate exactly 4 short, sharp, corridor-specific insider tips they need to know before diving into their checklist. These should be the kind of things a friend who already made this move would tell you — not generic advice.
+
+Each tip must be:
+- 1 sentence, max 20 words
+- Specific to this exact corridor (${profile.originCountry} → ${profile.destinationCountry})
+- Immediately actionable or eye-opening
+
+Respond ONLY with a valid JSON array of 4 strings:
+["Tip one.", "Tip two.", "Tip three.", "Tip four."]`;
+
+  const message = await client.messages.create({
+    model: "claude-sonnet-4-6",
+    max_tokens: 400,
+    messages: [{ role: "user", content: prompt }],
+  });
+
+  const text = message.content[0].type === "text" ? message.content[0].text : "";
+  const jsonMatch = text.match(/\[[\s\S]*\]/);
+  if (!jsonMatch) throw new Error("LLM returned unexpected format for baseline tips");
+
+  return JSON.parse(jsonMatch[0]) as string[];
+}
+
 export interface GeneratedTask {
   title: string;
   description: string;
