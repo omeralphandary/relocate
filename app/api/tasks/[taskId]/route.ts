@@ -57,10 +57,6 @@ export async function DELETE(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    if (task.taskId !== null) {
-      return NextResponse.json({ error: "Cannot delete system tasks" }, { status: 400 });
-    }
-
     await prisma.journeyTask.delete({ where: { id: taskId } });
 
     return NextResponse.json({ deleted: true });

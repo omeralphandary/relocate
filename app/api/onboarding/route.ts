@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
-import { generateJourneyTasks } from "@/lib/llm";
+import { generateJourneyTasks, type GeneratedTask } from "@/lib/llm";
 import { OnboardingData } from "@/types";
 
 interface OnboardingBody extends OnboardingData {
@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     const body: OnboardingBody = await req.json();
     const {
       name, email, password,
-      nationality, secondNationality, originCountry, destinationCountry,
+      nationality, secondNationality, originCountry, destinationCountry, destinationCity,
       employmentStatus, familyStatus, hasChildren, movingDate,
     } = body;
 
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
       ],
     };
 
-    let templates = await prisma.taskTemplate.findMany({
+    const seededTemplates = await prisma.taskTemplate.findMany({
       where: {
         AND: [
           { OR: [{ countries: { isEmpty: true } }, { countries: { has: destinationCountry } }] },
@@ -55,41 +55,27 @@ export async function POST(req: NextRequest) {
       orderBy: [{ category: "asc" }, { order: "asc" }],
     });
 
-    // No POST_ARRIVAL templates for this destination — try LLM. PRE_DEPARTURE templates are global
-    // and always match, so checking total length would miss missing post-arrival content.
-    const hasPostArrival = templates.some((t) => t.phase === "POST_ARRIVAL");
+    // Check for destination-specific POST_ARRIVAL coverage (origin-only tasks don't count).
+    // PRE_DEPARTURE templates are global (countries: []) and always match, so we can't use total count.
+    // Origin-specific tasks (e.g. US tax filing) also have countries: [], so we only count
+    // templates explicitly scoped to this destination country.
+    const hasPostArrival = seededTemplates.some(
+      (t) => t.phase === "POST_ARRIVAL" && t.countries.length > 0,
+    );
+
+    let llmTasks: GeneratedTask[] = [];
     if (!hasPostArrival) {
       console.log(`[onboarding] No templates for ${destinationCountry}, generating via LLM...`);
       try {
-        const generated = await generateJourneyTasks({
+        llmTasks = await generateJourneyTasks({
           nationality,
           originCountry,
           destinationCountry,
+          destinationCity,
           employmentStatus,
           familyStatus,
         });
-
-        const llmTemplates = await Promise.all(
-          generated.map((t) =>
-            prisma.taskTemplate.create({
-              data: {
-                title: t.title,
-                description: t.description,
-                category: t.category,
-                documents: t.documents,
-                tips: t.tips,
-                officialUrl: t.officialUrl ?? null,
-                order: t.order,
-                countries: [destinationCountry],
-                dependsOn: [],
-                aiEnriched: true,
-              },
-            }),
-          ),
-        );
-        templates = [...templates, ...llmTemplates];
-
-        console.log(`[onboarding] Generated and saved ${llmTemplates.length} LLM templates for ${destinationCountry}`);
+        console.log(`[onboarding] Generated ${llmTasks.length} LLM tasks for ${destinationCountry}`);
       } catch (llmErr) {
         console.error(`[onboarding] LLM generation failed for ${destinationCountry}:`, llmErr);
         return NextResponse.json(
@@ -110,6 +96,7 @@ export async function POST(req: NextRequest) {
             secondNationality: secondNationality ?? null,
             originCountry,
             destinationCountry,
+            destinationCity: destinationCity ?? null,
             employmentStatus,
             familyStatus,
             hasChildren: hasChildren ?? false,
@@ -122,7 +109,20 @@ export async function POST(req: NextRequest) {
             origin: originCountry,
             destination: destinationCountry,
             tasks: {
-              create: templates.map((t) => ({ taskId: t.id, phase: t.phase })),
+              create: [
+                ...seededTemplates.map((t) => ({ taskId: t.id, phase: t.phase })),
+                ...llmTasks.map((t) => ({
+                  taskId: null,
+                  phase: "POST_ARRIVAL" as const,
+                  customTitle: t.title,
+                  customDescription: t.description,
+                  customCategory: t.category,
+                  aiDocuments: t.documents,
+                  aiTips: t.tips,
+                  aiInstructions: t.instructions ?? null,
+                  aiGeneratedAt: new Date(),
+                })),
+              ],
             },
           },
         },

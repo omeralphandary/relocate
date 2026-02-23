@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { generateJourneyTasks, generateBaselineTips } from "@/lib/llm";
+import { generateJourneyTasks, generateBaselineTips, type GeneratedTask } from "@/lib/llm";
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,13 +15,14 @@ export async function POST(req: NextRequest) {
       secondNationality?: string;
       originCountry?: string;
       destinationCountry?: string;
+      destinationCity?: string;
       employmentStatus?: string;
       familyStatus?: string;
       hasChildren?: boolean;
       movingDate?: string | null;
     };
 
-    const { nationality, secondNationality, originCountry, destinationCountry, employmentStatus, familyStatus, hasChildren, movingDate } = body;
+    const { nationality, secondNationality, originCountry, destinationCountry, destinationCity, employmentStatus, familyStatus, hasChildren, movingDate } = body;
 
     if (!nationality || !originCountry || !destinationCountry || !employmentStatus || !familyStatus) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -50,7 +51,7 @@ export async function POST(req: NextRequest) {
     };
 
     // Find templates matching this corridor
-    let templates = await prisma.taskTemplate.findMany({
+    const seededTemplates = await prisma.taskTemplate.findMany({
       where: {
         AND: [
           { OR: [{ countries: { isEmpty: true } }, { countries: { has: destinationCountry } }] },
@@ -63,25 +64,18 @@ export async function POST(req: NextRequest) {
       orderBy: [{ category: "asc" }, { order: "asc" }],
     });
 
-    // Fall back to LLM for unknown destinations — check POST_ARRIVAL specifically,
-    // since PRE_DEPARTURE templates are global and always match, masking missing post-arrival content.
-    const hasPostArrival = templates.some((t) => t.phase === "POST_ARRIVAL");
+    // Check for destination-specific POST_ARRIVAL coverage (origin-only tasks don't count).
+    // PRE_DEPARTURE templates are global (countries: []) and always match, so we can't use total count.
+    // Origin-specific tasks (e.g. US tax filing) also have countries: [], so we only count
+    // templates explicitly scoped to this destination country.
+    const hasPostArrival = seededTemplates.some(
+      (t) => t.phase === "POST_ARRIVAL" && t.countries.length > 0,
+    );
+
+    let llmTasks: GeneratedTask[] = [];
     if (!hasPostArrival) {
       try {
-        const generated = await generateJourneyTasks({ nationality, originCountry, destinationCountry, employmentStatus, familyStatus });
-        const llmTemplates = await Promise.all(
-          generated.map((t) =>
-            prisma.taskTemplate.create({
-              data: {
-                title: t.title, description: t.description, category: t.category,
-                documents: t.documents, tips: t.tips, officialUrl: t.officialUrl ?? null,
-                order: t.order, countries: [destinationCountry], dependsOn: [], aiEnriched: true,
-                // phase defaults to POST_ARRIVAL — correct for LLM-generated content
-              },
-            })
-          )
-        );
-        templates = [...templates, ...llmTemplates];
+        llmTasks = await generateJourneyTasks({ nationality, originCountry, destinationCountry, destinationCity, employmentStatus, familyStatus });
       } catch {
         return NextResponse.json(
           { error: `No relocation tasks available for "${destinationCountry}" and AI generation failed.` },
@@ -93,7 +87,7 @@ export async function POST(req: NextRequest) {
     // Generate corridor-specific baseline tips — fire and forget on failure
     let baselineTips: string[] = [];
     try {
-      baselineTips = await generateBaselineTips({ nationality, secondNationality, originCountry, destinationCountry, employmentStatus, familyStatus });
+      baselineTips = await generateBaselineTips({ nationality, secondNationality, originCountry, destinationCountry, destinationCity, employmentStatus, familyStatus });
     } catch {
       // Non-fatal — journey still creates without tips
     }
@@ -102,8 +96,8 @@ export async function POST(req: NextRequest) {
     const journey = await prisma.$transaction(async (tx) => {
       await tx.profile.upsert({
         where: { userId },
-        update: { nationality, secondNationality: secondNationality ?? null, originCountry, destinationCountry, employmentStatus, familyStatus, hasChildren: hasChildren ?? false, movingDate: movingDate ? new Date(movingDate) : null },
-        create: { userId, nationality, secondNationality: secondNationality ?? null, originCountry, destinationCountry, employmentStatus, familyStatus, hasChildren: hasChildren ?? false, movingDate: movingDate ? new Date(movingDate) : null },
+        update: { nationality, secondNationality: secondNationality ?? null, originCountry, destinationCountry, destinationCity: destinationCity ?? null, employmentStatus, familyStatus, hasChildren: hasChildren ?? false, movingDate: movingDate ? new Date(movingDate) : null },
+        create: { userId, nationality, secondNationality: secondNationality ?? null, originCountry, destinationCountry, destinationCity: destinationCity ?? null, employmentStatus, familyStatus, hasChildren: hasChildren ?? false, movingDate: movingDate ? new Date(movingDate) : null },
       });
 
       return tx.journey.create({
@@ -113,7 +107,22 @@ export async function POST(req: NextRequest) {
           origin: originCountry,
           destination: destinationCountry,
           baselineTips,
-          tasks: { create: templates.map((t) => ({ taskId: t.id, phase: t.phase })) },
+          tasks: {
+            create: [
+              ...seededTemplates.map((t) => ({ taskId: t.id, phase: t.phase })),
+              ...llmTasks.map((t) => ({
+                taskId: null,
+                phase: "POST_ARRIVAL" as const,
+                customTitle: t.title,
+                customDescription: t.description,
+                customCategory: t.category,
+                aiDocuments: t.documents,
+                aiTips: t.tips,
+                aiInstructions: t.instructions ?? null,
+                aiGeneratedAt: new Date(),
+              })),
+            ],
+          },
         },
       });
     });

@@ -7,6 +7,7 @@ export interface OnboardingData {
   secondNationality?: string;
   originCountry: string;
   destinationCountry: string;
+  destinationCity?: string;
   employmentStatus: EmploymentStatus;
   familyStatus: FamilyStatus;
   hasChildren: boolean;
