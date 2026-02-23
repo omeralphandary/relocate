@@ -105,7 +105,7 @@ export default function TaskCard({
               )}
             </div>
             <div className="flex items-center gap-1 flex-shrink-0">
-              {isCustom && onDelete && (
+              {onDelete && (
                 <button
                   type="button"
                   onClick={(e) => { e.stopPropagation(); onDelete(id); }}
