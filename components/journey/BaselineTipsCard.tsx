@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useEffect } from "react";
+
 interface Props {
   origin: string;
   destination: string;
@@ -8,8 +10,17 @@ interface Props {
 }
 
 export default function BaselineTipsCard({ origin, destination, tips, onDismiss }: Props) {
+  const [shaking, setShaking] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setShaking(true);
+      setTimeout(() => setShaking(false), 700);
+    }, 2700);
+    return () => clearTimeout(t);
+  }, []);
+
   return (
-    <div className="rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-4 shadow-sm">
+    <div className={`rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-4 shadow-sm${shaking ? " animate-card-shake" : ""}`}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2 min-w-0">
           {/* AI icon */}
