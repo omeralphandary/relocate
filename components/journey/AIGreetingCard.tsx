@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useEffect } from "react";
+
 interface Props {
   userName: string | null;
   destination: string;
@@ -28,8 +30,17 @@ export default function AIGreetingCard({ userName, destination, totalCount, cate
   const first = userName?.split(" ")[0] ?? "there";
   const hint = FIRST_CATEGORY_HINT[firstCategory] ?? `start with ${firstCategory}`;
 
+  const [shaking, setShaking] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setShaking(true);
+      setTimeout(() => setShaking(false), 700);
+    }, 2000);
+    return () => clearTimeout(t);
+  }, []);
+
   return (
-    <div className="rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-4 flex items-start gap-3 relative shadow-sm">
+    <div className={`rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-4 flex items-start gap-3 relative shadow-sm${shaking ? " animate-card-shake" : ""}`}>
       {/* Avatar */}
       <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0 mt-0.5">
         <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">

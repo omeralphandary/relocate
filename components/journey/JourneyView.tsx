@@ -106,6 +106,7 @@ export default function JourneyView({ journeyId, title, origin, destination, bas
   const [showGreeting, setShowGreeting] = useState(false);
   const [tips, setTips] = useState(initialTips);
   const [milestone, setMilestone] = useState<MilestoneState>(null);
+  const [showScrollHint, setShowScrollHint] = useState(false);
 
   const hasPreDeparture = initialTasks.some((t) => taskPhase(t) === "PRE_DEPARTURE");
   const [activePhase, setActivePhase] = useState<"pre" | "post">(hasPreDeparture ? "pre" : "post");
@@ -129,6 +130,23 @@ export default function JourneyView({ journeyId, title, origin, destination, bas
       router.replace(url.pathname, { scroll: false });
     }
   }, [searchParams, router]);
+
+  // Scroll hint arrow — only for first-time users (when greeting is shown)
+  useEffect(() => {
+    if (!showGreeting) {
+      setShowScrollHint(false);
+      return;
+    }
+    const showTimer = setTimeout(() => setShowScrollHint(true), 1800);
+    const hideTimer = setTimeout(() => setShowScrollHint(false), 9000);
+    const handleScroll = () => setShowScrollHint(false);
+    window.addEventListener("scroll", handleScroll, { once: true, passive: true });
+    return () => {
+      clearTimeout(showTimer);
+      clearTimeout(hideTimer);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [showGreeting]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
@@ -501,6 +519,18 @@ export default function JourneyView({ journeyId, title, origin, destination, bas
             tips={tips}
             onDismiss={handleDismissTips}
           />
+        </div>
+      )}
+
+      {/* Scroll hint — first-time users only, fades in then bounces */}
+      {showScrollHint && (
+        <div className="flex flex-col items-center gap-1 py-4 animate-fade-in-up pointer-events-none select-none">
+          <span className="text-xs text-slate-400 tracking-wide">scroll to explore</span>
+          <div className="animate-bounce-down text-emerald-400">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
         </div>
       )}
 
