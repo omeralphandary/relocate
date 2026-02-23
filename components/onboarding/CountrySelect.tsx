@@ -25,6 +25,7 @@ export default function CountrySelect({ value, onChange, placeholder }: Props) {
     ch: "Switzerland", se: "Sweden", no: "Norway",
     dk: "Denmark", fi: "Finland", be: "Belgium",
     pt: "Portugal", ie: "Ireland", ru: "Russia",
+    hk: "Hong Kong",
     il: "Israel", au: "Australia", nz: "New Zealand",
     za: "South Africa", sg: "Singapore", jp: "Japan",
     kr: "South Korea", cn: "China", in: "India",
