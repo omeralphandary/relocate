@@ -46,7 +46,7 @@ export default function Step4Account({ data, onChange, onGoogleSignup }: Props) 
 
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Full name</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Full name <span className="text-red-500">*</span></label>
           <input
             type="text"
             value={data.name ?? ""}
@@ -57,7 +57,7 @@ export default function Step4Account({ data, onChange, onGoogleSignup }: Props) 
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Email <span className="text-red-500">*</span></label>
           <input
             type="email"
             value={data.email ?? ""}
@@ -68,7 +68,7 @@ export default function Step4Account({ data, onChange, onGoogleSignup }: Props) 
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Password <span className="text-red-500">*</span></label>
           <input
             type="password"
             value={data.password ?? ""}

@@ -19,7 +19,7 @@ export default function Step1Countries({ data, onChange }: Props) {
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Moving from
+            Moving from <span className="text-red-500">*</span>
           </label>
           <CountrySelect
             value={data.originCountry ?? ""}
@@ -40,7 +40,7 @@ export default function Step1Countries({ data, onChange }: Props) {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Moving to
+            Moving to <span className="text-red-500">*</span>
           </label>
           <CountrySelect
             value={data.destinationCountry ?? ""}
