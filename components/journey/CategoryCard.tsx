@@ -100,7 +100,7 @@ function AddTaskForm({
           type="button"
           onClick={() => handleSubmit(true)}
           disabled={submitting || !value.trim()}
-          className="text-xs text-gray-400 hover:text-violet-500 transition-colors disabled:opacity-40"
+          className="inline-flex items-center text-xs font-medium text-violet-600 border border-violet-300 bg-white px-3 py-1.5 rounded-lg hover:bg-violet-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
         >
           Just add it
         </button>
