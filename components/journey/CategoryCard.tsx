@@ -23,10 +23,11 @@ interface CategoryCardProps {
   onEnrichTask: (id: string) => Promise<void>;
   isLocked: (task: JourneyTask) => boolean;
   blockingNames: (task: JourneyTask) => string[];
+  phase: "pre" | "post";
   isAddingTask: boolean;
   onStartAddTask: () => void;
   onCancelAddTask: () => void;
-  onAddTask: (category: string, title: string, skipAI?: boolean) => Promise<void>;
+  onAddTask: (category: string, title: string, skipAI?: boolean, phase?: "pre" | "post") => Promise<void>;
   onDeleteTask: (id: string) => void;
 }
 
@@ -48,7 +49,7 @@ function AddTaskForm({
     setSubmitting(true);
     setError(null);
     try {
-      await onAdd(category, value.trim(), skipAI);
+      await onAdd(category, value.trim(), skipAI);  // phase is closed over in onAdd
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to add task. Try again.");
       setSubmitting(false);
@@ -125,6 +126,7 @@ export default function CategoryCard({
   onEnrichTask,
   isLocked,
   blockingNames,
+  phase,
   isAddingTask,
   onStartAddTask,
   onCancelAddTask,
@@ -208,7 +210,7 @@ export default function CategoryCard({
           {isAddingTask ? (
             <AddTaskForm
               category={category}
-              onAdd={onAddTask}
+              onAdd={(cat, title, skipAI) => onAddTask(cat, title, skipAI, phase)}
               onCancel={onCancelAddTask}
             />
           ) : (

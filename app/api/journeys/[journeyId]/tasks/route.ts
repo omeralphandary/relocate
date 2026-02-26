@@ -30,8 +30,8 @@ export async function POST(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const body = await req.json() as { title?: string; category?: string; skipAI?: boolean };
-    const { title, category, skipAI } = body;
+    const body = await req.json() as { title?: string; category?: string; skipAI?: boolean; phase?: string };
+    const { title, category, skipAI, phase } = body;
 
     if (!title || typeof title !== "string" || title.trim() === "") {
       return NextResponse.json({ error: "title is required" }, { status: 400 });
@@ -72,10 +72,14 @@ export async function POST(
       }
     }
 
+    const validPhases = ["PRE_DEPARTURE", "POST_ARRIVAL"];
+    const resolvedPhase = phase && validPhases.includes(phase) ? phase : "POST_ARRIVAL";
+
     const task = await prisma.journeyTask.create({
       data: {
         journeyId,
         taskId: null,
+        phase: resolvedPhase,
         customTitle: overview?.refinedTitle ?? title.trim(),
         customDescription: overview?.description ?? null,
         customCategory: category,
@@ -90,6 +94,7 @@ export async function POST(
       {
         id: task.id,
         status: task.status,
+        phase: task.phase,
         isCustom: true,
         customTitle: task.customTitle,
         customDescription: task.customDescription,

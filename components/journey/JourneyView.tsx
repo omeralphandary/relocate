@@ -257,11 +257,12 @@ export default function JourneyView({ journeyId, title, origin, destination, bas
     );
   };
 
-  const handleAddCustomTask = async (category: string, title: string, skipAI = false) => {
+  const handleAddCustomTask = async (category: string, title: string, skipAI = false, phase: "pre" | "post" = "post") => {
+    const dbPhase = phase === "pre" ? "PRE_DEPARTURE" : "POST_ARRIVAL";
     const res = await fetch(`/api/journeys/${journeyId}/tasks`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, category, skipAI }),
+      body: JSON.stringify({ title, category, skipAI, phase: dbPhase }),
     });
     if (!res.ok) {
       const { error } = await res.json().catch(() => ({ error: "Unknown error" }));
@@ -348,6 +349,7 @@ export default function JourneyView({ journeyId, title, origin, destination, bas
           onEnrichTask={handleEnrich}
           isLocked={isLocked}
           blockingNames={blockingNames}
+          phase={phase}
           isAddingTask={addingCategory === category}
           onStartAddTask={() => setAddingCategory(category)}
           onCancelAddTask={() => setAddingCategory(null)}
