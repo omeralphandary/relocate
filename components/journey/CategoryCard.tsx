@@ -80,6 +80,14 @@ function AddTaskForm({
       <div className="flex items-center gap-2">
         <button
           type="button"
+          onClick={() => handleSubmit(true)}
+          disabled={submitting}
+          className="inline-flex items-center text-xs font-medium text-violet-600 border border-violet-300 bg-white px-3 py-1.5 rounded-lg hover:bg-violet-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          Just add it
+        </button>
+        <button
+          type="button"
           onClick={() => handleSubmit(false)}
           disabled={submitting || !value.trim()}
           className="inline-flex items-center gap-1.5 text-xs font-medium bg-violet-500 text-white px-3 py-1.5 rounded-lg hover:bg-violet-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
@@ -95,14 +103,6 @@ function AddTaskForm({
           ) : (
             <>✦ Add with AI</>
           )}
-        </button>
-        <button
-          type="button"
-          onClick={() => handleSubmit(true)}
-          disabled={submitting}
-          className="inline-flex items-center text-xs font-medium text-violet-600 border border-violet-300 bg-white px-3 py-1.5 rounded-lg hover:bg-violet-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          Just add it
         </button>
         <button
           type="button"
