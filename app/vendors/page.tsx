@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Vendor {
   name: string;
@@ -347,8 +348,10 @@ function categorySlug(title: string): string {
   return title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 }
 
-export default function VendorsPage() {
+function VendorsContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const backHref = searchParams.get("from") ?? null;
 
   const scrollTo = (slug: string) => {
     const el = document.getElementById(slug);
@@ -366,7 +369,7 @@ export default function VendorsPage() {
             Realocate<span className="text-emerald-500">.ai</span>
           </span>
           <button
-            onClick={() => router.back()}
+            onClick={() => backHref ? router.push(backHref) : router.back()}
             className="text-sm font-medium text-gray-600 hover:text-emerald-500 transition-colors"
           >
             ← Back to my journey
@@ -433,5 +436,13 @@ export default function VendorsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function VendorsPage() {
+  return (
+    <Suspense>
+      <VendorsContent />
+    </Suspense>
   );
 }

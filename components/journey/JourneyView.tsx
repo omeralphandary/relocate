@@ -87,7 +87,7 @@ const CATEGORY_META: Record<string, {
   transport: { label: "Transport",          emoji: "🚗", urgency: "Month 1–2",      timeEstimate: "1–4 weeks",  color: "bg-red-50 text-red-600 border-red-200",           donutColor: "#ef4444" },
   education: { label: "Education",          emoji: "🎓", urgency: "Week 1–2",       preDepartureUrgency: "4–6 wks before", timeEstimate: "1–4 weeks",  color: "bg-indigo-50 text-indigo-600 border-indigo-200",  donutColor: "#6366f1" },
   // Pre-departure only
-  documents: { label: "Documents",          emoji: "📄", urgency: "6–8 wks before", timeEstimate: "2–4 weeks",  color: "bg-amber-50 text-amber-600 border-amber-200",     donutColor: "#f59e0b" },
+  documents: { label: "Documents",          emoji: "📄", urgency: "Week 1–2",        preDepartureUrgency: "6–8 wks before", timeEstimate: "2–4 weeks",  color: "bg-amber-50 text-amber-600 border-amber-200",     donutColor: "#f59e0b" },
   moving:    { label: "Moving & Shipping",  emoji: "📦", urgency: "4–8 wks before", timeEstimate: "2–8 weeks",  color: "bg-sky-50 text-sky-600 border-sky-200",           donutColor: "#0ea5e9" },
   pets:      { label: "Pets",               emoji: "🐾", urgency: "8–12 wks before",timeEstimate: "8–12 weeks", color: "bg-rose-50 text-rose-600 border-rose-200",        donutColor: "#f43f5e" },
 };
@@ -257,11 +257,12 @@ export default function JourneyView({ journeyId, title, origin, destination, bas
     );
   };
 
-  const handleAddCustomTask = async (category: string, title: string) => {
+  const handleAddCustomTask = async (category: string, title: string, skipAI = false, phase: "pre" | "post" = "post") => {
+    const dbPhase = phase === "pre" ? "PRE_DEPARTURE" : "POST_ARRIVAL";
     const res = await fetch(`/api/journeys/${journeyId}/tasks`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, category }),
+      body: JSON.stringify({ title, category, skipAI, phase: dbPhase }),
     });
     if (!res.ok) {
       const { error } = await res.json().catch(() => ({ error: "Unknown error" }));
@@ -348,6 +349,7 @@ export default function JourneyView({ journeyId, title, origin, destination, bas
           onEnrichTask={handleEnrich}
           isLocked={isLocked}
           blockingNames={blockingNames}
+          phase={phase}
           isAddingTask={addingCategory === category}
           onStartAddTask={() => setAddingCategory(category)}
           onCancelAddTask={() => setAddingCategory(null)}
@@ -599,7 +601,7 @@ export default function JourneyView({ journeyId, title, origin, destination, bas
 
               {/* Help on the Ground — vendor marketplace */}
               <Link
-                href="/vendors"
+                href={`/vendors?from=/journey/${journeyId}`}
                 className="block rounded-2xl border border-gray-200 bg-white hover:border-emerald-200 hover:bg-emerald-50/30 transition-all duration-200 shadow-sm group"
               >
                 <div className="flex items-center gap-4 px-5 py-4">

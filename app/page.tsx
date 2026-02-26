@@ -96,6 +96,13 @@ export default function Home() {
         </Link>
         <p className="mt-3 text-xs text-slate-600">3 minutes to a full relocation plan</p>
 
+        <Link
+          href="/journey"
+          className="mt-3 inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-emerald-400 transition-colors"
+        >
+          Continue my journey →
+        </Link>
+
         {/* Feature cards */}
         <div className="mt-24 max-w-3xl w-full grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
           {FEATURES.map((f) => (
@@ -114,7 +121,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="relative z-10 border-t border-white/[0.07] text-center text-xs text-slate-700 py-6 space-y-2">
         <p>© 2026 Realocate.ai. Your relocation, simplified.</p>
-        <p className="text-slate-800">v1.1</p>
+        <p className="text-slate-800">v1.2</p>
         <div className="flex items-center justify-center gap-4">
           <Link href="/privacy" className="hover:text-slate-400 transition-colors">Privacy Policy</Link>
           <span className="text-slate-800">·</span>

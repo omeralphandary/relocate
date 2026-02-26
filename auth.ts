@@ -39,15 +39,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, user, account }) {
       if (user) {
         if (account?.provider === "google") {
-          // Upsert the DB user and capture their ID in one step.
-          // This replaces the old two-step signIn callback + findUnique pattern
-          // which could leave token.id undefined on race conditions.
-          const dbUser = await prisma.user.upsert({
-            where: { email: user.email! },
-            update: { name: user.name ?? undefined },
-            create: { email: user.email!, name: user.name },
-          });
-          token.id = dbUser.id;
+          try {
+            const dbUser = await prisma.user.upsert({
+              where: { email: user.email! },
+              update: { name: user.name ?? undefined },
+              create: { email: user.email!, name: user.name },
+            });
+            token.id = dbUser.id;
+          } catch (err) {
+            console.error("[auth] Google upsert failed:", err);
+            // token.id stays undefined → journey/page.tsx redirects to sign-in
+          }
         } else {
           token.id = user.id;
         }

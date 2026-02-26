@@ -23,10 +23,11 @@ interface CategoryCardProps {
   onEnrichTask: (id: string) => Promise<void>;
   isLocked: (task: JourneyTask) => boolean;
   blockingNames: (task: JourneyTask) => string[];
+  phase: "pre" | "post";
   isAddingTask: boolean;
   onStartAddTask: () => void;
   onCancelAddTask: () => void;
-  onAddTask: (category: string, title: string) => Promise<void>;
+  onAddTask: (category: string, title: string, skipAI?: boolean, phase?: "pre" | "post") => Promise<void>;
   onDeleteTask: (id: string) => void;
 }
 
@@ -36,19 +37,19 @@ function AddTaskForm({
   onCancel,
 }: {
   category: string;
-  onAdd: (category: string, title: string) => Promise<void>;
+  onAdd: (category: string, title: string, skipAI?: boolean) => Promise<void>;
   onCancel: () => void;
 }) {
   const [value, setValue] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (skipAI = false) => {
     if (!value.trim()) return;
     setSubmitting(true);
     setError(null);
     try {
-      await onAdd(category, value.trim());
+      await onAdd(category, value.trim(), skipAI);  // phase is closed over in onAdd
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to add task. Try again.");
       setSubmitting(false);
@@ -57,21 +58,37 @@ function AddTaskForm({
 
   return (
     <div className="rounded-xl border border-violet-200 bg-violet-50/60 p-3 space-y-2">
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onKeyDown={(e) => { if (e.key === "Enter") handleSubmit(); if (e.key === "Escape") onCancel(); }}
-        placeholder="Describe your task…"
-        className="w-full text-sm text-gray-900 placeholder:text-gray-400 bg-white border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-transparent"
-        autoFocus
-        disabled={submitting}
-      />
+      <div className="relative">
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={(e) => { if (e.key === "Enter") handleSubmit(); if (e.key === "Escape") onCancel(); }}
+          placeholder="Describe your task…"
+          maxLength={200}
+          className="w-full text-sm text-gray-900 placeholder:text-gray-400 bg-white border border-gray-200 rounded-lg px-3 py-2 pr-14 focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-transparent"
+          autoFocus
+          disabled={submitting}
+        />
+        {value.length > 150 && (
+          <span className={`absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-medium ${value.length >= 200 ? "text-red-400" : "text-gray-400"}`}>
+            {200 - value.length}
+          </span>
+        )}
+      </div>
       {error && <p className="text-xs text-red-400">{error}</p>}
       <div className="flex items-center gap-2">
         <button
           type="button"
-          onClick={handleSubmit}
+          onClick={() => handleSubmit(true)}
+          disabled={submitting}
+          className="inline-flex items-center text-xs font-medium text-violet-600 border border-violet-300 bg-white px-3 py-1.5 rounded-lg hover:bg-violet-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          Just add it
+        </button>
+        <button
+          type="button"
+          onClick={() => handleSubmit(false)}
           disabled={submitting || !value.trim()}
           className="inline-flex items-center gap-1.5 text-xs font-medium bg-violet-500 text-white px-3 py-1.5 rounded-lg hover:bg-violet-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
@@ -91,7 +108,7 @@ function AddTaskForm({
           type="button"
           onClick={onCancel}
           disabled={submitting}
-          className="text-xs text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-40"
+          className="text-xs text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-40 ml-auto"
         >
           Cancel
         </button>
@@ -109,6 +126,7 @@ export default function CategoryCard({
   onEnrichTask,
   isLocked,
   blockingNames,
+  phase,
   isAddingTask,
   onStartAddTask,
   onCancelAddTask,
@@ -192,7 +210,7 @@ export default function CategoryCard({
           {isAddingTask ? (
             <AddTaskForm
               category={category}
-              onAdd={onAddTask}
+              onAdd={(cat, title, skipAI) => onAddTask(cat, title, skipAI, phase)}
               onCancel={onCancelAddTask}
             />
           ) : (
