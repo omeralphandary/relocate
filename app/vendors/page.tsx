@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 interface Vendor {
@@ -347,7 +348,7 @@ function categorySlug(title: string): string {
   return title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 }
 
-export default function VendorsPage() {
+function VendorsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const backHref = searchParams.get("from") ?? null;
@@ -435,5 +436,13 @@ export default function VendorsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function VendorsPage() {
+  return (
+    <Suspense>
+      <VendorsContent />
+    </Suspense>
   );
 }
