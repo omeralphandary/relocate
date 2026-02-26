@@ -8,12 +8,17 @@ export default async function JourneyIndexPage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/auth/signin");
 
-  const journey = await prisma.journey.findFirst({
-    where: { userId: session.user.id, status: "ACTIVE" },
-    orderBy: { createdAt: "desc" },
-    select: { id: true },
-  });
+  try {
+    const journey = await prisma.journey.findFirst({
+      where: { userId: session.user.id, status: "ACTIVE" },
+      orderBy: { createdAt: "desc" },
+      select: { id: true },
+    });
 
-  if (journey) redirect(`/journey/${journey.id}`);
+    if (journey) redirect(`/journey/${journey.id}`);
+  } catch (err) {
+    console.error("[journey/page] DB lookup failed:", err);
+  }
+
   redirect("/onboarding");
 }
