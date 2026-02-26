@@ -521,13 +521,16 @@ describe("POST /api/journeys/[journeyId]/tasks", () => {
     expect(res.status).toBe(404);
   });
 
-  it("returns 500 when LLM call fails", async () => {
+  it("falls back to plain task (201) when LLM call fails", async () => {
     vi.mocked(generateCustomTaskOverview).mockRejectedValue(new Error("LLM down"));
     const res = await customTaskPOST(
       makeRequest({ title: "Something", category: "legal" }),
       { params },
     );
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(201);
+    const createCall = vi.mocked(prisma.journeyTask.create).mock.calls[0][0];
+    expect(createCall.data.customTitle).toBe("Something");
+    expect(createCall.data.aiInstructions).toBeNull();
   });
 
   it("creates task with taskId: null", async () => {

@@ -257,11 +257,11 @@ export default function JourneyView({ journeyId, title, origin, destination, bas
     );
   };
 
-  const handleAddCustomTask = async (category: string, title: string) => {
+  const handleAddCustomTask = async (category: string, title: string, skipAI = false) => {
     const res = await fetch(`/api/journeys/${journeyId}/tasks`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, category }),
+      body: JSON.stringify({ title, category, skipAI }),
     });
     if (!res.ok) {
       const { error } = await res.json().catch(() => ({ error: "Unknown error" }));
@@ -599,7 +599,7 @@ export default function JourneyView({ journeyId, title, origin, destination, bas
 
               {/* Help on the Ground — vendor marketplace */}
               <Link
-                href="/vendors"
+                href={`/vendors?from=/journey/${journeyId}`}
                 className="block rounded-2xl border border-gray-200 bg-white hover:border-emerald-200 hover:bg-emerald-50/30 transition-all duration-200 shadow-sm group"
               >
                 <div className="flex items-center gap-4 px-5 py-4">

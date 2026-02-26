@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Vendor {
   name: string;
@@ -349,6 +349,8 @@ function categorySlug(title: string): string {
 
 export default function VendorsPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const backHref = searchParams.get("from") ?? null;
 
   const scrollTo = (slug: string) => {
     const el = document.getElementById(slug);
@@ -366,7 +368,7 @@ export default function VendorsPage() {
             Realocate<span className="text-emerald-500">.ai</span>
           </span>
           <button
-            onClick={() => router.back()}
+            onClick={() => backHref ? router.push(backHref) : router.back()}
             className="text-sm font-medium text-gray-600 hover:text-emerald-500 transition-colors"
           >
             ← Back to my journey

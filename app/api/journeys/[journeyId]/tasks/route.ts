@@ -30,8 +30,8 @@ export async function POST(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const body = await req.json() as { title?: string; category?: string };
-    const { title, category } = body;
+    const body = await req.json() as { title?: string; category?: string; skipAI?: boolean };
+    const { title, category, skipAI } = body;
 
     if (!title || typeof title !== "string" || title.trim() === "") {
       return NextResponse.json({ error: "title is required" }, { status: 400 });
@@ -48,39 +48,38 @@ export async function POST(
       return NextResponse.json({ error: "Profile not found" }, { status: 400 });
     }
 
-    let overview;
-    try {
-      overview = await generateCustomTaskOverview({
-        userTitle: title.trim(),
-        category,
-        nationality: profile.nationality,
-        secondNationality: profile.secondNationality,
-        originCountry: profile.originCountry,
-        destinationCountry: profile.destinationCountry,
-        destinationCity: profile.destinationCity,
-        employmentStatus: profile.employmentStatus,
-        familyStatus: profile.familyStatus,
-        movingDate: profile.movingDate?.toISOString() ?? null,
-      });
-    } catch (llmErr) {
-      console.error("[custom task LLM]", llmErr);
-      return NextResponse.json(
-        { error: "Failed to generate task overview. Please try again." },
-        { status: 500 },
-      );
+    let overview: Awaited<ReturnType<typeof generateCustomTaskOverview>> | null = null;
+    if (!skipAI) {
+      try {
+        overview = await generateCustomTaskOverview({
+          userTitle: title.trim(),
+          category,
+          nationality: profile.nationality,
+          secondNationality: profile.secondNationality,
+          originCountry: profile.originCountry,
+          destinationCountry: profile.destinationCountry,
+          destinationCity: profile.destinationCity,
+          employmentStatus: profile.employmentStatus,
+          familyStatus: profile.familyStatus,
+          movingDate: profile.movingDate?.toISOString() ?? null,
+        });
+      } catch (llmErr) {
+        console.error("[custom task LLM]", llmErr);
+        // Fall through — create the task without AI content
+      }
     }
 
     const task = await prisma.journeyTask.create({
       data: {
         journeyId,
         taskId: null,
-        customTitle: overview.refinedTitle,
-        customDescription: overview.description,
+        customTitle: overview?.refinedTitle ?? title.trim(),
+        customDescription: overview?.description ?? null,
         customCategory: category,
-        aiInstructions: overview.instructions,
-        aiDocuments: overview.documents,
-        aiTips: overview.tips,
-        aiGeneratedAt: new Date(),
+        aiInstructions: overview?.instructions ?? null,
+        aiDocuments: overview?.documents ?? [],
+        aiTips: overview?.tips ?? null,
+        aiGeneratedAt: overview ? new Date() : null,
       },
     });
 

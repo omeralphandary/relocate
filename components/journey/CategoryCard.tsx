@@ -26,7 +26,7 @@ interface CategoryCardProps {
   isAddingTask: boolean;
   onStartAddTask: () => void;
   onCancelAddTask: () => void;
-  onAddTask: (category: string, title: string) => Promise<void>;
+  onAddTask: (category: string, title: string, skipAI?: boolean) => Promise<void>;
   onDeleteTask: (id: string) => void;
 }
 
@@ -36,19 +36,19 @@ function AddTaskForm({
   onCancel,
 }: {
   category: string;
-  onAdd: (category: string, title: string) => Promise<void>;
+  onAdd: (category: string, title: string, skipAI?: boolean) => Promise<void>;
   onCancel: () => void;
 }) {
   const [value, setValue] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (skipAI = false) => {
     if (!value.trim()) return;
     setSubmitting(true);
     setError(null);
     try {
-      await onAdd(category, value.trim());
+      await onAdd(category, value.trim(), skipAI);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to add task. Try again.");
       setSubmitting(false);
@@ -71,7 +71,7 @@ function AddTaskForm({
       <div className="flex items-center gap-2">
         <button
           type="button"
-          onClick={handleSubmit}
+          onClick={() => handleSubmit(false)}
           disabled={submitting || !value.trim()}
           className="inline-flex items-center gap-1.5 text-xs font-medium bg-violet-500 text-white px-3 py-1.5 rounded-lg hover:bg-violet-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
@@ -89,9 +89,17 @@ function AddTaskForm({
         </button>
         <button
           type="button"
+          onClick={() => handleSubmit(true)}
+          disabled={submitting || !value.trim()}
+          className="text-xs text-gray-400 hover:text-violet-500 transition-colors disabled:opacity-40"
+        >
+          Add simple
+        </button>
+        <button
+          type="button"
           onClick={onCancel}
           disabled={submitting}
-          className="text-xs text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-40"
+          className="text-xs text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-40 ml-auto"
         >
           Cancel
         </button>
