@@ -93,7 +93,7 @@ function AddTaskForm({
           disabled={submitting || !value.trim()}
           className="text-xs text-gray-400 hover:text-violet-500 transition-colors disabled:opacity-40"
         >
-          Add simple
+          Just add it
         </button>
         <button
           type="button"
