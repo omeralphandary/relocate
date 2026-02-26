@@ -96,6 +96,13 @@ export default function Home() {
         </Link>
         <p className="mt-3 text-xs text-slate-600">3 minutes to a full relocation plan</p>
 
+        <Link
+          href="/journey"
+          className="mt-3 inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-emerald-400 transition-colors"
+        >
+          Continue my journey →
+        </Link>
+
         {/* Feature cards */}
         <div className="mt-24 max-w-3xl w-full grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
           {FEATURES.map((f) => (
