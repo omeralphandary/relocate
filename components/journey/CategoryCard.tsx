@@ -57,16 +57,24 @@ function AddTaskForm({
 
   return (
     <div className="rounded-xl border border-violet-200 bg-violet-50/60 p-3 space-y-2">
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onKeyDown={(e) => { if (e.key === "Enter") handleSubmit(); if (e.key === "Escape") onCancel(); }}
-        placeholder="Describe your task…"
-        className="w-full text-sm text-gray-900 placeholder:text-gray-400 bg-white border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-transparent"
-        autoFocus
-        disabled={submitting}
-      />
+      <div className="relative">
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={(e) => { if (e.key === "Enter") handleSubmit(); if (e.key === "Escape") onCancel(); }}
+          placeholder="Describe your task…"
+          maxLength={200}
+          className="w-full text-sm text-gray-900 placeholder:text-gray-400 bg-white border border-gray-200 rounded-lg px-3 py-2 pr-14 focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-transparent"
+          autoFocus
+          disabled={submitting}
+        />
+        {value.length > 150 && (
+          <span className={`absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-medium ${value.length >= 200 ? "text-red-400" : "text-gray-400"}`}>
+            {200 - value.length}
+          </span>
+        )}
+      </div>
       {error && <p className="text-xs text-red-400">{error}</p>}
       <div className="flex items-center gap-2">
         <button

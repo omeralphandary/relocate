@@ -36,6 +36,9 @@ export async function POST(
     if (!title || typeof title !== "string" || title.trim() === "") {
       return NextResponse.json({ error: "title is required" }, { status: 400 });
     }
+    if (title.trim().length > 200) {
+      return NextResponse.json({ error: "Title must be 200 characters or fewer" }, { status: 400 });
+    }
     if (!category || !VALID_CATEGORIES.includes(category)) {
       return NextResponse.json(
         { error: `category must be one of: ${VALID_CATEGORIES.join(", ")}` },
