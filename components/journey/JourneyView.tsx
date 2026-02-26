@@ -87,7 +87,7 @@ const CATEGORY_META: Record<string, {
   transport: { label: "Transport",          emoji: "🚗", urgency: "Month 1–2",      timeEstimate: "1–4 weeks",  color: "bg-red-50 text-red-600 border-red-200",           donutColor: "#ef4444" },
   education: { label: "Education",          emoji: "🎓", urgency: "Week 1–2",       preDepartureUrgency: "4–6 wks before", timeEstimate: "1–4 weeks",  color: "bg-indigo-50 text-indigo-600 border-indigo-200",  donutColor: "#6366f1" },
   // Pre-departure only
-  documents: { label: "Documents",          emoji: "📄", urgency: "6–8 wks before", timeEstimate: "2–4 weeks",  color: "bg-amber-50 text-amber-600 border-amber-200",     donutColor: "#f59e0b" },
+  documents: { label: "Documents",          emoji: "📄", urgency: "Week 1–2",        preDepartureUrgency: "6–8 wks before", timeEstimate: "2–4 weeks",  color: "bg-amber-50 text-amber-600 border-amber-200",     donutColor: "#f59e0b" },
   moving:    { label: "Moving & Shipping",  emoji: "📦", urgency: "4–8 wks before", timeEstimate: "2–8 weeks",  color: "bg-sky-50 text-sky-600 border-sky-200",           donutColor: "#0ea5e9" },
   pets:      { label: "Pets",               emoji: "🐾", urgency: "8–12 wks before",timeEstimate: "8–12 weeks", color: "bg-rose-50 text-rose-600 border-rose-200",        donutColor: "#f43f5e" },
 };
